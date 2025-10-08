@@ -87,28 +87,23 @@ RUN npm install -g \
 # Create command history directory
 RUN mkdir -p /commandhistory && chown node:node /commandhistory
 
-# Switch back to root to install Claude Code and set permissions
+# Switch back to root to set permissions
 USER root
 
-# Install Claude Code globally (will be done in postCreateCommand for latest version)
-# We just ensure npm is ready for the installation
+# Clean npm cache for good measure
 RUN npm cache clean --force
 
 # Create a startup script for the container
 RUN echo '#!/bin/bash' > /usr/local/bin/container-init && \
-    echo 'echo "🚀 Claude Code Development Environment"' >> /usr/local/bin/container-init && \
+    echo 'echo "🚀 Claude Code VSCode Extension Development Environment"' >> /usr/local/bin/container-init && \
     echo 'echo "✅ Node.js $(node --version)"' >> /usr/local/bin/container-init && \
     echo 'echo "✅ npm $(npm --version)"' >> /usr/local/bin/container-init && \
     echo 'echo "✅ Git $(git --version)"' >> /usr/local/bin/container-init && \
-    echo 'if command -v claude-code &> /dev/null; then' >> /usr/local/bin/container-init && \
-    echo '    echo "✅ Claude Code $(claude-code --version 2>/dev/null || echo "installed")"' >> /usr/local/bin/container-init && \
-    echo 'else' >> /usr/local/bin/container-init && \
-    echo '    echo "⏳ Claude Code will be installed on first run"' >> /usr/local/bin/container-init && \
-    echo 'fi' >> /usr/local/bin/container-init && \
+    echo 'echo "✅ Claude Code VSCode Extension configured"' >> /usr/local/bin/container-init && \
     echo 'echo ""' >> /usr/local/bin/container-init && \
     echo 'echo "💡 Pro tips:"' >> /usr/local/bin/container-init && \
-    echo 'echo "   - Use \`claude-code\` to start the Claude Code CLI"' >> /usr/local/bin/container-init && \
-    echo 'echo "   - Set your CLAUDE_API_KEY environment variable"' >> /usr/local/bin/container-init && \
+    echo 'echo "   - Use Cmd/Ctrl+Shift+P and search for Claude to start"' >> /usr/local/bin/container-init && \
+    echo 'echo "   - Sign in with your Claude subscription when prompted"' >> /usr/local/bin/container-init && \
     echo 'echo "   - Use \`npm start\` or \`npm run dev\` for development servers"' >> /usr/local/bin/container-init && \
     echo 'echo ""' >> /usr/local/bin/container-init && \
     chmod +x /usr/local/bin/container-init

@@ -57,7 +57,7 @@ app.get('/', (req, res) => {
         <div>
             <h3>🛠️ Development Environment Status</h3>
             <div class="badge devcontainer-ready">✅ GitHub Codespaces Ready</div>
-            <div class="badge claude-ready">✅ Claude Code Support</div>
+            <div class="badge claude-ready">✅ Claude Code VSCode Extension</div>
             <div class="badge">✅ Node.js ${process.version}</div>
             <div class="badge">✅ Express Server</div>
         </div>
@@ -66,7 +66,7 @@ app.get('/', (req, res) => {
             <h3>📚 Quick Start</h3>
             <p>This environment is configured with:</p>
             <ul>
-                <li><strong>Claude Code</strong> - AI-powered development assistant</li>
+                <li><strong>Claude Code VSCode Extension</strong> - AI-powered development assistant</li>
                 <li><strong>Node.js 20</strong> - Modern JavaScript runtime</li>
                 <li><strong>VS Code Extensions</strong> - Enhanced development experience</li>
                 <li><strong>Zsh with Oh My Zsh</strong> - Improved terminal experience</li>
@@ -77,15 +77,15 @@ app.get('/', (req, res) => {
         <div>
             <h3>🎯 Next Steps</h3>
             <ol>
-                <li>Set your <code>CLAUDE_API_KEY</code> environment variable</li>
-                <li>Run <code>claude-code</code> in the terminal to start AI development</li>
+                <li>Press <code>Cmd/Ctrl+Shift+P</code> and search for "Claude"</li>
+                <li>Sign in with your Claude subscription when prompted</li>
                 <li>Use <code>npm run dev</code> for live development</li>
-                <li>Start building your awesome project! 🎉</li>
+                <li>Start building with AI assistance! 🎉</li>
             </ol>
         </div>
         
         <footer style="margin-top: 2rem; text-align: center; color: #666;">
-            <p>Powered by GitHub Codespaces + Claude Code</p>
+            <p>Powered by GitHub Codespaces + Claude Code VSCode Extension</p>
         </footer>
     </body>
     </html>
@@ -98,7 +98,7 @@ app.get('/health', (req, res) => {
     status: 'healthy',
     timestamp: new Date().toISOString(),
     environment: 'codespaces',
-    claudeCodeSupport: true,
+    claudeCodeExtension: true,
     nodeVersion: process.version
   });
 });

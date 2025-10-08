@@ -13,6 +13,7 @@
   "customizations": {
     "vscode": {
       "extensions": [
+        "anthropic.claude-code",
         "ms-vscode.vscode-typescript-next",
         "esbenp.prettier-vscode",
         "dbaeumer.vscode-eslint",
@@ -51,11 +52,10 @@
     }
   ],
   "containerEnv": {
-    "CLAUDE_API_KEY": "${localEnv:CLAUDE_API_KEY}",
     "SHELL": "/bin/zsh"
   },
-  "postCreateCommand": "npm install -g @anthropic-ai/claude-code",
-  "postStartCommand": "echo 'Claude Code Development Environment is ready!'",
+  "postCreateCommand": "echo 'Setting up development environment...'",
+  "postStartCommand": "echo 'Claude Code VSCode Extension Development Environment is ready! Use Cmd/Ctrl+Shift+P and search for Claude to get started.'",
   "forwardPorts": [3000, 8000, 8080, 5173, 4000],
   "portsAttributes": {
     "3000": {

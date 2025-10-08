@@ -6,13 +6,13 @@ This directory contains the configuration for a GitHub Codespaces development en
 
 ### Development Tools
 - **Node.js 20**: Latest LTS version for modern JavaScript development
-- **Claude Code**: Anthropic's Claude Code CLI tool (installed automatically)
+- **Claude Code VSCode Extension**: Anthropic's Claude Code extension for VS Code
 - **Git with Delta**: Enhanced git diff experience
 - **Zsh with Oh My Zsh**: Improved shell experience
 - **Essential CLI tools**: fzf, ripgrep, jq, tree, htop, and more
 
 ### VS Code Extensions
-- **Claude Code Support**: Extensions for optimal Claude development
+- **Claude Code Extension**: Official Claude Code VSCode extension for AI-assisted development
 - **GitHub Copilot**: AI-powered code suggestions
 - **TypeScript**: Enhanced TypeScript support
 - **Prettier & ESLint**: Code formatting and linting
@@ -29,50 +29,52 @@ This directory contains the configuration for a GitHub Codespaces development en
 
 ## Setup Instructions
 
-### 1. Set Environment Variables
-Before starting the container, you'll need to set your Claude API key:
-
-```bash
-export CLAUDE_API_KEY="your-claude-api-key-here"
-```
-
-### 2. Start Codespace
+### 1. Start Codespace
 1. Open the repository in GitHub
 2. Click the green "Code" button
 3. Select "Codespaces" tab
 4. Click "Create codespace on main" (or your current branch)
 
-### 3. Wait for Setup
+### 2. Wait for Setup
 The container will automatically:
 - Install all development tools
-- Install Claude Code CLI
+- Install Claude Code VSCode extension
 - Configure the shell environment
 - Set up VS Code extensions
 
+### 3. Authenticate with Claude Code
+Once the container is ready:
+1. Open the Command Palette (`Cmd/Ctrl+Shift+P`)
+2. Search for "Claude" and select a Claude Code command
+3. When prompted, click the login link that appears
+4. Sign in with your Claude subscription account
+5. Return to VS Code and start using Claude Code!
+
 ### 4. Verify Installation
-Once the container is ready, you can verify the installation:
+Once the container is ready, you can verify the setup:
 
 ```bash
-# Check Claude Code installation
-claude-code --version
-
 # Check Node.js
 node --version
 
 # Check npm
 npm --version
+
+# Check that Claude Code extension is installed
+code --list-extensions | grep anthropic.claude-code
 ```
 
 ## Usage
 
-### Starting Claude Code
+### Using Claude Code
 To start working with Claude Code:
 
-```bash
-claude-code
-```
+1. **Open Command Palette**: Press `Cmd/Ctrl+Shift+P`
+2. **Search for Claude**: Type "Claude" to see available commands
+3. **Start a conversation**: Select "Claude Code: New Chat" or similar command
+4. **Begin coding**: Ask Claude to help with your development tasks
 
-Make sure your `CLAUDE_API_KEY` environment variable is set.
+No API key setup required - just sign in with your Claude subscription when prompted!
 
 ### Development Workflow
 1. **Create or open your project files**
@@ -96,14 +98,14 @@ npm test
 # Build for production
 npm run build
 
-# Use Claude Code
-claude-code
+# Access Claude Code
+# Use Cmd/Ctrl+Shift+P then search for "Claude"
 ```
 
 ## Security Features
 
 - **Network isolation**: Container has restricted network access
-- **API key management**: Secure handling of sensitive credentials
+- **Subscription-based authentication**: Uses Claude subscription login (no API keys needed)
 - **Persistent volumes**: Command history and data persist across container restarts
 
 ## Customization
@@ -145,11 +147,19 @@ Edit the `forwardPorts` array in `devcontainer.json`:
 
 ## Troubleshooting
 
-### Claude API Key Issues
-If Claude Code can't authenticate:
-1. Verify your API key is correct
-2. Check that the `CLAUDE_API_KEY` environment variable is set
-3. Restart the container if needed
+### Claude Code Authentication Issues
+If Claude Code extension isn't working:
+1. Open Command Palette (`Cmd/Ctrl+Shift+P`)
+2. Search for "Claude Code: Sign In" or similar command
+3. Click the login link when prompted
+4. Complete authentication in your browser
+5. Return to VS Code and try again
+
+### Extension Not Appearing
+If you don't see Claude Code commands:
+1. Check that the extension is installed: `Extensions` view → search for "Claude Code"
+2. Reload VS Code window: `Cmd/Ctrl+Shift+P` → "Developer: Reload Window"
+3. Check the extension is enabled and not disabled
 
 ### Port Access Issues
 If you can't access forwarded ports:
