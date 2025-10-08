@@ -1,0 +1,59 @@
+---
+export interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Chris Rodriguez - Software Engineer, Triathlete, Dad">
+  <title>{title} | Chris Rodriguez</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <style>
+    /* Custom theme colors */
+    :root {
+      --pico-font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    nav ul li strong {
+      font-size: 1.2rem;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+  </style>
+</head>
+<body>
+  <nav class="container">
+    <ul>
+      <li><strong>Chris Rodriguez</strong></li>
+    </ul>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/blog">Blog</a></li>
+      <li><a href="/coffee">Coffee</a></li>
+      <li><a href="/training">Training</a></li>
+    </ul>
+  </nav>
+  
+  <main class="container">
+    <slot />
+  </main>
+  
+  <footer class="container">
+    <small>
+      © {new Date().getFullYear()} Chris Rodriguez •
+      <a href="/admin">Admin</a>
+    </small>
+  </footer>
+</body>
+</html>

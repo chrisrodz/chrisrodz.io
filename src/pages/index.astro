@@ -1,0 +1,69 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { supabase } from '../lib/supabase';
+
+// Fetch recent data (with error handling for when Supabase isn't configured)
+let recentCoffees = null;
+let recentActivities = null;
+
+try {
+  const { data: coffeeData } = await supabase
+    .from('coffees')
+    .select('*, beans(name, roaster)')
+    .order('brew_date', { ascending: false })
+    .limit(3);
+  recentCoffees = coffeeData;
+
+  const { data: activityData } = await supabase
+    .from('activities')
+    .select('*')
+    .order('start_date', { ascending: false })
+    .limit(3);
+  recentActivities = activityData;
+} catch (error) {
+  console.warn('Supabase not configured yet:', error);
+}
+---
+
+<Layout title="Home">
+  <header>
+    <h1>Chris Rodriguez</h1>
+    <p>Software Engineer • Triathlete • Dad</p>
+  </header>
+  
+  <section>
+    <h2>Recent Coffee</h2>
+    {recentCoffees && recentCoffees.length > 0 ? (
+      <div class="stats-grid">
+        {recentCoffees.map(coffee => (
+          <article>
+            <header>{coffee.beans?.name || 'Unknown'}</header>
+            <p>Rating: {coffee.rating}/10</p>
+            <p><small>{new Date(coffee.brew_date).toLocaleDateString()}</small></p>
+          </article>
+        ))}
+      </div>
+    ) : (
+      <p>No coffees logged yet. <a href="/admin/coffee">Add your first coffee →</a></p>
+    )}
+    <a href="/coffee" role="button">View Coffee Log →</a>
+  </section>
+  
+  <section>
+    <h2>Recent Training</h2>
+    {recentActivities && recentActivities.length > 0 ? (
+      <div class="stats-grid">
+        {recentActivities.map(activity => (
+          <article>
+            <header>{activity.type}</header>
+            <p>{(activity.distance / 1000).toFixed(1)} km</p>
+            <p><small>{new Date(activity.start_date).toLocaleDateString()}</small></p>
+          </article>
+        ))}
+      </div>
+    ) : (
+      <p>No activities synced yet. Connect your Strava account to see training data.</p>
+    )}
+    <a href="/training" role="button">View Training Log →</a>
+  </section>
+</Layout>
