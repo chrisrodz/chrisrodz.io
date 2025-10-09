@@ -2,6 +2,13 @@ import type { APIRoute } from 'astro';
 import { supabase } from '../../lib/supabase';
 
 export const GET: APIRoute = async () => {
+  if (!supabase) {
+    return new Response(JSON.stringify({ error: 'Database not configured' }), {
+      status: 503,
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+
   try {
     const { data: coffees, error } = await supabase
       .from('coffees')
@@ -20,8 +27,8 @@ export const GET: APIRoute = async () => {
       headers: { 'Content-Type': 'application/json' }
     });
   } catch (error) {
-    return new Response(JSON.stringify({ error: 'Database not configured' }), {
-      status: 503,
+    return new Response(JSON.stringify({ error: 'Internal server error' }), {
+      status: 500,
       headers: { 'Content-Type': 'application/json' }
     });
   }

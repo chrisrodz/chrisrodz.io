@@ -1,13 +1,14 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { supabase } from '../../lib/supabase';
+import { checkAuth } from '../../lib/auth';
+import { BeanSchema, CoffeeSchema } from '../../lib/validation';
 
 export const prerender = false;
 
-// Simple auth check
-const adminSecret = import.meta.env.ADMIN_SECRET;
+// Check authentication
 const cookies = Astro.cookies;
-const isAuthed = cookies.get('admin_auth')?.value === adminSecret;
+const isAuthed = checkAuth(cookies);
 
 if (!isAuthed) {
   return Astro.redirect('/admin');
@@ -18,53 +19,71 @@ let beans = null;
 
 // Handle form submission
 if (Astro.request.method === 'POST') {
-  try {
-    const formData = await Astro.request.formData();
-    const action = formData.get('action');
-    
-    if (action === 'add_bean') {
-      const { error } = await supabase
-        .from('beans')
-        .insert({
-          name: formData.get('bean_name'),
-          roaster: formData.get('roaster'),
-          origin: formData.get('origin'),
-          roast_date: formData.get('roast_date') || null,
-          notes: formData.get('bean_notes')
-        });
-      
-      if (error) throw error;
-      message = 'Bean added successfully!';
-    } else if (action === 'add_coffee') {
-      const { error } = await supabase
-        .from('coffees')
-        .insert({
-          bean_id: formData.get('bean_id'),
-          brew_date: formData.get('brew_date'),
-          brew_method: formData.get('brew_method'),
-          coffee_grams: parseFloat(formData.get('coffee_grams') as string) || null,
-          water_grams: parseFloat(formData.get('water_grams') as string) || null,
-          rating: parseInt(formData.get('rating') as string) || null,
-          notes: formData.get('coffee_notes')
-        });
-      
-      if (error) throw error;
-      message = 'Coffee entry added successfully!';
+  if (!supabase) {
+    message = 'Error: Supabase is not configured. Please set up your database connection.';
+  } else {
+    try {
+      const formData = await Astro.request.formData();
+      const action = formData.get('action');
+
+      if (action === 'add_bean') {
+        // Validate input
+        const rawData = Object.fromEntries(formData.entries());
+        const validatedData = BeanSchema.parse(rawData);
+
+        const { error } = await supabase
+          .from('beans')
+          .insert({
+            name: validatedData.bean_name,
+            roaster: validatedData.roaster || null,
+            origin: validatedData.origin || null,
+            roast_date: validatedData.roast_date || null,
+            notes: validatedData.bean_notes || null
+          });
+
+        if (error) throw error;
+        message = 'Bean added successfully!';
+      } else if (action === 'add_coffee') {
+        // Validate input
+        const rawData = Object.fromEntries(formData.entries());
+        const validatedData = CoffeeSchema.parse(rawData);
+
+        const { error } = await supabase
+          .from('coffees')
+          .insert({
+            bean_id: validatedData.bean_id,
+            brew_date: validatedData.brew_date,
+            brew_method: validatedData.brew_method || null,
+            coffee_grams: validatedData.coffee_grams || null,
+            water_grams: validatedData.water_grams || null,
+            rating: validatedData.rating || null,
+            notes: validatedData.coffee_notes || null
+          });
+
+        if (error) throw error;
+        message = 'Coffee entry added successfully!';
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        message = `Error: ${error.message}`;
+      } else {
+        message = 'Error: Unknown error occurred';
+      }
     }
-  } catch (error) {
-    message = `Error: ${error instanceof Error ? error.message : 'Unknown error'}`;
   }
 }
 
 // Fetch beans for the dropdown
-try {
-  const { data } = await supabase
-    .from('beans')
-    .select('*')
-    .order('name');
-  beans = data;
-} catch (error) {
-  console.warn('Could not fetch beans:', error);
+if (supabase) {
+  try {
+    const { data } = await supabase
+      .from('beans')
+      .select('*')
+      .order('name');
+    beans = data;
+  } catch (error) {
+    console.warn('Could not fetch beans:', error);
+  }
 }
 ---
 

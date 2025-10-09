@@ -6,22 +6,24 @@ import { supabase } from '../lib/supabase';
 let recentCoffees = null;
 let recentActivities = null;
 
-try {
-  const { data: coffeeData } = await supabase
-    .from('coffees')
-    .select('*, beans(name, roaster)')
-    .order('brew_date', { ascending: false })
-    .limit(3);
-  recentCoffees = coffeeData;
+if (supabase) {
+  try {
+    const { data: coffeeData } = await supabase
+      .from('coffees')
+      .select('*, beans(name, roaster)')
+      .order('brew_date', { ascending: false })
+      .limit(3);
+    recentCoffees = coffeeData;
 
-  const { data: activityData } = await supabase
-    .from('activities')
-    .select('*')
-    .order('start_date', { ascending: false })
-    .limit(3);
-  recentActivities = activityData;
-} catch (error) {
-  console.warn('Supabase not configured yet:', error);
+    const { data: activityData } = await supabase
+      .from('activities')
+      .select('*')
+      .order('start_date', { ascending: false })
+      .limit(3);
+    recentActivities = activityData;
+  } catch (error) {
+    console.warn('Error fetching data:', error);
+  }
 }
 ---
 

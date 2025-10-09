@@ -1,31 +1,24 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import { checkAuth, verifyAdminSecret, createSession, setAuthCookie } from '../../lib/auth';
 
 export const prerender = false;
 
-// Simple auth check - in a real app, this would be more sophisticated
-const adminSecret = import.meta.env.ADMIN_SECRET;
 const cookies = Astro.cookies;
-
-let isAuthed = false;
-
-// Check if already authenticated via cookie
-if (cookies.get('admin_auth')?.value === adminSecret) {
-  isAuthed = true;
-}
+let isAuthed = checkAuth(cookies);
+let loginError = '';
 
 // Handle login form submission
 if (Astro.request.method === 'POST') {
   const formData = await Astro.request.formData();
-  const password = formData.get('password');
-  
-  if (password === adminSecret) {
-    cookies.set('admin_auth', adminSecret, { 
-      httpOnly: true, 
-      secure: true,
-      maxAge: 60 * 60 * 24 // 24 hours
-    });
+  const password = formData.get('password') as string;
+
+  if (verifyAdminSecret(password)) {
+    const sessionId = createSession();
+    setAuthCookie(cookies, sessionId);
     isAuthed = true;
+  } else {
+    loginError = 'Invalid password';
   }
 }
 ---
@@ -34,6 +27,11 @@ if (Astro.request.method === 'POST') {
   {!isAuthed ? (
     <section>
       <h1>Admin Login</h1>
+      {loginError && (
+        <div style="padding: 1rem; margin: 1rem 0; background: #fee; border-radius: 4px; color: #c00;">
+          {loginError}
+        </div>
+      )}
       <form method="POST">
         <fieldset>
           <label for="password">Admin Password</label>
