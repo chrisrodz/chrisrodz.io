@@ -16,27 +16,39 @@ yarn new-post "Title" # Create new blog post with frontmatter
 
 ## Git Workflow
 
-**Important**: Always follow this workflow when making changes:
+**Critical**: Always follow this workflow when making changes:
 
-1. **Commit AND push together**: Whenever you commit changes, immediately push them
+1. **Create feature branch**: Always work on a feature branch, never commit directly to `main`
+   ```bash
+   git checkout -b feature/description
+   ```
+
+2. **ALWAYS commit AND push together**: Never commit without pushing immediately after
    ```bash
    git add . && git commit -m "message" && git push
    ```
-
-2. **Keep a draft PR open**: Always maintain a draft pull request with your changes
+   If the branch doesn't exist remotely yet, use:
    ```bash
-   # After first commit on a feature branch
-   gh pr create --draft --title "Feature: [description]" --body "Working on [feature]"
-
-   # The PR will automatically update as you push new commits
+   git push -u origin feature/description
    ```
 
-3. **Mark PR as ready when done**: Convert from draft to ready for review when feature is complete
+3. **ALWAYS create a draft PR**: Immediately after the first push to a new feature branch, create a draft PR
+   ```bash
+   gh pr create --draft --title "Feature: [description]" --body "Working on [feature]"
+   ```
+   The PR will automatically update as you push new commits.
+
+4. **Mark PR as ready when done**: Convert from draft to ready for review when feature is complete
    ```bash
    gh pr ready
    ```
 
-This ensures work is always backed up and visible for review.
+**Never**:
+- Commit without pushing
+- Work on a feature branch without a draft PR open
+- Commit directly to `main`
+
+This ensures work is always backed up, visible, and ready for review.
 
 ## Architecture Overview
 
