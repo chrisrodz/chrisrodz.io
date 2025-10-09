@@ -62,7 +62,7 @@ export function t(locale: Locale, key: string, vars?: Record<string, string>): s
  */
 export function getAlternateUrl(
   currentPath: string,
-  currentLocale: Locale,
+  _currentLocale: Locale,
   targetLocale: Locale
 ): string {
   // If switching to English (default), remove /es prefix
@@ -101,10 +101,11 @@ export async function getTranslatedPost(
 }
 
 /**
- * Get the slug without file extension for blog posts
+ * Get the slug without file extension and locale folder for blog posts
  */
 export function getPostSlug(post: CollectionEntry<'blog'>): string {
-  return post.id.replace(/\.mdx?$/, '');
+  // Remove .md/.mdx extension and locale folder prefix (en/, es/)
+  return post.id.replace(/^(en|es)\//, '').replace(/\.mdx?$/, '');
 }
 
 /**

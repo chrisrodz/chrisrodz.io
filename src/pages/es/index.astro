@@ -1,12 +1,12 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from '../../layouts/Layout.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { getBlogPostUrl } from '@/lib/i18n';
 
-// Fetch recent English blog posts
+// Fetch recent Spanish blog posts
 let recentPosts: CollectionEntry<'blog'>[] = [];
 try {
-  const posts = await getCollection('blog', ({ data }) => data.locale === 'en');
+  const posts = await getCollection('blog', ({ data }) => data.locale === 'es');
   recentPosts = posts
     .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
     .slice(0, 3);
@@ -15,20 +15,20 @@ try {
 }
 ---
 
-<Layout title="Home">
+<Layout title="Inicio">
   <header class="hero">
     <h1>Chris Rodriguez</h1>
-    <p>Software Engineer • Triathlete • Dad</p>
+    <p>Ingeniero de Software • Triatleta • Papá</p>
     <p style="margin-top: 1.5rem;">
-      <a href="/blog" role="button">Read the blog</a>
-      <a href="/about" role="button" class="secondary">About me</a>
+      <a href="/es/blog" role="button">Leer el blog</a>
+      <a href="/es/about" role="button" class="secondary">Acerca de mí</a>
     </p>
   </header>
 
   {recentPosts.length > 0 && (
     <section style="margin-top: 4rem;">
       <header style="margin-bottom: 2rem;">
-        <h2 style="font-size: 1.75rem; font-weight: 700; letter-spacing: -0.025em;">Latest posts</h2>
+        <h2 style="font-size: 1.75rem; font-weight: 700; letter-spacing: -0.025em;">Últimos posts</h2>
       </header>
 
       <div style="display: grid; gap: 2rem;">
@@ -36,7 +36,7 @@ try {
           <article class="blog-card">
             <div class="blog-meta">
               <time datetime={post.data.pubDate.toISOString()}>
-                {post.data.pubDate.toLocaleDateString('en-US', {
+                {post.data.pubDate.toLocaleDateString('es-ES', {
                   year: 'numeric',
                   month: 'long',
                   day: 'numeric',
@@ -58,7 +58,7 @@ try {
             )}
             <footer>
               <a href={getBlogPostUrl(post)} style="font-weight: 500;">
-                Read more →
+                Leer más →
               </a>
             </footer>
           </article>
@@ -66,22 +66,22 @@ try {
       </div>
 
       <div style="margin-top: 2rem; text-align: center;">
-        <a href="/blog">View all posts →</a>
+        <a href="/es/blog">Ver todos los posts →</a>
       </div>
     </section>
   )}
 
   <section style="margin-top: 4rem; padding: 3rem 0; border-top: 1px solid var(--pico-muted-border-color);">
     <div style="text-align: center;">
-      <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">Let's connect</h2>
+      <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">Conectemos</h2>
       <p style="color: var(--pico-muted-color); margin-bottom: 1.5rem;">
-        I write about software engineering, triathlon training, and life.
+        Escribo sobre ingeniería de software, entrenamiento de triatlón y la vida.
       </p>
       <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
         <a href="https://github.com/chrisrodz" target="_blank" rel="noopener noreferrer">GitHub</a>
         <a href="https://twitter.com/chrisrodz" target="_blank" rel="noopener noreferrer">Twitter</a>
-        <a href="/coffee">Coffee Log</a>
-        <a href="/training">Training Log</a>
+        <a href="/es/coffee">Registro de Café</a>
+        <a href="/es/training">Registro de Entrenamiento</a>
       </div>
     </div>
   </section>
