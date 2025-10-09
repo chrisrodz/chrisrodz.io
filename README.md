@@ -1,6 +1,8 @@
 # Personal Site - Chris Rodriguez
 
-A modern personal website built with Astro, featuring coffee tracking, training logs, and a blog.
+A modern personal website built with Astro, featuring a blog, coffee tracking, and training logs.
+
+🌐 **Live at**: [chrisrodz.io](https://chrisrodz.io)
 
 ## 🚀 Quick Start
 
@@ -118,7 +120,6 @@ CREATE POLICY "Public can read activities" ON activities FOR SELECT USING (true)
 ```
 
 ## 📁 Project Structure
-## 📁 Project Structure
 
 ```
 src/
@@ -141,7 +142,9 @@ src/
 ├── layouts/
 │   └── Layout.astro          # Main layout with Pico CSS
 ├── lib/
-│   └── supabase.ts           # Database client
+│   ├── auth.ts               # Session-based authentication
+│   ├── supabase.ts           # Database client (null-safe)
+│   └── validation.ts         # Zod schemas for input validation
 └── env.d.ts                  # Type definitions
 
 scripts/
@@ -157,13 +160,16 @@ Config files:
 
 ## ✨ Features
 
+- **📝 Blog**: Write and publish markdown blog posts with frontmatter
 - **🏠 Homepage**: Overview with recent coffee entries and training activities
 - **☕ Coffee Tracking**: Log your coffee brewing experiments with ratings and notes
 - **🏃‍♂️ Training Dashboard**: View your activities (sync with Strava)
-- **📝 Blog**: Write and publish markdown blog posts
-- **🔐 Admin Panel**: Protected admin interface for content management
+- **🔐 Admin Panel**: Secure session-based authentication for content management
+- **✅ Input Validation**: Zod schemas for type-safe form validation
+- **🛡️ Security**: HttpOnly cookies, CSRF protection, secure session management
 - **📱 Responsive**: Beautiful design with Pico CSS
 - **🚀 Performance**: Built with Astro for optimal loading speeds
+- **♿ Graceful Degradation**: Works without Supabase configured
 
 ## 🛠️ Available Scripts
 
@@ -188,47 +194,86 @@ This creates a new markdown file in `src/content/blog/` with the proper frontmat
 
 ## 🚀 Deployment
 
-### Deploy to Vercel
+This site is configured for seamless deployment on Vercel with automatic deployments on every push to `main`.
+
+### Initial Deployment
+
+**Via Vercel Dashboard (Recommended):**
 
 1. Push your code to GitHub
-2. Import project in Vercel
-3. Add your environment variables
-4. Deploy!
+2. Visit [vercel.com/new](https://vercel.com/new)
+3. Import your GitHub repository
+4. Configure environment variables:
+   - `ADMIN_SECRET` - Generate with: `openssl rand -base64 32`
+   - Optional: Supabase credentials (if using coffee/training features)
+5. Deploy!
 
-Or use the Vercel CLI:
+**Via Vercel CLI:**
 
 ```bash
-yarn global add vercel
+npm i -g vercel
+vercel login
 vercel --prod
 ```
 
-### Connect your domain
+### Custom Domain Setup
 
 1. In Vercel dashboard → Settings → Domains
-2. Add your domain (e.g., chrisrodz.io)
-3. Update DNS settings at your registrar
+2. Add both `yourdomain.com` and `www.yourdomain.com`
+3. Set apex domain as primary (ensures www redirects to apex)
+4. Update DNS at your registrar:
+   ```
+   Type: A, Host: @, Value: 76.76.21.21
+   Type: CNAME, Host: www, Value: cname.vercel-dns.com
+   ```
+5. Wait for DNS propagation (5-30 minutes)
+6. Vercel auto-provisions SSL certificate
+
+### Continuous Deployment
+
+- **Auto-deploy**: Every push to `main` triggers a new deployment
+- **Build time**: ~30-60 seconds
+- **Preview deploys**: Available for pull requests
+- **Rollback**: One-click rollback to previous deployments
 
 ## 🔧 Admin Features
 
-Visit `/admin` to access the admin panel. You'll need to set the `ADMIN_SECRET` environment variable.
+Visit `/admin` to access the secure admin panel.
 
-Features include:
-- Add coffee beans and brewing entries
+**Authentication:**
+- Session-based auth with secure HttpOnly cookies
+- 24-hour session expiry
+- Password set via `ADMIN_SECRET` environment variable
+
+**Available Features:**
+- Add and manage coffee beans and brewing entries
 - View setup instructions for Supabase and Strava
 - Manage blog posts (coming soon)
 
 ## 🌐 API Endpoints
 
 - `GET /api/coffee.json` - Public coffee entries API
+  - Returns coffee data with bean information
+  - Gracefully handles database not configured (503 status)
+
+## 🔒 Security Features
+
+- **Session Management**: Secure session tokens (not exposing secrets in cookies)
+- **Input Validation**: Zod schemas validate all form inputs
+- **Type Safety**: Full TypeScript coverage
+- **Null Safety**: Graceful handling of missing database connections
+- **Cookie Security**: HttpOnly, Secure, SameSite=Lax flags
+- **Error Handling**: User-friendly error messages, no stack traces exposed
 
 ## 📝 Development Notes
 
 ### Environment Setup
 
-The site gracefully handles missing environment variables:
-- Without Supabase: Coffee and training features show setup instructions
-- Without Strava: Training section shows connection instructions
-- Without admin secret: Admin panel requires password setup
+The site gracefully degrades when services aren't configured:
+- **Without Supabase**: Coffee and training features show setup instructions
+- **Without Strava**: Training section shows connection instructions
+- **Without Admin Secret**: Admin panel shows setup instructions
+- **Blog**: Works completely standalone, no external dependencies
 
 ### Styling
 
@@ -244,12 +289,14 @@ The site uses [Pico CSS](https://picocss.com/) for beautiful, semantic styling w
 
 ## 📚 Tech Stack
 
-- **Framework**: [Astro](https://astro.build) v4
+- **Framework**: [Astro](https://astro.build) v5.14+
 - **Language**: TypeScript
 - **Styling**: [Pico CSS](https://picocss.com/) + [Tailwind CSS](https://tailwindcss.com/)
-- **Database**: [Supabase](https://supabase.com)
-- **Deployment**: [Vercel](https://vercel.com)
-- **Content**: Markdown with frontmatter
+- **Database**: [Supabase](https://supabase.com) (PostgreSQL)
+- **Deployment**: [Vercel](https://vercel.com) (Node.js 20+)
+- **Validation**: [Zod](https://zod.dev)
+- **Authentication**: Custom session-based with [nanoid](https://github.com/ai/nanoid)
+- **Content**: Markdown with frontmatter (Astro Content Collections)
 
 ## 📖 Resources
 
