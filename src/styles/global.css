@@ -175,6 +175,31 @@
   footer a:hover {
     color: var(--pico-primary);
   }
+
+  /* Language switcher */
+  .lang-divider {
+    color: var(--pico-muted-color);
+    user-select: none;
+    padding: 0 0.5rem;
+  }
+
+  .lang-link {
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  .lang-link.active {
+    color: var(--pico-primary);
+    font-weight: 600;
+  }
+
+  .lang-link:not(.active) {
+    color: var(--pico-muted-color);
+  }
+
+  .lang-link:not(.active):hover {
+    color: var(--pico-color);
+  }
 }
 
 /* Utility classes */

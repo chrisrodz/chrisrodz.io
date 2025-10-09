@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { getLocaleFromUrl, t, getAlternateUrl, type Locale } from '@/lib/i18n';
 
 export interface Props {
   title: string;
@@ -7,19 +8,30 @@ export interface Props {
   image?: string;
 }
 
-const { title, description = "Chris Rodriguez - Software Engineer, Triathlete, Dad", image = "/og-image.png" } = Astro.props;
+const locale: Locale = getLocaleFromUrl(Astro.url);
+const { title, description = t(locale, 'home.hero.subtitle'), image = "/og-image.png" } = Astro.props;
 const currentPath = Astro.url.pathname;
 const canonicalURL = new URL(currentPath, Astro.site || 'https://chrisrodz.io');
 const ogImage = new URL(image, Astro.site || 'https://chrisrodz.io');
+
+// Generate alternate language URLs
+const alternateLocale: Locale = locale === 'en' ? 'es' : 'en';
+const alternateUrl = getAlternateUrl(currentPath, locale, alternateLocale);
+const alternateFullUrl = new URL(alternateUrl, Astro.site || 'https://chrisrodz.io');
 ---
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang={locale}>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content={description}>
   <link rel="canonical" href={canonicalURL}>
+
+  <!-- Alternate language links for SEO -->
+  <link rel="alternate" hreflang={locale} href={canonicalURL} />
+  <link rel="alternate" hreflang={alternateLocale} href={alternateFullUrl} />
+  <link rel="alternate" hreflang="x-default" href={new URL('/', Astro.site || 'https://chrisrodz.io')} />
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
@@ -60,14 +72,17 @@ const ogImage = new URL(image, Astro.site || 'https://chrisrodz.io');
       <li><strong class="gradient-text">Chris Rodriguez</strong></li>
     </ul>
     <ul>
-      <li><a href="/" class={currentPath === "/" ? "active" : ""}>Home</a></li>
-      <li><a href="/blog" class={currentPath.startsWith("/blog") ? "active" : ""}>Blog</a></li>
-      <li><a href="/about" class={currentPath === "/about" ? "active" : ""}>About</a></li>
+      <li><a href={locale === 'es' ? '/es' : '/'} class={currentPath === "/" || currentPath === "/es" ? "active" : ""}>{t(locale, 'nav.home')}</a></li>
+      <li><a href={locale === 'es' ? '/es/blog' : '/blog'} class={currentPath.startsWith("/blog") || currentPath.startsWith("/es/blog") ? "active" : ""}>{t(locale, 'nav.blog')}</a></li>
+      <li><a href={locale === 'es' ? '/es/about' : '/about'} class={currentPath === "/about" || currentPath === "/es/about" ? "active" : ""}>{t(locale, 'nav.about')}</a></li>
       <li>
         <button id="theme-toggle" aria-label="Toggle theme" class="contrast" title="Toggle light/dark mode">
           <span id="theme-icon" aria-hidden="true">🌙</span>
         </button>
       </li>
+      <li class="lang-divider" aria-hidden="true">|</li>
+      <li><a href={locale === 'en' ? currentPath : alternateUrl} class={locale === 'en' ? 'lang-link active' : 'lang-link'}>EN</a></li>
+      <li><a href={locale === 'es' ? currentPath : alternateUrl} class={locale === 'es' ? 'lang-link active' : 'lang-link'}>ES</a></li>
     </ul>
   </nav>
 
@@ -77,13 +92,13 @@ const ogImage = new URL(image, Astro.site || 'https://chrisrodz.io');
 
   <footer class="container">
     <p>
-      © {new Date().getFullYear()} Chris Rodriguez
+      {t(locale, 'footer.copyright', { year: new Date().getFullYear().toString() })}
       <br>
       <small>
-        <a href="/coffee">Coffee</a> •
-        <a href="/training">Training</a> •
-        <a href="https://github.com/chrisrodz" target="_blank" rel="noopener noreferrer">GitHub</a> •
-        <a href="https://twitter.com/chrisrodz" target="_blank" rel="noopener noreferrer">Twitter</a>
+        <a href={locale === 'es' ? '/es/coffee' : '/coffee'}>{t(locale, 'footer.coffee')}</a> •
+        <a href={locale === 'es' ? '/es/training' : '/training'}>{t(locale, 'footer.training')}</a> •
+        <a href="https://github.com/chrisrodz" target="_blank" rel="noopener noreferrer">{t(locale, 'footer.github')}</a> •
+        <a href="https://twitter.com/chrisrodz" target="_blank" rel="noopener noreferrer">{t(locale, 'footer.twitter')}</a>
       </small>
     </p>
   </footer>

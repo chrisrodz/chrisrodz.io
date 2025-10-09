@@ -1,0 +1,33 @@
+{
+  "nav": {
+    "home": "Home",
+    "blog": "Blog",
+    "about": "About",
+    "coffee": "Coffee",
+    "training": "Training"
+  },
+  "footer": {
+    "copyright": "© {year} Chris Rodriguez",
+    "coffee": "Coffee",
+    "training": "Training",
+    "github": "GitHub",
+    "twitter": "Twitter"
+  },
+  "blog": {
+    "title": "Blog",
+    "readMore": "Read more",
+    "publishedOn": "Published on",
+    "updatedOn": "Updated on",
+    "backToAll": "← Back to all posts",
+    "tags": "Tags"
+  },
+  "home": {
+    "hero": {
+      "title": "Chris Rodriguez",
+      "subtitle": "Software Engineer, Triathlete, Dad"
+    }
+  },
+  "about": {
+    "title": "About Me"
+  }
+}

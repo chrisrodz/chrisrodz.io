@@ -3,6 +3,8 @@ title: 'Welcome to My Personal Site'
 description: 'Introducing my new personal website built with Astro, featuring coffee tracking and training logs.'
 pubDate: 2024-01-01
 tags: ['astro', 'web development', 'personal']
+locale: en
+translationKey: 'welcome-post-2024'
 ---
 
 This is my new personal website built with [Astro](https://astro.build). Here you'll find:

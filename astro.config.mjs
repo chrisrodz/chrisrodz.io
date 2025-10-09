@@ -7,5 +7,12 @@ export default defineConfig({
   output: 'server',
   adapter: vercel(),
   prefetch: true,
-  integrations: [tailwind()]
+  integrations: [tailwind()],
+  i18n: {
+    locales: ['en', 'es'],
+    defaultLocale: 'en',
+    routing: {
+      prefixDefaultLocale: false
+    }
+  }
 });

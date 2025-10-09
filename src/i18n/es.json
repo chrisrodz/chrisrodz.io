@@ -1,0 +1,33 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "blog": "Blog",
+    "about": "Acerca",
+    "coffee": "Café",
+    "training": "Entrenamiento"
+  },
+  "footer": {
+    "copyright": "© {year} Chris Rodriguez",
+    "coffee": "Café",
+    "training": "Entrenamiento",
+    "github": "GitHub",
+    "twitter": "Twitter"
+  },
+  "blog": {
+    "title": "Blog",
+    "readMore": "Leer más",
+    "publishedOn": "Publicado el",
+    "updatedOn": "Actualizado el",
+    "backToAll": "← Volver a todos los posts",
+    "tags": "Etiquetas"
+  },
+  "home": {
+    "hero": {
+      "title": "Chris Rodriguez",
+      "subtitle": "Ingeniero de Software, Triatleta, Papá"
+    }
+  },
+  "about": {
+    "title": "Acerca de Mí"
+  }
+}
