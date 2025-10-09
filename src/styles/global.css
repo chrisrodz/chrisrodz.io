@@ -5,18 +5,11 @@
 
 /* Pico CSS custom properties override */
 :root {
-  /* Colors */
-  --pico-primary: #0ea5e9;
-  --pico-primary-hover: #0284c7;
-  --pico-primary-focus: rgba(14, 165, 233, 0.125);
-
   /* Typography */
   --pico-font-family: "Inter var", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --pico-font-weight: 400;
   --pico-line-height: 1.75;
 
   /* Spacing */
-  --pico-block-spacing-vertical: 1.5rem;
   --pico-typography-spacing-vertical: 1.5rem;
 
   /* Border radius */
@@ -26,15 +19,10 @@
   --pico-container-max-width: 720px;
 }
 
-/* Dark mode overrides */
+/* Dark mode - keep PicoCSS defaults, minimal overrides */
 [data-theme="dark"] {
-  --pico-background-color: #09090b;
-  --pico-color: #f4f4f5;
-  --pico-primary: #38bdf8;
-  --pico-primary-hover: #0ea5e9;
-  --pico-primary-focus: rgba(56, 189, 248, 0.125);
-  --pico-card-background-color: #18181b;
-  --pico-card-border-color: #27272a;
+  /* Use PicoCSS's default dark colors - they're already well-designed */
+  /* Only override if absolutely necessary */
 }
 
 /* Custom base styles */
@@ -70,10 +58,7 @@
     letter-spacing: -0.05em;
     line-height: 1.1;
     margin-bottom: 0.5rem;
-    background: linear-gradient(135deg, #0ea5e9 0%, #d946ef 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--pico-h1-color);
   }
 
   .hero p {
@@ -85,7 +70,7 @@
   /* Navigation styling */
   nav.main-nav {
     border-bottom: 1px solid var(--pico-muted-border-color);
-    padding: 1rem 0;
+    padding: 1.25rem 0;
   }
 
   nav.main-nav ul {
@@ -174,21 +159,29 @@
   /* Footer */
   footer {
     margin-top: 4rem;
-    padding: 2rem 0;
+    padding: 2.5rem 0;
     border-top: 1px solid var(--pico-muted-border-color);
     text-align: center;
     color: var(--pico-muted-color);
     font-size: 0.875rem;
+  }
+
+  footer a {
+    text-decoration: none;
+    color: var(--pico-muted-color);
+    transition: color 0.2s ease;
+  }
+
+  footer a:hover {
+    color: var(--pico-primary);
   }
 }
 
 /* Utility classes */
 @layer utilities {
   .gradient-text {
-    background: linear-gradient(135deg, #0ea5e9 0%, #d946ef 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--pico-color);
+    font-weight: 800;
   }
 
   .text-balance {
@@ -216,14 +209,48 @@
 
 .prose h1 {
   font-size: 2.25rem;
+  color: var(--pico-h1-color);
 }
 
 .prose h2 {
   font-size: 1.875rem;
+  color: var(--pico-h2-color);
 }
 
 .prose h3 {
   font-size: 1.5rem;
+  color: var(--pico-h3-color);
+}
+
+.prose h4 {
+  color: var(--pico-h4-color);
+}
+
+.prose h5 {
+  color: var(--pico-h5-color);
+}
+
+.prose h6 {
+  color: var(--pico-h6-color);
+}
+
+.prose p {
+  color: var(--pico-color);
+}
+
+.prose strong,
+.prose b {
+  color: var(--pico-color);
+  font-weight: 700;
+}
+
+.prose ul,
+.prose ol {
+  color: var(--pico-color);
+}
+
+.prose li {
+  color: var(--pico-color);
 }
 
 .prose a {

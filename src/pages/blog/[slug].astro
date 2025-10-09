@@ -1,19 +1,23 @@
 ---
-import { type CollectionEntry, getCollection } from 'astro:content';
+import { getEntry, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 
-export async function getStaticPaths() {
-  const posts = await getCollection('blog');
-  return posts.map((post) => ({
-    params: { slug: post.slug },
-    props: post,
-  }));
+// Get the slug from the URL params
+const { slug } = Astro.params;
+
+if (!slug) {
+  return Astro.redirect('/404');
 }
 
-type Props = CollectionEntry<'blog'>;
+// Fetch the blog post entry
+const entry = await getEntry('blog', slug);
 
-const post = Astro.props;
-const { Content } = await post.render();
+if (!entry) {
+  return Astro.redirect('/404');
+}
+
+const { Content } = await render(entry);
+const post = entry;
 
 // Format date
 const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
@@ -41,11 +45,7 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
           {formattedDate}
         </time>
         {post.data.tags && post.data.tags.length > 0 && (
-          <div style="display: flex; gap: 0.5rem;">
-            {post.data.tags.map((tag) => (
-              <span class="blog-tag">{tag}</span>
-            ))}
-          </div>
+          <span class="blog-tag">{post.data.tags[0]}</span>
         )}
       </div>
 

@@ -1,9 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
 
 // Fetch recent blog posts
-let recentPosts = [];
+let recentPosts: CollectionEntry<'blog'>[] = [];
 try {
   const posts = await getCollection('blog');
   recentPosts = posts
@@ -47,7 +47,7 @@ try {
             </div>
             <header>
               <h3>
-                <a href={`/blog/${post.slug}`}>{post.data.title}</a>
+                <a href={`/blog/${post.id.replace(/\.mdx?$/, '')}`}>{post.data.title}</a>
               </h3>
             </header>
             {post.data.description && (
@@ -56,7 +56,7 @@ try {
               </p>
             )}
             <footer>
-              <a href={`/blog/${post.slug}`} style="font-weight: 500;">
+              <a href={`/blog/${post.id.replace(/\.mdx?$/, '')}`} style="font-weight: 500;">
                 Read more →
               </a>
             </footer>
