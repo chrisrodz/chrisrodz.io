@@ -1,9 +1,11 @@
 ---
 export interface Props {
   title: string;
+  description?: string;
 }
 
-const { title } = Astro.props;
+const { title, description = "Chris Rodriguez - Software Engineer, Triathlete, Dad" } = Astro.props;
+const currentPath = Astro.url.pathname;
 ---
 
 <!DOCTYPE html>
@@ -11,49 +13,89 @@ const { title } = Astro.props;
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Chris Rodriguez - Software Engineer, Triathlete, Dad">
+  <meta name="description" content={description}>
   <title>{title} | Chris Rodriguez</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Pico CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
-  <style>
-    /* Custom theme colors */
-    :root {
-      --pico-font-family: system-ui, -apple-system, sans-serif;
-    }
 
-    nav ul li strong {
-      font-size: 1.2rem;
-    }
+  <!-- Custom styles -->
+  <link rel="stylesheet" href="/src/styles/global.css">
 
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-      margin: 2rem 0;
+  <!-- Theme script (prevent FOUC) -->
+  <script is:inline>
+    // Check for saved theme preference or default to 'light' mode
+    const theme = localStorage.getItem('theme') || 'light';
+    if (theme === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
     }
-  </style>
+  </script>
 </head>
 <body>
-  <nav class="container">
+  <nav class="container main-nav">
     <ul>
-      <li><strong>Chris Rodriguez</strong></li>
+      <li><strong class="gradient-text">Chris Rodriguez</strong></li>
     </ul>
     <ul>
-      <li><a href="/">Home</a></li>
-      <li><a href="/blog">Blog</a></li>
-      <li><a href="/coffee">Coffee</a></li>
-      <li><a href="/training">Training</a></li>
+      <li><a href="/" class={currentPath === "/" ? "active" : ""}>Home</a></li>
+      <li><a href="/blog" class={currentPath.startsWith("/blog") ? "active" : ""}>Blog</a></li>
+      <li><a href="/about" class={currentPath === "/about" ? "active" : ""}>About</a></li>
+      <li>
+        <button id="theme-toggle" aria-label="Toggle dark mode" class="contrast">
+          <span id="theme-icon">🌙</span>
+        </button>
+      </li>
     </ul>
   </nav>
-  
+
   <main class="container">
     <slot />
   </main>
-  
+
   <footer class="container">
-    <small>
-      © {new Date().getFullYear()} Chris Rodriguez •
-      <a href="/admin">Admin</a>
-    </small>
+    <p>
+      © {new Date().getFullYear()} Chris Rodriguez
+      <br>
+      <small>
+        <a href="/coffee">Coffee</a> •
+        <a href="/training">Training</a> •
+        <a href="https://github.com/chrisrodz" target="_blank" rel="noopener noreferrer">GitHub</a> •
+        <a href="https://twitter.com/chrisrodz" target="_blank" rel="noopener noreferrer">Twitter</a>
+      </small>
+    </p>
   </footer>
+
+  <!-- Dark mode toggle script -->
+  <script is:inline>
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+    const html = document.documentElement;
+
+    function setTheme(theme) {
+      if (theme === 'dark') {
+        html.setAttribute('data-theme', 'dark');
+        themeIcon.textContent = '☀️';
+      } else {
+        html.setAttribute('data-theme', 'light');
+        themeIcon.textContent = '🌙';
+      }
+      localStorage.setItem('theme', theme);
+    }
+
+    // Set initial icon based on current theme
+    const currentTheme = html.getAttribute('data-theme') || 'light';
+    themeIcon.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
+
+    themeToggle?.addEventListener('click', () => {
+      const current = html.getAttribute('data-theme') || 'light';
+      const next = current === 'dark' ? 'light' : 'dark';
+      setTheme(next);
+    });
+  </script>
 </body>
 </html>

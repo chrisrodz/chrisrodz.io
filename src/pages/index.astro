@@ -1,71 +1,87 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { supabase } from '../lib/supabase';
+import { getCollection } from 'astro:content';
 
-// Fetch recent data (with error handling for when Supabase isn't configured)
-let recentCoffees = null;
-let recentActivities = null;
-
-if (supabase) {
-  try {
-    const { data: coffeeData } = await supabase
-      .from('coffees')
-      .select('*, beans(name, roaster)')
-      .order('brew_date', { ascending: false })
-      .limit(3);
-    recentCoffees = coffeeData;
-
-    const { data: activityData } = await supabase
-      .from('activities')
-      .select('*')
-      .order('start_date', { ascending: false })
-      .limit(3);
-    recentActivities = activityData;
-  } catch (error) {
-    console.warn('Error fetching data:', error);
-  }
+// Fetch recent blog posts
+let recentPosts = [];
+try {
+  const posts = await getCollection('blog');
+  recentPosts = posts
+    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+    .slice(0, 3);
+} catch (e) {
+  console.warn('No blog posts found:', e);
 }
 ---
 
 <Layout title="Home">
-  <header>
+  <header class="hero">
     <h1>Chris Rodriguez</h1>
     <p>Software Engineer • Triathlete • Dad</p>
+    <p style="margin-top: 1.5rem;">
+      <a href="/blog" role="button">Read the blog</a>
+      <a href="/about" role="button" class="secondary">About me</a>
+    </p>
   </header>
-  
-  <section>
-    <h2>Recent Coffee</h2>
-    {recentCoffees && recentCoffees.length > 0 ? (
-      <div class="stats-grid">
-        {recentCoffees.map(coffee => (
-          <article>
-            <header>{coffee.beans?.name || 'Unknown'}</header>
-            <p>Rating: {coffee.rating}/10</p>
-            <p><small>{new Date(coffee.brew_date).toLocaleDateString()}</small></p>
+
+  {recentPosts.length > 0 && (
+    <section style="margin-top: 4rem;">
+      <header style="margin-bottom: 2rem;">
+        <h2 style="font-size: 1.75rem; font-weight: 700; letter-spacing: -0.025em;">Latest posts</h2>
+      </header>
+
+      <div style="display: grid; gap: 2rem;">
+        {recentPosts.map((post) => (
+          <article class="blog-card">
+            <div class="blog-meta">
+              <time datetime={post.data.pubDate.toISOString()}>
+                {post.data.pubDate.toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                })}
+              </time>
+              {post.data.tags && post.data.tags.length > 0 && (
+                <span class="blog-tag">{post.data.tags[0]}</span>
+              )}
+            </div>
+            <header>
+              <h3>
+                <a href={`/blog/${post.slug}`}>{post.data.title}</a>
+              </h3>
+            </header>
+            {post.data.description && (
+              <p style="color: var(--pico-muted-color); line-height: 1.6;">
+                {post.data.description}
+              </p>
+            )}
+            <footer>
+              <a href={`/blog/${post.slug}`} style="font-weight: 500;">
+                Read more →
+              </a>
+            </footer>
           </article>
         ))}
       </div>
-    ) : (
-      <p>No coffees logged yet. <a href="/admin/coffee">Add your first coffee →</a></p>
-    )}
-    <a href="/coffee" role="button">View Coffee Log →</a>
-  </section>
-  
-  <section>
-    <h2>Recent Training</h2>
-    {recentActivities && recentActivities.length > 0 ? (
-      <div class="stats-grid">
-        {recentActivities.map(activity => (
-          <article>
-            <header>{activity.type}</header>
-            <p>{(activity.distance / 1000).toFixed(1)} km</p>
-            <p><small>{new Date(activity.start_date).toLocaleDateString()}</small></p>
-          </article>
-        ))}
+
+      <div style="margin-top: 2rem; text-align: center;">
+        <a href="/blog">View all posts →</a>
       </div>
-    ) : (
-      <p>No activities synced yet. Connect your Strava account to see training data.</p>
-    )}
-    <a href="/training" role="button">View Training Log →</a>
+    </section>
+  )}
+
+  <section style="margin-top: 4rem; padding: 3rem 0; border-top: 1px solid var(--pico-muted-border-color);">
+    <div style="text-align: center;">
+      <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">Let's connect</h2>
+      <p style="color: var(--pico-muted-color); margin-bottom: 1.5rem;">
+        I write about software engineering, triathlon training, and life.
+      </p>
+      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a href="https://github.com/chrisrodz" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://twitter.com/chrisrodz" target="_blank" rel="noopener noreferrer">Twitter</a>
+        <a href="/coffee">Coffee Log</a>
+        <a href="/training">Training Log</a>
+      </div>
+    </div>
   </section>
 </Layout>

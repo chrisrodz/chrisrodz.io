@@ -14,19 +14,64 @@ type Props = CollectionEntry<'blog'>;
 
 const post = Astro.props;
 const { Content } = await post.render();
+
+// Format date
+const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
 ---
 
-<Layout title={post.data.title}>
-  <article>
-    <header>
-      <h1>{post.data.title}</h1>
-      <p><small>Published on {post.data.pubDate.toLocaleDateString()}</small></p>
-      {post.data.description && <p><em>{post.data.description}</em></p>}
+<Layout title={post.data.title} description={post.data.description}>
+  <article style="max-width: 70ch; margin: 0 auto;">
+    <header style="margin-bottom: 3rem;">
+      <nav style="margin-bottom: 1.5rem;">
+        <a href="/blog" style="text-decoration: none; color: var(--pico-muted-color); font-weight: 500; font-size: 0.9375rem;">
+          ← Back to blog
+        </a>
+      </nav>
+
+      <h1 style="font-size: clamp(2rem, 4vw, 2.5rem); font-weight: 800; letter-spacing: -0.05em; line-height: 1.2; margin-bottom: 1rem;">
+        {post.data.title}
+      </h1>
+
+      <div style="display: flex; gap: 1.5rem; align-items: center; color: var(--pico-muted-color); font-size: 0.9375rem;">
+        <time datetime={post.data.pubDate.toISOString()}>
+          {formattedDate}
+        </time>
+        {post.data.tags && post.data.tags.length > 0 && (
+          <div style="display: flex; gap: 0.5rem;">
+            {post.data.tags.map((tag) => (
+              <span class="blog-tag">{tag}</span>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {post.data.description && (
+        <p style="margin-top: 1.5rem; font-size: 1.125rem; color: var(--pico-muted-color); line-height: 1.6;">
+          {post.data.description}
+        </p>
+      )}
     </header>
-    <Content />
+
+    <div class="prose">
+      <Content />
+    </div>
   </article>
-  
-  <nav>
-    <a href="/blog" role="button" class="secondary">← Back to blog</a>
-  </nav>
+
+  <div style="max-width: 70ch; margin: 3rem auto 0;">
+    <hr style="margin: 3rem 0;">
+    <nav style="display: flex; justify-content: space-between; align-items: center;">
+      <a href="/blog" role="button" class="secondary">
+        ← Back to blog
+      </a>
+      <div style="display: flex; gap: 1rem;">
+        <a href="https://twitter.com/intent/tweet?text={encodeURIComponent(post.data.title)}&url={encodeURIComponent(Astro.url.href)}" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+          Share on Twitter
+        </a>
+      </div>
+    </nav>
+  </div>
 </Layout>
