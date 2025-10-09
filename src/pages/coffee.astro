@@ -1,0 +1,78 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { supabase } from '../lib/supabase';
+
+// Fetch all coffees with their beans
+let coffees = null;
+let error = null;
+
+if (supabase) {
+  try {
+    const { data, error: fetchError } = await supabase
+      .from('coffees')
+      .select('*, beans(name, roaster, origin)')
+      .order('brew_date', { ascending: false });
+
+    coffees = data;
+    error = fetchError;
+  } catch (e) {
+    console.warn('Error fetching coffees:', e);
+    error = 'Error loading coffee data';
+  }
+} else {
+  error = 'Database not configured';
+}
+---
+
+<Layout title="Coffee Log">
+  <header>
+    <h1>Coffee Log</h1>
+    <p>Tracking my coffee brewing journey</p>
+  </header>
+
+  {error ? (
+    <section>
+      <p>Coffee tracking is not available yet. Please configure your Supabase database.</p>
+      <a href="/admin/coffee" role="button">Set up coffee tracking →</a>
+    </section>
+  ) : (
+    <section>
+      {coffees && coffees.length > 0 ? (
+        <div class="overflow-auto">
+          <table>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Bean</th>
+                <th>Method</th>
+                <th>Rating</th>
+                <th>Notes</th>
+              </tr>
+            </thead>
+            <tbody>
+              {coffees.map(coffee => (
+                <tr>
+                  <td>{new Date(coffee.brew_date).toLocaleDateString()}</td>
+                  <td>
+                    <strong>{coffee.beans?.name || 'Unknown'}</strong>
+                    {coffee.beans?.roaster && (
+                      <><br /><small>{coffee.beans.roaster}</small></>
+                    )}
+                  </td>
+                  <td>{coffee.brew_method || '-'}</td>
+                  <td>{coffee.rating ? `${coffee.rating}/10` : '-'}</td>
+                  <td>{coffee.notes || '-'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <div>
+          <p>No coffee entries yet. Start tracking your brews!</p>
+          <a href="/admin/coffee" role="button">Add Coffee Entry →</a>
+        </div>
+      )}
+    </section>
+  )}
+</Layout>
