@@ -14,6 +14,30 @@ yarn preview          # Preview production build
 yarn new-post "Title" # Create new blog post with frontmatter
 ```
 
+## Git Workflow
+
+**Important**: Always follow this workflow when making changes:
+
+1. **Commit AND push together**: Whenever you commit changes, immediately push them
+   ```bash
+   git add . && git commit -m "message" && git push
+   ```
+
+2. **Keep a draft PR open**: Always maintain a draft pull request with your changes
+   ```bash
+   # After first commit on a feature branch
+   gh pr create --draft --title "Feature: [description]" --body "Working on [feature]"
+
+   # The PR will automatically update as you push new commits
+   ```
+
+3. **Mark PR as ready when done**: Convert from draft to ready for review when feature is complete
+   ```bash
+   gh pr ready
+   ```
+
+This ensures work is always backed up and visible for review.
+
 ## Architecture Overview
 
 ### SSR Mode with Astro v5
