@@ -1,4 +1,4 @@
-# Personal Site - Chris Rodriguez
+# Personal Site - Christian Rodriguez
 
 A modern personal website built with Astro, featuring a blog, coffee tracking, and training logs.
 

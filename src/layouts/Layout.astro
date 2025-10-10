@@ -38,18 +38,18 @@ const alternateFullUrl = new URL(alternateUrl, Astro.site || 'https://chrisrodz.
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
   <meta property="og:url" content={canonicalURL}>
-  <meta property="og:title" content={`${title} | Chris Rodriguez`}>
+  <meta property="og:title" content={`${title} | Christian Rodriguez`}>
   <meta property="og:description" content={description}>
   <meta property="og:image" content={ogImage}>
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image">
   <meta property="twitter:url" content={canonicalURL}>
-  <meta property="twitter:title" content={`${title} | Chris Rodriguez`}>
+  <meta property="twitter:title" content={`${title} | Christian Rodriguez`}>
   <meta property="twitter:description" content={description}>
   <meta property="twitter:image" content={ogImage}>
 
-  <title>{title} | Chris Rodriguez</title>
+  <title>{title} | Christian Rodriguez</title>
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -71,7 +71,7 @@ const alternateFullUrl = new URL(alternateUrl, Astro.site || 'https://chrisrodz.
 <body>
   <nav class="container main-nav">
     <ul>
-      <li><strong class="gradient-text">Chris Rodriguez</strong></li>
+      <li><strong class="gradient-text">Christian Rodriguez</strong></li>
     </ul>
     <ul>
       <li><a href={locale === 'es' ? '/es' : '/'} class={currentPath === "/" || currentPath === "/es" ? "active" : ""}>{t(locale, 'nav.home')}</a></li>
