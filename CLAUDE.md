@@ -16,39 +16,72 @@ yarn new-post "Title" # Create new blog post with frontmatter
 
 ## Git Workflow
 
-**Critical**: Always follow this workflow when making changes:
+**Critical**: Always work on feature branches to protect `main` which auto-deploys to production.
 
-1. **Create feature branch**: Always work on a feature branch, never commit directly to `main`
+### Standard Workflow:
+
+1. **Create feature branch** from main:
    ```bash
+   git checkout main
+   git pull
    git checkout -b feature/description
    ```
 
-2. **ALWAYS commit AND push together**: Never commit without pushing immediately after
+2. **Make changes** on the feature branch
+   - Test locally with `yarn dev`
+   - Build to verify: `yarn build`
+
+3. **ALWAYS commit AND push together** (never commit without pushing):
    ```bash
-   git add . && git commit -m "message" && git push
+   git add . && git commit -m "descriptive message" && git push
    ```
    If the branch doesn't exist remotely yet, use:
    ```bash
    git push -u origin feature/description
    ```
 
-3. **ALWAYS create a draft PR**: Immediately after the first push to a new feature branch, create a draft PR
+4. **ALWAYS create a draft PR** immediately after first push:
    ```bash
    gh pr create --draft --title "Feature: [description]" --body "Working on [feature]"
    ```
    The PR will automatically update as you push new commits.
 
-4. **Mark PR as ready when done**: Convert from draft to ready for review when feature is complete
+5. **Mark PR as ready** when feature is complete:
    ```bash
    gh pr ready
    ```
+   - Review changes in GitHub
+   - Get approval (or self-review)
+   - Merge to main
 
-**Never**:
-- Commit without pushing
-- Work on a feature branch without a draft PR open
-- Commit directly to `main`
+6. **Clean up** after merge:
+   ```bash
+   git checkout main
+   git pull
+   git branch -d feature/description
+   ```
+
+### Branch Naming Convention:
+- `feature/` - New features or enhancements
+- `fix/` - Bug fixes
+- `docs/` - Documentation updates
+- `refactor/` - Code refactoring
+
+### Best Practices:
+- ✅ Keep commits atomic - one logical change per commit
+- ✅ Write clear, descriptive commit messages
+- ✅ Always test locally before pushing
+- ✅ Review your own PRs before merging
+- ❌ Never commit without pushing
+- ❌ Never work on a feature branch without a draft PR open
+- ❌ Never commit directly to `main`
 
 This ensures work is always backed up, visible, and ready for review.
+
+### Deployment:
+- **Main branch** auto-deploys to production (Vercel)
+- **Feature branches** do NOT auto-deploy (unless PR created)
+- **Preview deployments** available for PRs
 
 ## Architecture Overview
 
@@ -157,15 +190,27 @@ if (!result.success) {
 
 Never trust user input. Always validate with Zod before database operations.
 
+## Tech Stack
+
+- **Framework**: Astro v5.14+ (SSR mode)
+- **Styling**: Pico CSS v2 + Tailwind CSS
+- **Database**: Supabase (PostgreSQL, optional with graceful degradation)
+- **Auth**: Custom session-based (nanoid)
+- **Validation**: Zod schemas
+- **Deployment**: Vercel (Node.js 20+)
+
 ## Key Files
 
 - `astro.config.mjs`: SSR mode, Vercel adapter, site URL
 - `src/lib/supabase.ts`: Null-safe database client
 - `src/lib/auth.ts`: Session management
 - `src/lib/validation.ts`: Zod schemas
+- `src/lib/i18n.ts`: Internationalization utilities (en/es)
 - `src/content/config.ts`: Blog collection schema
-- `src/layouts/Layout.astro`: Main layout with PicoCSS, dark mode toggle, meta tags
+- `src/layouts/Layout.astro`: Main layout with PicoCSS, dark mode toggle, meta tags, i18n
 - `src/styles/global.css`: Custom styles (minimal, uses PicoCSS variables)
+- `src/pages/`: All routes (SSR)
+- `src/content/blog/`: Markdown blog posts (en/ and es/ subdirectories)
 
 ## Environment Variables
 
@@ -257,6 +302,23 @@ Full TypeScript coverage. Key types:
 - `SupabaseClient | null`: Database client
 - Zod inferred types: `z.infer<typeof coffeeSchema>`
 
+## Internationalization (i18n)
+
+The site supports English (default) and Spanish:
+- **English**: `/blog/post-slug`
+- **Spanish**: `/es/blog/post-slug`
+
+Blog posts with translations must share a `translationKey` in their frontmatter:
+```yaml
+# en/welcome.md
+translationKey: "welcome-post-2025"
+
+# es/bienvenido.md
+translationKey: "welcome-post-2025"
+```
+
+The language switcher in `Layout.astro` uses `getTranslatedPost()` to find the correct translated URL based on `translationKey`, not just by swapping the `/es/` prefix.
+
 ## Notes for Future Development
 
 1. **Don't override PicoCSS colors** unless absolutely necessary. Use CSS variables.
@@ -266,3 +328,8 @@ Full TypeScript coverage. Key types:
 5. **Strip `.md` extension** from blog post IDs when creating URLs.
 6. **Test graceful degradation**: App should work without env vars configured.
 7. **Session storage is in-memory**: Consider Redis/database for production scale.
+8. **i18n translations**: When adding translated blog posts, always use matching `translationKey` in frontmatter.
+
+---
+
+**Last updated**: 2025-10-10
