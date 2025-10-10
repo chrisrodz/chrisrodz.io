@@ -90,19 +90,6 @@ const alternateFullUrl = new URL(alternateUrl, Astro.site || 'https://chrisrodz.
     <slot />
   </main>
 
-  <footer class="container">
-    <p>
-      {t(locale, 'footer.copyright', { year: new Date().getFullYear().toString() })}
-      <br>
-      <small>
-        <a href={locale === 'es' ? '/es/coffee' : '/coffee'}>{t(locale, 'footer.coffee')}</a> •
-        <a href={locale === 'es' ? '/es/training' : '/training'}>{t(locale, 'footer.training')}</a> •
-        <a href="https://github.com/chrisrodz" target="_blank" rel="noopener noreferrer">{t(locale, 'footer.github')}</a> •
-        <a href="https://twitter.com/chrisrodz" target="_blank" rel="noopener noreferrer">{t(locale, 'footer.twitter')}</a>
-      </small>
-    </p>
-  </footer>
-
   <!-- Dark mode toggle script -->
   <script is:inline>
     const themeToggle = document.getElementById('theme-toggle');

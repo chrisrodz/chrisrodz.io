@@ -67,15 +67,10 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
 
   <div style="max-width: 70ch; margin: 3rem auto 0;">
     <hr style="margin: 3rem 0;">
-    <nav style="display: flex; justify-content: space-between; align-items: center;">
+    <nav>
       <a href="/blog" role="button" class="secondary">
         ← Back to blog
       </a>
-      <div style="display: flex; gap: 1rem;">
-        <a href="https://twitter.com/intent/tweet?text={encodeURIComponent(post.data.title)}&url={encodeURIComponent(Astro.url.href)}" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
-          Share on Twitter
-        </a>
-      </div>
     </nav>
   </div>
 </Layout>
