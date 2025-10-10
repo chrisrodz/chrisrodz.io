@@ -52,9 +52,6 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
         <time datetime={post.data.pubDate.toISOString()}>
           {formattedDate}
         </time>
-        {post.data.tags && post.data.tags.length > 0 && (
-          <span class="blog-tag">{post.data.tags[0]}</span>
-        )}
       </div>
 
       {post.data.description && (

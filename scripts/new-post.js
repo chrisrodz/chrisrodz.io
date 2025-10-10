@@ -49,7 +49,6 @@ title: "${title}"
 description: "A brief description of the post"
 slug: "${slug}"
 pubDate: ${pubDate}
-tags: []
 locale: ${lang}
 ---
 
@@ -96,4 +95,3 @@ console.log('');
 console.log('📝 Next steps:');
 console.log(`  1. Update the title, description, and slug in the frontmatter`);
 console.log(`  2. Write your content`);
-console.log(`  3. Add relevant tags`);

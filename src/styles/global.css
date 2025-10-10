@@ -144,18 +144,6 @@
     margin-bottom: 0.75rem;
   }
 
-  .blog-tag {
-    display: inline-block;
-    padding: 0.25rem 0.75rem;
-    background: var(--pico-primary-focus);
-    color: var(--pico-primary);
-    border-radius: 9999px;
-    font-size: 0.75rem;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-
   /* Footer */
   footer {
     margin-top: 4rem;
