@@ -176,29 +176,42 @@
     color: var(--pico-primary);
   }
 
-  /* Language switcher */
-  .lang-divider {
-    color: var(--pico-muted-color);
-    user-select: none;
-    padding: 0 0.5rem;
-  }
-
-  .lang-link {
-    font-size: 0.875rem;
-    font-weight: 500;
-  }
-
-  .lang-link.active {
+  /* Language toggle */
+  .lang-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 9999px;
+    background: var(--pico-primary-focus);
     color: var(--pico-primary);
     font-weight: 600;
+    font-size: 0.875rem;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
   }
 
-  .lang-link:not(.active) {
-    color: var(--pico-muted-color);
+  .lang-toggle:hover {
+    background: var(--pico-primary);
+    color: var(--pico-primary-inverse);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px -2px var(--pico-primary-focus);
   }
 
-  .lang-link:not(.active):hover {
-    color: var(--pico-color);
+  .lang-icon {
+    font-size: 1.125rem;
+    line-height: 1;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .lang-toggle:hover .lang-icon {
+    transform: rotate(180deg);
+  }
+
+  .lang-text {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.05em;
   }
 }
 
