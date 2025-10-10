@@ -1,5 +1,5 @@
 ---
-import { getEntry, render } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import { getTranslatedPost, getBlogPostUrl } from '@/lib/i18n';
 
@@ -10,10 +10,13 @@ if (!slug) {
   return Astro.redirect('/404');
 }
 
-// Fetch the English blog post entry
-const entry = await getEntry('blog', `en/${slug}`);
+// Find the English blog post by slug field
+const allPosts = await getCollection('blog');
+const entry = allPosts.find(
+  (post) => post.data.slug === slug && post.data.locale === 'en'
+);
 
-if (!entry || entry.data.locale !== 'en') {
+if (!entry) {
   return Astro.redirect('/404');
 }
 

@@ -1,10 +1,10 @@
 ---
 title: "Hello World"
 description: "Welcome to my website where I will be writing some thoughts out loud"
+slug: "welcome-to-my-site"
 pubDate: 2025-10-09
 tags: ["web development", "personal development", "family"]
 locale: en
-translationKey: "welcome-post-2025"
 ---
 
 If you've made it here and we haven't met, it's a pleasure to see you here. I'm Christian Rodríguez, from Bayamón, Puerto Rico. I'm a software engineer, amateur triathlete, and recent dad of the most beautiful girl in the world.

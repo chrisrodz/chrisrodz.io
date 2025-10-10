@@ -9,55 +9,91 @@ const __dirname = path.dirname(__filename);
 
 // Get the post title from command line arguments
 const postTitle = process.argv[2];
+const locale = process.argv[3] || 'both'; // 'en', 'es', or 'both'
 
 if (!postTitle) {
   console.error('Please provide a post title:');
-  console.error('npm run new-post "My New Post Title"');
+  console.error('  yarn new-post "My New Post Title" [locale]');
+  console.error('');
+  console.error('Examples:');
+  console.error('  yarn new-post "My Post"          # Creates both en.md and es.md');
+  console.error('  yarn new-post "My Post" en       # Creates only en.md');
+  console.error('  yarn new-post "My Post" es       # Creates only es.md');
   process.exit(1);
 }
 
-// Generate slug from title
-const slug = postTitle
+if (!['en', 'es', 'both'].includes(locale)) {
+  console.error('Locale must be "en", "es", or "both"');
+  process.exit(1);
+}
+
+// Generate slug from title (for URL)
+const urlSlug = postTitle
   .toLowerCase()
   .replace(/[^a-z0-9\s-]/g, '')
   .replace(/\s+/g, '-')
   .replace(/-+/g, '-')
   .trim('-');
 
-// Get current date
+// Generate folder name (translation key)
 const now = new Date();
+const year = now.getFullYear();
+const translationKey = `${urlSlug}-${year}`;
+
+// Get current date
 const pubDate = now.toISOString().split('T')[0];
 
-// Create the frontmatter
-const frontmatter = `---
-title: '${postTitle}'
-description: 'A brief description of the post'
+// Create the frontmatter template
+const createFrontmatter = (lang, title, slug) => `---
+title: "${title}"
+description: "A brief description of the post"
+slug: "${slug}"
 pubDate: ${pubDate}
 tags: []
+locale: ${lang}
 ---
 
-# ${postTitle}
+# ${title}
 
 Your content goes here...
 `;
 
-// Create the file path
+// Create the post directory
 const postsDir = path.join(__dirname, '..', 'src', 'content', 'blog');
-const filePath = path.join(postsDir, `${slug}.md`);
+const postDir = path.join(postsDir, translationKey);
 
 // Ensure the directory exists
-if (!fs.existsSync(postsDir)) {
-  fs.mkdirSync(postsDir, { recursive: true });
+if (!fs.existsSync(postDir)) {
+  fs.mkdirSync(postDir, { recursive: true });
+  console.log(`📁 Created folder: ${translationKey}/`);
+} else {
+  console.log(`📁 Using existing folder: ${translationKey}/`);
 }
 
-// Check if file already exists
-if (fs.existsSync(filePath)) {
-  console.error(`Error: Post "${slug}.md" already exists!`);
-  process.exit(1);
+// Create English post
+if (locale === 'en' || locale === 'both') {
+  const enPath = path.join(postDir, 'en.md');
+  if (fs.existsSync(enPath)) {
+    console.error(`Error: English post already exists at ${enPath}`);
+  } else {
+    fs.writeFileSync(enPath, createFrontmatter('en', postTitle, urlSlug));
+    console.log(`✅ Created: ${translationKey}/en.md`);
+  }
 }
 
-// Write the file
-fs.writeFileSync(filePath, frontmatter);
+// Create Spanish post
+if (locale === 'es' || locale === 'both') {
+  const esPath = path.join(postDir, 'es.md');
+  if (fs.existsSync(esPath)) {
+    console.error(`Error: Spanish post already exists at ${esPath}`);
+  } else {
+    fs.writeFileSync(esPath, createFrontmatter('es', postTitle, urlSlug));
+    console.log(`✅ Created: ${translationKey}/es.md`);
+  }
+}
 
-console.log(`✅ New post created: ${filePath}`);
-console.log(`📝 Edit your post and update the description and tags!`);
+console.log('');
+console.log('📝 Next steps:');
+console.log(`  1. Update the title, description, and slug in the frontmatter`);
+console.log(`  2. Write your content`);
+console.log(`  3. Add relevant tags`);
