@@ -84,8 +84,10 @@ const alternateFullUrl = new URL(alternateUrl, Astro.site || 'https://chrisrodz.
       </li>
       <li>
         <a
+          id="lang-toggle"
           href={alternateUrl}
           class="lang-toggle"
+          data-target-lang={locale === 'en' ? 'es' : 'en'}
           data-tooltip={locale === 'en' ? 'Haz click para cambiar a Español' : 'Click for English'}
           data-placement="bottom"
           aria-label={locale === 'en' ? 'Switch to Spanish' : 'Cambiar a Inglés'}
@@ -126,6 +128,23 @@ const alternateFullUrl = new URL(alternateUrl, Astro.site || 'https://chrisrodz.
       const current = html.getAttribute('data-theme') || 'light';
       const next = current === 'dark' ? 'light' : 'dark';
       setTheme(next);
+    });
+  </script>
+
+  <!-- Language switcher script -->
+  <script is:inline>
+    const langToggle = document.getElementById('lang-toggle');
+
+    langToggle?.addEventListener('click', (e) => {
+      // Set cookie to remember user's language preference
+      const targetLang = langToggle.getAttribute('data-target-lang');
+
+      // Set cookie for 1 year (365 days)
+      const expires = new Date();
+      expires.setFullYear(expires.getFullYear() + 1);
+      document.cookie = `preferred-lang=${targetLang}; path=/; expires=${expires.toUTCString()}; SameSite=Lax`;
+
+      // Let the navigation proceed normally
     });
   </script>
 </body>
