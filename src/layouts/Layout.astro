@@ -51,6 +51,10 @@ const alternateFullUrl = new URL(alternateUrl, Astro.site || 'https://chrisrodz.
 
   <title>{title} | Christian Rodriguez</title>
 
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/png" href="/favicon.png">
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -73,16 +77,16 @@ const alternateFullUrl = new URL(alternateUrl, Astro.site || 'https://chrisrodz.
     <ul>
       <li><strong class="gradient-text">Christian Rodriguez</strong></li>
     </ul>
-    <ul>
+    <ul class="nav-links">
       <li><a href={locale === 'es' ? '/es' : '/'} class={currentPath === "/" || currentPath === "/es" ? "active" : ""}>{t(locale, 'nav.home')}</a></li>
       <li><a href={locale === 'es' ? '/es/blog' : '/blog'} class={currentPath.startsWith("/blog") || currentPath.startsWith("/es/blog") ? "active" : ""}>{t(locale, 'nav.blog')}</a></li>
       <li><a href={locale === 'es' ? '/es/about' : '/about'} class={currentPath === "/about" || currentPath === "/es/about" ? "active" : ""}>{t(locale, 'nav.about')}</a></li>
-      <li>
-        <button id="theme-toggle" aria-label="Toggle theme" class="contrast" title="Toggle light/dark mode">
+      <li class="nav-actions">
+        <button id="theme-toggle" aria-label="Toggle theme" class="contrast icon-button" title="Toggle light/dark mode">
           <span id="theme-icon" aria-hidden="true">🌙</span>
         </button>
       </li>
-      <li>
+      <li class="nav-actions">
         <a
           id="lang-toggle"
           href={alternateUrl}
@@ -97,6 +101,9 @@ const alternateFullUrl = new URL(alternateUrl, Astro.site || 'https://chrisrodz.
         </a>
       </li>
     </ul>
+    <button id="mobile-menu-toggle" class="mobile-menu-toggle" aria-label="Toggle menu" aria-expanded="false">
+      <span class="hamburger-icon"></span>
+    </button>
   </nav>
 
   <main class="container">
@@ -145,6 +152,37 @@ const alternateFullUrl = new URL(alternateUrl, Astro.site || 'https://chrisrodz.
       document.cookie = `preferred-lang=${targetLang}; path=/; expires=${expires.toUTCString()}; SameSite=Lax`;
 
       // Let the navigation proceed normally
+    });
+  </script>
+
+  <!-- Mobile menu toggle script -->
+  <script is:inline>
+    const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+    const navLinks = document.querySelector('.nav-links');
+
+    mobileMenuToggle?.addEventListener('click', () => {
+      const isExpanded = mobileMenuToggle.getAttribute('aria-expanded') === 'true';
+      mobileMenuToggle.setAttribute('aria-expanded', !isExpanded);
+      navLinks?.classList.toggle('active');
+      mobileMenuToggle.classList.toggle('active');
+    });
+
+    // Close menu when clicking on a link
+    navLinks?.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('active');
+        mobileMenuToggle?.classList.remove('active');
+        mobileMenuToggle?.setAttribute('aria-expanded', 'false');
+      });
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.main-nav')) {
+        navLinks?.classList.remove('active');
+        mobileMenuToggle?.classList.remove('active');
+        mobileMenuToggle?.setAttribute('aria-expanded', 'false');
+      }
     });
   </script>
 </body>
