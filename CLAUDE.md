@@ -33,7 +33,7 @@ yarn new-post "Title" es    # Create only Spanish post
    - Test locally with `yarn dev`
    - Build to verify: `yarn build`
 
-3. **ALWAYS commit AND push together** (never commit without pushing):
+3. **Commit AND push together** (never commit without pushing):
    ```bash
    git add . && git commit -m "descriptive message" && git push
    ```
@@ -42,26 +42,28 @@ yarn new-post "Title" es    # Create only Spanish post
    git push -u origin feature/description
    ```
 
-4. **ALWAYS create a draft PR** immediately after first push:
-   ```bash
-   gh pr create --draft --title "Feature: [description]" --body "Working on [feature]"
-   ```
-   The PR will automatically update as you push new commits.
-
-5. **Mark PR as ready** when feature is complete:
-   ```bash
-   gh pr ready
-   ```
-   - Review changes in GitHub
-   - Get approval (or self-review)
-   - Merge to main
-
-6. **Clean up** after merge:
+4. **Merge when ready**:
    ```bash
    git checkout main
-   git pull
-   git branch -d feature/description
+   git merge feature/description
+   git push
    ```
+
+5. **Clean up** after merge:
+   ```bash
+   git branch -d feature/description
+   git push origin --delete feature/description
+   ```
+
+### Pull Requests (Optional):
+
+**Only create PRs when explicitly requested.** For most autonomous development tasks, direct merge to main after local testing is sufficient.
+
+When a PR is requested:
+```bash
+gh pr create --draft --title "Feature: [description]" --body "[description]"
+gh pr ready  # When ready for review
+```
 
 ### Branch Naming Convention:
 - `feature/` - New features or enhancements
@@ -72,18 +74,15 @@ yarn new-post "Title" es    # Create only Spanish post
 ### Best Practices:
 - ✅ Keep commits atomic - one logical change per commit
 - ✅ Write clear, descriptive commit messages
-- ✅ Always test locally before pushing
-- ✅ Review your own PRs before merging
-- ❌ Never commit without pushing
-- ❌ Never work on a feature branch without a draft PR open
+- ✅ Always test locally before committing
+- ✅ Always push immediately after committing
+- ❌ Never commit without pushing (work could be lost)
 - ❌ Never commit directly to `main`
-
-This ensures work is always backed up, visible, and ready for review.
 
 ### Deployment:
 - **Main branch** auto-deploys to production (Vercel)
-- **Feature branches** do NOT auto-deploy (unless PR created)
-- **Preview deployments** available for PRs
+- **Feature branches** do NOT auto-deploy
+- **Preview deployments** available for PRs (when created)
 
 ## Architecture Overview
 
