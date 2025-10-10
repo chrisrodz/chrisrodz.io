@@ -1,0 +1,21 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Page Not Found" description="The page you're looking for doesn't exist.">
+  <div style="text-align: center; padding: 6rem 0;">
+    <h1 style="font-size: clamp(3rem, 8vw, 6rem); font-weight: 800; letter-spacing: -0.05em; margin-bottom: 1rem;">
+      404
+    </h1>
+    <p style="font-size: 1.5rem; color: var(--pico-muted-color); margin-bottom: 2rem;">
+      Page not found
+    </p>
+    <p style="color: var(--pico-muted-color); margin-bottom: 2rem;">
+      The page you're looking for doesn't exist or has been moved.
+    </p>
+    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+      <a href="/" role="button">Go home</a>
+      <a href="/blog" role="button" class="secondary">Read the blog</a>
+    </div>
+  </div>
+</Layout>

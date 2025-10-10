@@ -1,6 +1,6 @@
 ---
 import { getEntry, render } from 'astro:content';
-import Layout from '../../layouts/Layout.astro';
+import Layout from '../../../layouts/Layout.astro';
 import { getTranslatedPost } from '@/lib/i18n';
 
 // Get the slug from the URL params
@@ -10,21 +10,21 @@ if (!slug) {
   return Astro.redirect('/404');
 }
 
-// Fetch the English blog post entry
-const entry = await getEntry('blog', `en/${slug}`);
+// Fetch the Spanish blog post entry
+const entry = await getEntry('blog', `es/${slug}`);
 
-if (!entry || entry.data.locale !== 'en') {
+if (!entry || entry.data.locale !== 'es') {
   return Astro.redirect('/404');
 }
 
 const { Content } = await render(entry);
 const post = entry;
 
-// Check if Spanish translation exists
-await getTranslatedPost(post, 'es');
+// Check if English translation exists
+await getTranslatedPost(post, 'en');
 
 // Format date
-const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
+const formattedDate = post.data.pubDate.toLocaleDateString('es-ES', {
   year: 'numeric',
   month: 'long',
   day: 'numeric',
@@ -35,8 +35,8 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
   <article style="max-width: 70ch; margin: 0 auto;">
     <header style="margin-bottom: 3rem;">
       <nav style="margin-bottom: 1.5rem;">
-        <a href="/blog" style="text-decoration: none; color: var(--pico-muted-color); font-weight: 500; font-size: 0.9375rem;">
-          ← Back to blog
+        <a href="/es/blog" style="text-decoration: none; color: var(--pico-muted-color); font-weight: 500; font-size: 0.9375rem;">
+          ← Volver al blog
         </a>
       </nav>
 
@@ -68,8 +68,8 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
   <div style="max-width: 70ch; margin: 3rem auto 0;">
     <hr style="margin: 3rem 0;">
     <nav>
-      <a href="/blog" role="button" class="secondary">
-        ← Back to blog
+      <a href="/es/blog" role="button" class="secondary">
+        ← Volver al blog
       </a>
     </nav>
   </div>

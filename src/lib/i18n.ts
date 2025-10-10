@@ -1,0 +1,122 @@
+import { getCollection, type CollectionEntry } from 'astro:content';
+import en from '../i18n/en.json';
+import es from '../i18n/es.json';
+
+export type Locale = 'en' | 'es';
+
+const translations: Record<Locale, typeof en> = {
+  en,
+  es,
+};
+
+/**
+ * Extract locale from URL pathname
+ * /es/blog -> 'es'
+ * /blog -> 'en'
+ */
+export function getLocaleFromUrl(url: URL): Locale {
+  const pathname = url.pathname;
+  if (pathname.startsWith('/es/') || pathname === '/es') {
+    return 'es';
+  }
+  return 'en';
+}
+
+/**
+ * Get translation for a key using dot notation
+ * t('en', 'nav.home') -> 'Home'
+ * t('es', 'nav.home') -> 'Inicio'
+ */
+export function t(locale: Locale, key: string, vars?: Record<string, string>): string {
+  const keys = key.split('.');
+  let value: any = translations[locale];
+
+  for (const k of keys) {
+    if (value && typeof value === 'object' && k in value) {
+      value = value[k];
+    } else {
+      console.warn(`Translation key not found: ${key} for locale ${locale}`);
+      return key;
+    }
+  }
+
+  if (typeof value !== 'string') {
+    console.warn(`Translation value is not a string: ${key}`);
+    return key;
+  }
+
+  // Replace variables like {year}
+  if (vars) {
+    return value.replace(/\{(\w+)\}/g, (match, varName) => {
+      return vars[varName] || match;
+    });
+  }
+
+  return value;
+}
+
+/**
+ * Generate URL for alternate language
+ * getAlternateUrl('/blog/my-post', 'en', 'es') -> '/es/blog/my-post'
+ * getAlternateUrl('/es/blog/mi-post', 'es', 'en') -> '/blog/mi-post'
+ */
+export function getAlternateUrl(
+  currentPath: string,
+  _currentLocale: Locale,
+  targetLocale: Locale
+): string {
+  // If switching to English (default), remove /es prefix
+  if (targetLocale === 'en') {
+    return currentPath.replace(/^\/es(\/|$)/, '/') || '/';
+  }
+
+  // If switching to Spanish, add /es prefix
+  if (targetLocale === 'es') {
+    // Remove any existing /es prefix first
+    const cleanPath = currentPath.replace(/^\/es(\/|$)/, '/');
+    return `/es${cleanPath === '/' ? '' : cleanPath}`;
+  }
+
+  return currentPath;
+}
+
+/**
+ * Find translated blog post using translationKey
+ */
+export async function getTranslatedPost(
+  post: CollectionEntry<'blog'>,
+  targetLocale: Locale
+): Promise<CollectionEntry<'blog'> | null> {
+  const translationKey = post.data.translationKey;
+  if (!translationKey) {
+    return null;
+  }
+
+  const allPosts = await getCollection('blog');
+  const translated = allPosts.find(
+    (p) => p.data.translationKey === translationKey && p.data.locale === targetLocale
+  );
+
+  return translated || null;
+}
+
+/**
+ * Get the slug without file extension and locale folder for blog posts
+ */
+export function getPostSlug(post: CollectionEntry<'blog'>): string {
+  // Remove .md/.mdx extension and locale folder prefix (en/, es/)
+  return post.id.replace(/^(en|es)\//, '').replace(/\.mdx?$/, '');
+}
+
+/**
+ * Build blog post URL based on locale
+ */
+export function getBlogPostUrl(post: CollectionEntry<'blog'>): string {
+  const slug = getPostSlug(post);
+  const locale = post.data.locale || 'en';
+
+  if (locale === 'es') {
+    return `/es/blog/${slug}`;
+  }
+  return `/blog/${slug}`;
+}

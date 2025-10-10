@@ -1,21 +1,21 @@
 ---
-import Layout from '../../layouts/Layout.astro';
+import Layout from '../../../layouts/Layout.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { getBlogPostUrl } from '@/lib/i18n';
 
 let posts: CollectionEntry<'blog'>[] = [];
 try {
-  posts = await getCollection('blog', ({ data }) => data.locale === 'en');
+  posts = await getCollection('blog', ({ data }) => data.locale === 'es');
   posts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 } catch (e) {
   console.warn('No blog posts found:', e);
 }
 ---
 
-<Layout title="Blog" description="Thoughts on software engineering, triathlon, and life">
+<Layout title="Blog" description="Pensamientos sobre ingeniería de software, triatlón y la vida">
   <header class="hero">
     <h1>Blog</h1>
-    <p>Thoughts on software engineering, triathlon training, and life</p>
+    <p>Pensamientos sobre ingeniería de software, entrenamiento de triatlón y la vida</p>
   </header>
 
   <section>
@@ -25,7 +25,7 @@ try {
           <article class="blog-card">
             <div class="blog-meta">
               <time datetime={post.data.pubDate.toISOString()}>
-                {post.data.pubDate.toLocaleDateString('en-US', {
+                {post.data.pubDate.toLocaleDateString('es-ES', {
                   year: 'numeric',
                   month: 'long',
                   day: 'numeric',
@@ -47,7 +47,7 @@ try {
             )}
             <footer>
               <a href={getBlogPostUrl(post)} style="font-weight: 500;">
-                Read more →
+                Leer más →
               </a>
             </footer>
           </article>
@@ -56,7 +56,7 @@ try {
     ) : (
       <div style="text-align: center; padding: 4rem 0;">
         <p style="font-size: 1.125rem; color: var(--pico-muted-color);">
-          No blog posts yet. Check back soon for updates on engineering, triathlon training, and life as a dad!
+          Aún no hay posts en el blog. ¡Vuelve pronto para actualizaciones sobre ingeniería, entrenamiento de triatlón y la vida como papá!
         </p>
       </div>
     )}

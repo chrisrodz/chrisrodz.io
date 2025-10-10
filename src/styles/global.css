@@ -1,0 +1,362 @@
+/* Global styles and CSS variable overrides */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Pico CSS custom properties override */
+:root {
+  /* Typography */
+  --pico-font-family: "Inter var", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --pico-line-height: 1.75;
+
+  /* Spacing */
+  --pico-typography-spacing-vertical: 1.5rem;
+
+  /* Border radius */
+  --pico-border-radius: 0.5rem;
+
+  /* Container */
+  --pico-container-max-width: 720px;
+}
+
+/* Dark mode - keep PicoCSS defaults, minimal overrides */
+[data-theme="dark"] {
+  /* Use PicoCSS's default dark colors - they're already well-designed */
+  /* Only override if absolutely necessary */
+}
+
+/* Custom base styles */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Better focus states */
+  :focus-visible {
+    outline: 2px solid var(--pico-primary);
+    outline-offset: 2px;
+  }
+}
+
+/* Custom component styles */
+@layer components {
+  /* Header/Hero styling */
+  .hero {
+    padding: 4rem 0 3rem;
+    text-align: center;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    font-weight: 800;
+    letter-spacing: -0.05em;
+    line-height: 1.1;
+    margin-bottom: 0.5rem;
+    color: var(--pico-h1-color);
+  }
+
+  .hero p {
+    font-size: 1.125rem;
+    color: var(--pico-muted-color);
+    margin: 0;
+  }
+
+  /* Navigation styling */
+  nav.main-nav {
+    border-bottom: 1px solid var(--pico-muted-border-color);
+    padding: 1.25rem 0;
+  }
+
+  nav.main-nav ul {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+  }
+
+  nav.main-nav ul li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  nav.main-nav a {
+    text-decoration: none;
+    color: var(--pico-muted-color);
+    font-weight: 500;
+    font-size: 0.9375rem;
+    transition: color 0.2s ease;
+  }
+
+  nav.main-nav a:hover {
+    color: var(--pico-color);
+  }
+
+  nav.main-nav a.active {
+    color: var(--pico-primary);
+  }
+
+  /* Blog card styling */
+  .blog-card {
+    padding: 1.5rem;
+    border: 1px solid var(--pico-muted-border-color);
+    border-radius: var(--pico-border-radius);
+    transition: all 0.2s ease;
+    background: var(--pico-card-background-color);
+  }
+
+  .blog-card:hover {
+    border-color: var(--pico-primary);
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    transform: translateY(-2px);
+  }
+
+  .blog-card h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+  }
+
+  .blog-card h2 a {
+    color: var(--pico-color);
+    text-decoration: none;
+  }
+
+  .blog-card h2 a:hover {
+    color: var(--pico-primary);
+  }
+
+  .blog-meta {
+    font-size: 0.875rem;
+    color: var(--pico-muted-color);
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+
+  .blog-tag {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    background: var(--pico-primary-focus);
+    color: var(--pico-primary);
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Footer */
+  footer {
+    margin-top: 4rem;
+    padding: 2.5rem 0;
+    border-top: 1px solid var(--pico-muted-border-color);
+    text-align: center;
+    color: var(--pico-muted-color);
+    font-size: 0.875rem;
+  }
+
+  footer a {
+    text-decoration: none;
+    color: var(--pico-muted-color);
+    transition: color 0.2s ease;
+  }
+
+  footer a:hover {
+    color: var(--pico-primary);
+  }
+
+  /* Language toggle */
+  .lang-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 9999px;
+    background: var(--pico-primary-focus);
+    color: var(--pico-primary);
+    font-weight: 600;
+    font-size: 0.875rem;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+  }
+
+  .lang-toggle:hover {
+    background: var(--pico-primary);
+    color: var(--pico-primary-inverse);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px -2px var(--pico-primary-focus);
+  }
+
+  .lang-icon {
+    font-size: 1.125rem;
+    line-height: 1;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .lang-toggle:hover .lang-icon {
+    transform: rotate(360deg);
+  }
+
+  .lang-text {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.05em;
+  }
+}
+
+/* Utility classes */
+@layer utilities {
+  .gradient-text {
+    color: var(--pico-color);
+    font-weight: 800;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Markdown/prose content styling */
+.prose {
+  @apply max-w-none;
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4,
+.prose h5,
+.prose h6 {
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  margin-top: 2em;
+  margin-bottom: 0.75em;
+  line-height: 1.3;
+}
+
+.prose h1 {
+  font-size: 2.25rem;
+  color: var(--pico-h1-color);
+}
+
+.prose h2 {
+  font-size: 1.875rem;
+  color: var(--pico-h2-color);
+}
+
+.prose h3 {
+  font-size: 1.5rem;
+  color: var(--pico-h3-color);
+}
+
+.prose h4 {
+  color: var(--pico-h4-color);
+}
+
+.prose h5 {
+  color: var(--pico-h5-color);
+}
+
+.prose h6 {
+  color: var(--pico-h6-color);
+}
+
+.prose p {
+  color: var(--pico-color);
+}
+
+.prose strong,
+.prose b {
+  color: var(--pico-color);
+  font-weight: 700;
+}
+
+.prose ul,
+.prose ol {
+  color: var(--pico-color);
+}
+
+.prose li {
+  color: var(--pico-color);
+}
+
+.prose a {
+  color: var(--pico-primary);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+  transition: all 0.2s ease;
+}
+
+.prose a:hover {
+  color: var(--pico-primary-hover);
+  text-decoration-thickness: 2px;
+}
+
+.prose code {
+  background: var(--pico-card-background-color);
+  padding: 0.2em 0.4em;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+}
+
+.prose pre {
+  background: var(--pico-card-background-color);
+  border: 1px solid var(--pico-muted-border-color);
+  border-radius: var(--pico-border-radius);
+  padding: 1rem;
+  overflow-x: auto;
+}
+
+.prose pre code {
+  background: none;
+  padding: 0;
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+
+.prose blockquote {
+  border-left: 4px solid var(--pico-primary);
+  padding-left: 1.5rem;
+  font-style: italic;
+  color: var(--pico-muted-color);
+  margin: 2rem 0;
+}
+
+.prose img {
+  border-radius: var(--pico-border-radius);
+  margin: 2rem 0;
+}
+
+.prose ul,
+.prose ol {
+  margin: 1.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.prose li {
+  margin: 0.5rem 0;
+}
+
+/* Reading progress bar */
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--pico-primary);
+  transform-origin: left;
+  z-index: 9999;
+}

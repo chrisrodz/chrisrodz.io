@@ -1,59 +1,130 @@
 ---
+import '../styles/global.css';
+import { getLocaleFromUrl, t, getAlternateUrl, type Locale } from '@/lib/i18n';
+
 export interface Props {
   title: string;
+  description?: string;
+  image?: string;
 }
 
-const { title } = Astro.props;
+const locale: Locale = getLocaleFromUrl(Astro.url);
+const { title, description = t(locale, 'home.hero.subtitle'), image = "/og-image.png" } = Astro.props;
+const currentPath = Astro.url.pathname;
+const canonicalURL = new URL(currentPath, Astro.site || 'https://chrisrodz.io');
+const ogImage = new URL(image, Astro.site || 'https://chrisrodz.io');
+
+// Generate alternate language URLs
+const alternateLocale: Locale = locale === 'en' ? 'es' : 'en';
+const alternateUrl = getAlternateUrl(currentPath, locale, alternateLocale);
+const alternateFullUrl = new URL(alternateUrl, Astro.site || 'https://chrisrodz.io');
 ---
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang={locale}>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Chris Rodriguez - Software Engineer, Triathlete, Dad">
+  <meta name="description" content={description}>
+  <link rel="canonical" href={canonicalURL}>
+
+  <!-- Alternate language links for SEO -->
+  <link rel="alternate" hreflang={locale} href={canonicalURL} />
+  <link rel="alternate" hreflang={alternateLocale} href={alternateFullUrl} />
+  <link rel="alternate" hreflang="x-default" href={new URL('/', Astro.site || 'https://chrisrodz.io')} />
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content={canonicalURL}>
+  <meta property="og:title" content={`${title} | Chris Rodriguez`}>
+  <meta property="og:description" content={description}>
+  <meta property="og:image" content={ogImage}>
+
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content={canonicalURL}>
+  <meta property="twitter:title" content={`${title} | Chris Rodriguez`}>
+  <meta property="twitter:description" content={description}>
+  <meta property="twitter:image" content={ogImage}>
+
   <title>{title} | Chris Rodriguez</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Pico CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
-  <style>
-    /* Custom theme colors */
-    :root {
-      --pico-font-family: system-ui, -apple-system, sans-serif;
-    }
 
-    nav ul li strong {
-      font-size: 1.2rem;
+  <!-- Theme script (prevent FOUC) -->
+  <script is:inline>
+    // Check for saved theme preference or default to 'light' mode
+    const theme = localStorage.getItem('theme') || 'light';
+    if (theme === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
     }
-
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-      margin: 2rem 0;
-    }
-  </style>
+  </script>
 </head>
 <body>
-  <nav class="container">
+  <nav class="container main-nav">
     <ul>
-      <li><strong>Chris Rodriguez</strong></li>
+      <li><strong class="gradient-text">Chris Rodriguez</strong></li>
     </ul>
     <ul>
-      <li><a href="/">Home</a></li>
-      <li><a href="/blog">Blog</a></li>
-      <li><a href="/coffee">Coffee</a></li>
-      <li><a href="/training">Training</a></li>
+      <li><a href={locale === 'es' ? '/es' : '/'} class={currentPath === "/" || currentPath === "/es" ? "active" : ""}>{t(locale, 'nav.home')}</a></li>
+      <li><a href={locale === 'es' ? '/es/blog' : '/blog'} class={currentPath.startsWith("/blog") || currentPath.startsWith("/es/blog") ? "active" : ""}>{t(locale, 'nav.blog')}</a></li>
+      <li><a href={locale === 'es' ? '/es/about' : '/about'} class={currentPath === "/about" || currentPath === "/es/about" ? "active" : ""}>{t(locale, 'nav.about')}</a></li>
+      <li>
+        <button id="theme-toggle" aria-label="Toggle theme" class="contrast" title="Toggle light/dark mode">
+          <span id="theme-icon" aria-hidden="true">🌙</span>
+        </button>
+      </li>
+      <li>
+        <a
+          href={alternateUrl}
+          class="lang-toggle"
+          data-tooltip={locale === 'en' ? 'Haz click para cambiar a Español' : 'Click for English'}
+          data-placement="bottom"
+          aria-label={locale === 'en' ? 'Switch to Spanish' : 'Cambiar a Inglés'}
+        >
+          <span class="lang-icon" aria-hidden="true">{locale === 'en' ? '🇵🇷' : '🇺🇸'}</span>
+          <span class="lang-text">{locale === 'en' ? 'ES' : 'EN'}</span>
+        </a>
+      </li>
     </ul>
   </nav>
-  
+
   <main class="container">
     <slot />
   </main>
-  
-  <footer class="container">
-    <small>
-      © {new Date().getFullYear()} Chris Rodriguez •
-      <a href="/admin">Admin</a>
-    </small>
-  </footer>
+
+  <!-- Dark mode toggle script -->
+  <script is:inline>
+    const themeToggle = document.getElementById('theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+    const html = document.documentElement;
+
+    function setTheme(theme) {
+      if (theme === 'dark') {
+        html.setAttribute('data-theme', 'dark');
+        themeIcon.textContent = '☀️';
+      } else {
+        html.setAttribute('data-theme', 'light');
+        themeIcon.textContent = '🌙';
+      }
+      localStorage.setItem('theme', theme);
+    }
+
+    // Set initial icon based on current theme
+    const currentTheme = html.getAttribute('data-theme') || 'light';
+    themeIcon.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
+
+    themeToggle?.addEventListener('click', () => {
+      const current = html.getAttribute('data-theme') || 'light';
+      const next = current === 'dark' ? 'light' : 'dark';
+      setTheme(next);
+    });
+  </script>
 </body>
 </html>
