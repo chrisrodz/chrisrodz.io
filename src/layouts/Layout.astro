@@ -6,17 +6,19 @@ export interface Props {
   title: string;
   description?: string;
   image?: string;
+  alternateUrl?: string; // Optional: for translated pages with different slugs
 }
 
 const locale: Locale = getLocaleFromUrl(Astro.url);
-const { title, description = t(locale, 'home.hero.subtitle'), image = "/og-image.png" } = Astro.props;
+const { title, description = t(locale, 'home.hero.subtitle'), image = "/og-image.png", alternateUrl: providedAlternateUrl } = Astro.props;
 const currentPath = Astro.url.pathname;
 const canonicalURL = new URL(currentPath, Astro.site || 'https://chrisrodz.io');
 const ogImage = new URL(image, Astro.site || 'https://chrisrodz.io');
 
 // Generate alternate language URLs
 const alternateLocale: Locale = locale === 'en' ? 'es' : 'en';
-const alternateUrl = getAlternateUrl(currentPath, locale, alternateLocale);
+// Use provided alternateUrl (e.g., for translated blog posts) or generate one
+const alternateUrl = providedAlternateUrl || getAlternateUrl(currentPath, locale, alternateLocale);
 const alternateFullUrl = new URL(alternateUrl, Astro.site || 'https://chrisrodz.io');
 ---
 

@@ -1,7 +1,7 @@
 ---
 import { getEntry, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
-import { getTranslatedPost } from '@/lib/i18n';
+import { getTranslatedPost, getBlogPostUrl } from '@/lib/i18n';
 
 // Get the slug from the URL params
 const { slug } = Astro.params;
@@ -20,8 +20,9 @@ if (!entry || entry.data.locale !== 'en') {
 const { Content } = await render(entry);
 const post = entry;
 
-// Check if Spanish translation exists
-await getTranslatedPost(post, 'es');
+// Check if Spanish translation exists and get its URL
+const translatedPost = await getTranslatedPost(post, 'es');
+const alternateUrl = translatedPost ? getBlogPostUrl(translatedPost) : undefined;
 
 // Format date
 const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
@@ -31,7 +32,7 @@ const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
 });
 ---
 
-<Layout title={post.data.title} description={post.data.description}>
+<Layout title={post.data.title} description={post.data.description} alternateUrl={alternateUrl}>
   <article style="max-width: 70ch; margin: 0 auto;">
     <header style="margin-bottom: 3rem;">
       <nav style="margin-bottom: 1.5rem;">
