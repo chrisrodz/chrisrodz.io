@@ -1,33 +1,18 @@
 ---
-title: 'Bienvenido a Mi Sitio Personal'
-description: 'Presentando mi nuevo sitio web personal construido con Astro, con seguimiento de café y registro de entrenamientos.'
-pubDate: 2024-01-01
-tags: ['astro', 'desarrollo web', 'personal']
+title: "Hola Mundo"
+description: "Presentando mi nuevo website personal donde voy a estar escribiendo de vez en cuando."
+pubDate: 2025-10-09
+tags: ["desarrollo web", "desarrollo personal", "family"]
 locale: es
-translationKey: 'welcome-post-2024'
+translationKey: "welcome-post-2025"
 ---
 
-Este es mi nuevo sitio web personal construido con [Astro](https://astro.build). Aquí encontrarás:
+Si llegaste hasta aquí y no me conoces, un placer. Soy Christian Rodríguez, de Bayamón, Puerto Rico. Soy ingeniero de software, triatleta aficionado, y recientemente papa de la nena más linda del mundo.
 
-## Seguimiento de Café ☕
+No se si tiene que ver con ser padre nuevo, o si es el surgir de todas las herramientas de IA, que me ha dado una inspiración nueva de crear cosas, de poner código a correr en producción para mi uso personal. Pensando en las cosas básicas que una persona de mi industria debe tener, pensé que debo tener mi propio website. Digo, ya yo soy dueño de mi dominio hace varios años. Solamente le estaba dando uso para mi [e-mail](mailto:hey@chrisrodz.io). Poner el website a correr me parece un excelente testing ground para lo que sea que quiera montar a corto plazo.
 
-Soy un entusiasta ávido del café y hago seguimiento de todos mis experimentos de preparación. Puedes ver mi registro de café para seguir mi viaje descubriendo granos excelentes y perfeccionando las técnicas de preparación.
+Pero, qué tener en el website **hoy**? Yo soy tímido como para tener algo que sea solamente un landing page con mi cara. Lo que se me ocurre de pronto son mis palabras. Entre medio de mucho texto (y código) escrito por la IA que me ayuda, pienso que esta chevere poner mis propias palabras escritas (typeadas) por mi a pulmón.
 
-## Registro de Entrenamiento 🏃‍♂️
+Así es como decidí entonces hacer un repo nuevo en Github y crear chrisrodz.io como Dios manda. El plan es añadir un par de features personales que me interesan al website. Y el otro plan es escribir un poco de contenido en este blog. Pienso mucho en la huella digital que todos dejamos de cara al futuro. Y quiero dejar una huella más fuerte y más mia para que Alina la pueda descubrir cuando crezca.
 
-Como triatleta, hago seguimiento de mis actividades de natación, ciclismo y carrera. La sección de entrenamiento se sincroniza con Strava para mostrar mis entrenamientos recientes y mi progreso.
-
-## Blog 📝
-
-Estaré escribiendo sobre ingeniería de software, entrenamiento de triatlón y la vida como padre. ¡Mantente atento para más contenido!
-
-## Stack Tecnológico
-
-Este sitio está construido con:
-- **Astro** para el framework
-- **TypeScript** para seguridad de tipos
-- **Tailwind CSS** y **Pico CSS** para el estilo
-- **Supabase** para la base de datos
-- **Vercel** para el hosting
-
-¡Gracias por visitar y siéntete libre de explorar!
+Ya aquí se supone que te invite a que te suscribas a mi RSS feed o me compres un café, pero no he tenido break de montar nada de eso. Que Dios te bendiga y nos vemos en la próxima amigo.
