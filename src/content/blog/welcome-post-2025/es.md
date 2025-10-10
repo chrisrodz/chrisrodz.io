@@ -1,10 +1,10 @@
 ---
 title: "Hola Mundo"
 description: "Presentando mi nuevo website personal donde voy a estar escribiendo de vez en cuando."
+slug: "bienvenido-a-mi-sitio"
 pubDate: 2025-10-09
 tags: ["desarrollo web", "desarrollo personal", "family"]
 locale: es
-translationKey: "welcome-post-2025"
 ---
 
 Si llegaste hasta aquí y no me conoces, un placer. Soy Christian Rodríguez, de Bayamón, Puerto Rico. Soy ingeniero de software, triatleta aficionado, y recientemente papa de la nena más linda del mundo.

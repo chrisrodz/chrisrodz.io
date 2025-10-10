@@ -11,7 +11,9 @@ yarn build            # Type check + build for production
 yarn preview          # Preview production build
 
 # Content
-yarn new-post "Title" # Create new blog post with frontmatter
+yarn new-post "Title"       # Create both en.md and es.md
+yarn new-post "Title" en    # Create only English post
+yarn new-post "Title" es    # Create only Spanish post
 ```
 
 ## Git Workflow
@@ -100,21 +102,49 @@ const entry = await getEntry('blog', slug);
 
 ### Blog Posts (Content Collections)
 
-Blog posts use Astro Content Collections with important quirks:
+Blog posts use Astro Content Collections with a translation-friendly folder structure:
 
-1. **Entry IDs include file extensions**:
-   - File: `welcome.md` → ID: `"welcome.md"`
-   - Strip extensions in URLs: `post.id.replace(/\.mdx?$/, '')`
+**Structure**:
+```
+src/content/blog/
+├── welcome-post-2025/       # Folder name = translation key
+│   ├── en.md                # English version
+│   └── es.md                # Spanish version
+```
 
-2. **Rendering pattern** (Astro v5):
+**Key Points**:
+
+1. **Folder-based organization**: Each post lives in its own folder, with one file per language
+   - Folder name serves as the translation key (e.g., `welcome-post-2025`)
+   - Files are named by locale: `en.md`, `es.md`
+
+2. **Entry IDs preserve folder structure**: Using `generateId` option
+   - File: `welcome-post-2025/en.md` → ID: `"welcome-post-2025/en.md"`
+   - Translation key extracted from folder name
+
+3. **Custom URL slugs**: Each post defines its own `slug` in frontmatter
+   - English: `slug: "welcome-to-my-site"` → `/blog/welcome-to-my-site`
+   - Spanish: `slug: "bienvenido-a-mi-sitio"` → `/es/blog/bienvenido-a-mi-sitio`
+
+4. **Finding posts by slug** (not by ID):
    ```typescript
-   import { getEntry, render } from 'astro:content';
+   import { getCollection, render } from 'astro:content';
 
-   const entry = await getEntry('blog', slug);
-   const { Content } = await render(entry); // Not entry.render()
+   const allPosts = await getCollection('blog');
+   const entry = allPosts.find(
+     (post) => post.data.slug === slug && post.data.locale === 'en'
+   );
+   const { Content } = await render(entry);
    ```
 
-3. **Schema location**: `src/content/config.ts`
+5. **Finding translations**: Use `getTranslationKey()` helper
+   ```typescript
+   import { getTranslatedPost } from '@/lib/i18n';
+
+   const translatedPost = await getTranslatedPost(post, 'es');
+   ```
+
+6. **Schema location**: `src/content/config.ts`
 
 ### Styling System
 
@@ -210,7 +240,7 @@ Never trust user input. Always validate with Zod before database operations.
 - `src/layouts/Layout.astro`: Main layout with PicoCSS, dark mode toggle, meta tags, i18n
 - `src/styles/global.css`: Custom styles (minimal, uses PicoCSS variables)
 - `src/pages/`: All routes (SSR)
-- `src/content/blog/`: Markdown blog posts (en/ and es/ subdirectories)
+- `src/content/blog/`: Markdown blog posts (folder-per-post structure)
 
 ## Environment Variables
 
@@ -250,23 +280,44 @@ All tables have Row Level Security enabled with public read access.
 
 ### Adding a blog post
 ```bash
+# Create both English and Spanish versions
 yarn new-post "My Post Title"
-# Edit src/content/blog/my-post-title.md
+
+# Create only English version
+yarn new-post "My Post Title" en
+
+# Create only Spanish version
+yarn new-post "My Post Title" es
 ```
+
+This creates:
+- `src/content/blog/my-post-title-2025/en.md` (and/or `es.md`)
+- Frontmatter includes: `title`, `description`, `slug`, `pubDate`, `tags`, `locale`
+- Edit the generated file(s) to customize the slug and add content
 
 ### Accessing blog posts in code
 ```typescript
-import { getEntry, getCollection, render } from 'astro:content';
+import { getCollection, render } from 'astro:content';
+import { getTranslatedPost, getBlogPostUrl } from '@/lib/i18n';
 
-// List all posts
-const posts = await getCollection('blog');
+// List all English posts
+const posts = await getCollection('blog', ({ data }) => data.locale === 'en');
 
-// Get single post (SSR)
-const post = await getEntry('blog', slug);
+// Find post by custom slug (not by ID)
+const allPosts = await getCollection('blog');
+const post = allPosts.find(
+  (p) => p.data.slug === 'my-slug' && p.data.locale === 'en'
+);
 if (!post) return Astro.redirect('/404');
 
 // Render content
 const { Content } = await render(post);
+
+// Find translation
+const translatedPost = await getTranslatedPost(post, 'es');
+if (translatedPost) {
+  const translatedUrl = getBlogPostUrl(translatedPost);
+}
 ```
 
 ### Working with forms
@@ -308,27 +359,33 @@ The site supports English (default) and Spanish:
 - **English**: `/blog/post-slug`
 - **Spanish**: `/es/blog/post-slug`
 
-Blog posts with translations must share a `translationKey` in their frontmatter:
-```yaml
-# en/welcome.md
-translationKey: "welcome-post-2025"
+**Translation Structure**:
+- Blog posts in the same folder are translations of each other
+- Folder name serves as the translation key (e.g., `welcome-post-2025/`)
+- Each language version has its own custom `slug` in frontmatter
 
-# es/bienvenido.md
-translationKey: "welcome-post-2025"
+**Example**:
+```
+src/content/blog/welcome-post-2025/
+├── en.md    # slug: "welcome-to-my-site"  → /blog/welcome-to-my-site
+└── es.md    # slug: "bienvenido-a-mi-sitio" → /es/blog/bienvenido-a-mi-sitio
 ```
 
-The language switcher in `Layout.astro` uses `getTranslatedPost()` to find the correct translated URL based on `translationKey`, not just by swapping the `/es/` prefix.
+The language switcher in `Layout.astro` uses `getTranslatedPost()` to:
+1. Extract the translation key from the post's folder
+2. Find the sibling file with the target locale
+3. Get the correct translated URL using that post's custom slug
 
 ## Notes for Future Development
 
 1. **Don't override PicoCSS colors** unless absolutely necessary. Use CSS variables.
 2. **Always validate with Zod** before database operations.
 3. **Check supabase !== null** before any database calls.
-4. **Use SSR patterns** (`getEntry`) not static (`getStaticPaths`) for blog posts.
-5. **Strip `.md` extension** from blog post IDs when creating URLs.
+4. **Use SSR patterns** (find by slug) not static (`getStaticPaths`) for blog posts.
+5. **Blog posts use custom slugs**: Find posts by `post.data.slug`, not by ID.
 6. **Test graceful degradation**: App should work without env vars configured.
 7. **Session storage is in-memory**: Consider Redis/database for production scale.
-8. **i18n translations**: When adding translated blog posts, always use matching `translationKey` in frontmatter.
+8. **i18n translations**: Place translated blog posts in the same folder with locale-named files (`en.md`, `es.md`).
 
 ---
 
