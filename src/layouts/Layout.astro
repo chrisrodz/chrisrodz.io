@@ -87,7 +87,7 @@ const alternateFullUrl = new URL(alternateUrl, Astro.site || 'https://chrisrodz.
           title={locale === 'en' ? 'Haz click para cambiar a Español' : 'Click for English'}
           aria-label={locale === 'en' ? 'Switch to Spanish' : 'Cambiar a Inglés'}
         >
-          <span class="lang-icon" aria-hidden="true">🌐</span>
+          <span class="lang-icon" aria-hidden="true">{locale === 'en' ? '🇵🇷' : '🇺🇸'}</span>
           <span class="lang-text">{locale === 'en' ? 'ES' : 'EN'}</span>
         </a>
       </li>
