@@ -1,78 +1,105 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import { getCollection, type CollectionEntry } from 'astro:content';
-import { getBlogPostUrl } from '@/lib/i18n';
+import Layout from "../layouts/Layout.astro";
+import { getCollection, type CollectionEntry } from "astro:content";
+import { getBlogPostUrl } from "@/lib/i18n";
 
 // Fetch all English blog posts
-let allPosts: CollectionEntry<'blog'>[] = [];
+let allPosts: CollectionEntry<"blog">[] = [];
 try {
-  const posts = await getCollection('blog', ({ data }) => data.locale === 'en');
-  allPosts = posts
-    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+  const posts = await getCollection("blog", ({ data }) => data.locale === "en");
+  allPosts = posts.sort(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+  );
 } catch (e) {
-  console.warn('No blog posts found:', e);
+  console.warn("No blog posts found:", e);
 }
 ---
 
 <Layout title="Home">
   <section style="margin-top: 3rem; margin-bottom: 4rem;">
-    <h1 style="font-family: var(--pico-font-family-serif); font-size: clamp(2rem, 4vw, 2.5rem); font-weight: 600; margin-bottom: 1.5rem;">
-      Hey! I'm Christian.
+    <h1
+      style="font-family: var(--pico-font-family-serif); font-size: clamp(2rem, 4vw, 2.5rem); font-weight: 600; margin-bottom: 1.5rem;"
+    >
+      Hello there!
     </h1>
 
     <div style="max-width: 65ch;">
-      <p style="font-size: 1.125rem; line-height: 1.8; color: var(--pico-color); margin-bottom: 1.5rem;">
-        I'm a software engineer passionate about building things that matter. By day, I write code and solve problems.
-        By early morning and evening, I train for triathlons. And in between, I'm a dad trying to keep up with my kids.
+      <p
+        style="font-size: 1.125rem; line-height: 1.8; color: var(--pico-color); margin-bottom: 1.5rem;"
+      >
+        My name is Christian. I'm a software engineer passionate about building
+        things that matter and make our lives better. When I'm not sitting at my
+        desk, I'm either on my bike or spending time with family.
       </p>
 
-      <p style="font-size: 1.125rem; line-height: 1.8; color: var(--pico-color);">
-        I write about software engineering, lessons learned from training, and whatever else seems worth sharing.
-        Here's what I've been working on:
+      <p
+        style="font-size: 1.125rem; line-height: 1.8; color: var(--pico-color);"
+      >
+        I write about software engineering, life lessons, and whatever else is
+        worth sharing. Here's some of my latest:
       </p>
     </div>
   </section>
 
-  {allPosts.length > 0 && (
-    <section>
-      <ul class="post-list" style="list-style: none; padding: 0; margin: 0;">
-        {allPosts.map((post) => (
-          <li style="padding: 1.25rem 0; border-bottom: 1px solid var(--pico-muted-border-color); display: flex; align-items: baseline; gap: 1.5rem; flex-wrap: wrap;">
-            <time
-              datetime={post.data.pubDate.toISOString()}
-              style="font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; color: var(--pico-muted-color); min-width: 100px; flex-shrink: 0;"
-            >
-              {post.data.pubDate.toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'short',
-              })}
-            </time>
-            <a
-              href={getBlogPostUrl(post)}
-              style="font-family: var(--pico-font-family-serif); font-size: 1.125rem; font-weight: 600; text-decoration: none; color: var(--pico-color); flex: 1;"
-            >
-              {post.data.title}
-            </a>
-            {post.data.category && (
-              <span style="font-size: 0.75rem; padding: 0.125rem 0.5rem; background: var(--pico-secondary-background); border-radius: 3px; color: var(--pico-muted-color);">
-                {post.data.category}
-              </span>
-            )}
-          </li>
-        ))}
-      </ul>
-    </section>
-  )}
+  {
+    allPosts.length > 0 && (
+      <section>
+        <ul class="post-list" style="list-style: none; padding: 0; margin: 0;">
+          {allPosts.map((post) => (
+            <li style="padding: 1.25rem 0; border-bottom: 1px solid var(--pico-muted-border-color); display: flex; align-items: baseline; gap: 1.5rem; flex-wrap: wrap;">
+              <time
+                datetime={post.data.pubDate.toISOString()}
+                style="font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; color: var(--pico-muted-color); min-width: 100px; flex-shrink: 0;"
+              >
+                {post.data.pubDate.toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "short",
+                })}
+              </time>
+              <a
+                href={getBlogPostUrl(post)}
+                style="font-family: var(--pico-font-family-serif); font-size: 1.125rem; font-weight: 600; text-decoration: none; color: var(--pico-color); flex: 1;"
+              >
+                {post.data.title}
+              </a>
+              {post.data.category && (
+                <span style="font-size: 0.75rem; padding: 0.125rem 0.5rem; background: var(--pico-secondary-background); border-radius: 3px; color: var(--pico-muted-color);">
+                  {post.data.category}
+                </span>
+              )}
+            </li>
+          ))}
+        </ul>
+      </section>
+    )
+  }
 
-  <footer style="margin-top: 4rem; padding: 2rem 0; border-top: 1px solid var(--pico-muted-border-color);">
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+  <footer
+    style="margin-top: 4rem; padding: 2rem 0; border-top: 1px solid var(--pico-muted-border-color);"
+  >
+    <div
+      style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;"
+    >
       <p style="color: var(--pico-muted-color); margin: 0;">
-        © 2025 Christian Rodriguez
+        © 2025 Christian A. Rodríguez Encarnación
       </p>
       <div style="display: flex; gap: 1.5rem;">
-        <a href="/rss.xml" style="color: var(--pico-muted-color); text-decoration: none;">RSS</a>
-        <a href="mailto:hey@chrisrodz.io" style="color: var(--pico-muted-color); text-decoration: none;">Email</a>
-        <a href="https://github.com/chrisrodz" target="_blank" rel="noopener noreferrer" style="color: var(--pico-muted-color); text-decoration: none;">GitHub</a>
+        <a
+          href="/rss.xml"
+          style="color: var(--pico-muted-color); text-decoration: none;">RSS</a
+        >
+        <a
+          href="mailto:hey@chrisrodz.io"
+          style="color: var(--pico-muted-color); text-decoration: none;"
+          >Email</a
+        >
+        <a
+          href="https://github.com/chrisrodz"
+          target="_blank"
+          rel="noopener noreferrer"
+          style="color: var(--pico-muted-color); text-decoration: none;"
+          >GitHub</a
+        >
       </div>
     </div>
   </footer>
