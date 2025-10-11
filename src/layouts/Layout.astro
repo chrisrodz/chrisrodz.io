@@ -58,7 +58,7 @@ const alternateFullUrl = new URL(alternateUrl, Astro.site || 'https://chrisrodz.
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Crimson+Text:wght@400;600;700&display=swap" rel="stylesheet">
 
   <!-- Pico CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
@@ -75,7 +75,7 @@ const alternateFullUrl = new URL(alternateUrl, Astro.site || 'https://chrisrodz.
 <body>
   <nav class="container main-nav">
     <ul>
-      <li><strong class="gradient-text">Christian Rodriguez</strong></li>
+      <li><strong>Christian Rodriguez</strong></li>
     </ul>
     <ul class="nav-links">
       <li><a href={locale === 'es' ? '/es' : '/'} class={currentPath === "/" || currentPath === "/es" ? "active" : ""}>{t(locale, 'nav.home')}</a></li>
