@@ -1,0 +1,78 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '@/layouts/Layout.astro';
+
+// Get params from URL: /es/dobleseis/privacy
+const { app, slug } = Astro.params;
+
+if (!app || !slug) {
+  return Astro.redirect('/404');
+}
+
+// Find the Spanish legal page by app and slug
+const allLegalPages = await getCollection('legal');
+const entry = allLegalPages.find(
+  (page) => page.data.app === app && page.data.slug === slug && page.data.locale === 'es'
+);
+
+if (!entry) {
+  return Astro.redirect('/404');
+}
+
+const { Content } = await render(entry);
+const page = entry;
+
+// Check if English translation exists
+const translatedPage = allLegalPages.find(
+  (p) => p.data.app === app && p.data.slug === slug && p.data.locale === 'en'
+);
+const alternateUrl = translatedPage ? `/${app}/${slug}` : undefined;
+
+// Format date
+const formattedDate = page.data.updatedDate.toLocaleDateString('es-ES', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<Layout title={page.data.title} description={page.data.description} alternateUrl={alternateUrl}>
+  <article style="max-width: 70ch; margin: 0 auto;">
+    <header style="margin-bottom: 3rem;">
+      <nav style="margin-bottom: 1.5rem;">
+        <a href="/es" style="text-decoration: none; color: var(--pico-muted-color); font-weight: 500; font-size: 0.9375rem;">
+          ← Volver al inicio
+        </a>
+      </nav>
+
+      <h1 style="font-size: clamp(2rem, 4vw, 2.5rem); font-weight: 800; letter-spacing: -0.05em; line-height: 1.2; margin-bottom: 1rem;">
+        {page.data.title}
+      </h1>
+
+      <div style="display: flex; gap: 1.5rem; align-items: center; color: var(--pico-muted-color); font-size: 0.9375rem;">
+        <time datetime={page.data.updatedDate.toISOString()}>
+          Última actualización: {formattedDate}
+        </time>
+      </div>
+
+      {page.data.description && (
+        <p style="margin-top: 1.5rem; font-size: 1.125rem; color: var(--pico-muted-color); line-height: 1.6;">
+          {page.data.description}
+        </p>
+      )}
+    </header>
+
+    <div class="prose">
+      <Content />
+    </div>
+  </article>
+
+  <div style="max-width: 70ch; margin: 3rem auto 0;">
+    <hr style="margin: 3rem 0;">
+    <nav>
+      <a href="/es" role="button" class="secondary">
+        ← Volver al inicio
+      </a>
+    </nav>
+  </div>
+</Layout>

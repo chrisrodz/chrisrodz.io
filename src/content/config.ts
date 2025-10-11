@@ -19,4 +19,21 @@ const blog = defineCollection({
   }),
 });
 
-export const collections = { blog };
+const legal = defineCollection({
+  loader: glob({
+    pattern: '**/*.md',
+    base: './src/content/legal',
+    // Preserve folder structure in ID: "privacy/en.md"
+    generateId: ({ entry }) => entry,
+  }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string().optional(),
+    slug: z.string(), // Custom URL slug (e.g., "privacy")
+    app: z.string(), // App name (e.g., "dobleseis")
+    updatedDate: z.coerce.date(),
+    locale: z.enum(['en', 'es']).default('en'),
+  }),
+});
+
+export const collections = { blog, legal };
