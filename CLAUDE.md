@@ -78,6 +78,7 @@ gh pr ready  # When ready for review
 - ✅ Always push immediately after committing
 - ❌ Never commit without pushing (work could be lost)
 - ❌ Never commit directly to `main`
+- ❌ Never add Claude as a co-author to commits
 
 ### Deployment:
 - **Main branch** auto-deploys to production (Vercel)
