@@ -3,80 +3,77 @@ import Layout from '../../layouts/Layout.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { getBlogPostUrl } from '@/lib/i18n';
 
-// Fetch recent Spanish blog posts
-let recentPosts: CollectionEntry<'blog'>[] = [];
+// Fetch all Spanish blog posts
+let allPosts: CollectionEntry<'blog'>[] = [];
 try {
   const posts = await getCollection('blog', ({ data }) => data.locale === 'es');
-  recentPosts = posts
-    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-    .slice(0, 3);
+  allPosts = posts
+    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 } catch (e) {
   console.warn('No blog posts found:', e);
 }
 ---
 
 <Layout title="Inicio">
-  <header class="hero">
-    <h1>Christian Rodriguez</h1>
-    <p>Ingeniero de Software • Triatleta • Papá</p>
-    <p style="margin-top: 1.5rem;">
-      <a href="/es/blog" role="button">Leer el blog</a>
-      <a href="/es/about" role="button" class="secondary">Acerca de mí</a>
-    </p>
-  </header>
+  <section style="margin-top: 3rem; margin-bottom: 4rem;">
+    <h1 style="font-family: var(--pico-font-family-serif); font-size: clamp(2rem, 4vw, 2.5rem); font-weight: 600; margin-bottom: 1.5rem;">
+      ¡Hola! Soy Christian.
+    </h1>
 
-  {recentPosts.length > 0 && (
-    <section style="margin-top: 4rem;">
-      <header style="margin-bottom: 2rem;">
-        <h2 style="font-size: 1.75rem; font-weight: 700; letter-spacing: -0.025em;">Últimos posts</h2>
-      </header>
+    <div style="max-width: 65ch;">
+      <p style="font-size: 1.125rem; line-height: 1.8; color: var(--pico-color); margin-bottom: 1.5rem;">
+        Soy ingeniero de software apasionado por construir cosas que importan. De día, escribo código y resuelvo problemas.
+        De madrugada y por la tarde, entreno para triatlones. Y entre medio, soy papá tratando de seguir el ritmo de mis hijos.
+      </p>
 
-      <div style="display: grid; gap: 2rem;">
-        {recentPosts.map((post) => (
-          <article class="blog-card">
-            <div class="blog-meta">
-              <time datetime={post.data.pubDate.toISOString()}>
-                {post.data.pubDate.toLocaleDateString('es-ES', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
-              </time>
-            </div>
-            <header>
-              <h3>
-                <a href={getBlogPostUrl(post)}>{post.data.title}</a>
-              </h3>
-            </header>
-            {post.data.description && (
-              <p style="color: var(--pico-muted-color); line-height: 1.6;">
-                {post.data.description}
-              </p>
+      <p style="font-size: 1.125rem; line-height: 1.8; color: var(--pico-color);">
+        Escribo sobre ingeniería de software, lecciones aprendidas del entrenamiento, y lo que sea que valga la pena compartir.
+        Aquí está en lo que he estado trabajando:
+      </p>
+    </div>
+  </section>
+
+  {allPosts.length > 0 && (
+    <section>
+      <ul class="post-list" style="list-style: none; padding: 0; margin: 0;">
+        {allPosts.map((post) => (
+          <li style="padding: 1.25rem 0; border-bottom: 1px solid var(--pico-muted-border-color); display: flex; align-items: baseline; gap: 1.5rem; flex-wrap: wrap;">
+            <time
+              datetime={post.data.pubDate.toISOString()}
+              style="font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; color: var(--pico-muted-color); min-width: 100px; flex-shrink: 0;"
+            >
+              {post.data.pubDate.toLocaleDateString('es-ES', {
+                year: 'numeric',
+                month: 'short',
+              })}
+            </time>
+            <a
+              href={getBlogPostUrl(post)}
+              style="font-family: var(--pico-font-family-serif); font-size: 1.125rem; font-weight: 600; text-decoration: none; color: var(--pico-color); flex: 1;"
+            >
+              {post.data.title}
+            </a>
+            {post.data.category && (
+              <span style="font-size: 0.75rem; padding: 0.125rem 0.5rem; background: var(--pico-secondary-background); border-radius: 3px; color: var(--pico-muted-color);">
+                {post.data.category}
+              </span>
             )}
-            <footer>
-              <a href={getBlogPostUrl(post)} style="font-weight: 500;">
-                Leer más →
-              </a>
-            </footer>
-          </article>
+          </li>
         ))}
-      </div>
-
-      <div style="margin-top: 2rem; text-align: center;">
-        <a href="/es/blog">Ver todos los posts →</a>
-      </div>
+      </ul>
     </section>
   )}
 
-  <section style="margin-top: 4rem; padding: 3rem 0; border-top: 1px solid var(--pico-muted-border-color);">
-    <div style="text-align: center;">
-      <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">Conectemos</h2>
-      <p style="color: var(--pico-muted-color); margin-bottom: 1.5rem;">
-        Escribo sobre ingeniería de software, entrenamiento de triatlón y la vida.
+  <footer style="margin-top: 4rem; padding: 2rem 0; border-top: 1px solid var(--pico-muted-border-color);">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <p style="color: var(--pico-muted-color); margin: 0;">
+        © 2025 Christian Rodriguez
       </p>
-      <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-        <a href="https://github.com/chrisrodz" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <div style="display: flex; gap: 1.5rem;">
+        <a href="/rss.xml" style="color: var(--pico-muted-color); text-decoration: none;">RSS</a>
+        <a href="mailto:hey@chrisrodz.io" style="color: var(--pico-muted-color); text-decoration: none;">Email</a>
+        <a href="https://github.com/chrisrodz" target="_blank" rel="noopener noreferrer" style="color: var(--pico-muted-color); text-decoration: none;">GitHub</a>
       </div>
     </div>
-  </section>
+  </footer>
 </Layout>

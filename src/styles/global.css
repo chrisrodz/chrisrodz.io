@@ -105,11 +105,14 @@ nav.container {
     border-bottom: 2px solid var(--pico-muted-border-color);
     padding: 1.5rem 0;
     position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
   nav.main-nav ul {
     display: flex;
-    gap: 2rem;
+    gap: 1.5rem;
     align-items: center;
     margin: 0;
     padding: 0;
@@ -121,11 +124,10 @@ nav.container {
     padding: 0;
   }
 
-  nav.main-nav ul li:first-child strong {
+  nav.main-nav ul:first-child a {
     font-family: var(--pico-font-family-serif);
     font-size: 1.25rem;
     font-weight: 600;
-    color: var(--pico-color);
   }
 
   nav.main-nav a {
@@ -135,16 +137,14 @@ nav.container {
     font-size: 1rem;
     transition: all 0.2s ease;
     display: inline-block;
-    padding: 0.75rem 0.5rem;
+    padding: 0.5rem;
     min-height: 44px;
     line-height: 1.5;
-    border-bottom: 2px solid transparent;
   }
 
-  nav.main-nav a:hover,
-  nav.main-nav a.active {
-    border-bottom-color: var(--pico-primary);
-    color: var(--pico-color);
+  nav.main-nav ul:first-child a:hover,
+  nav.main-nav ul:first-child a.active {
+    color: var(--pico-primary);
   }
 
   /* Increase touch target for theme toggle */
@@ -283,58 +283,17 @@ nav.container {
     }
   }
 
-  /* Blog card styling - minimal approach */
-  .blog-card {
-    padding: 1.5rem 0;
-    border: none;
-    border-bottom: 1px solid var(--pico-muted-border-color);
-    border-radius: 0;
-    background: transparent;
+  /* Minimal post list styling */
+  .post-list li {
     transition: border-color 0.2s ease;
   }
 
-  .blog-card:hover {
-    border-bottom-color: var(--pico-primary);
+  .post-list li:hover {
+    border-bottom-color: var(--pico-primary) !important;
   }
 
-  .blog-card h3 {
-    font-family: var(--pico-font-family-serif);
-    font-size: 1.5rem;
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    margin-bottom: 0.5rem;
-    line-height: 1.3;
-  }
-
-  .blog-card h3 a {
-    color: var(--pico-color);
-    text-decoration: none;
-    display: inline-block;
-    padding: 0.5rem 0;
-    min-height: 44px;
-    line-height: 1.5;
-  }
-
-  .blog-card h3 a:hover {
+  .post-list li a:hover {
     color: var(--pico-primary);
-  }
-
-  /* Improve touch targets for blog card action links */
-  .blog-card a[href*="blog"] {
-    display: inline-block;
-    padding: 0.75rem 0.5rem;
-    min-height: 44px;
-    line-height: 1.5;
-  }
-
-  .blog-meta {
-    font-size: 0.875rem;
-    color: var(--pico-muted-color);
-    font-family: "JetBrains Mono", monospace;
-    display: flex;
-    gap: 1rem;
-    align-items: center;
-    margin-bottom: 0.75rem;
   }
 
   /* Footer */

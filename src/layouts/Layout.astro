@@ -75,12 +75,9 @@ const alternateFullUrl = new URL(alternateUrl, Astro.site || 'https://chrisrodz.
 <body>
   <nav class="container main-nav">
     <ul>
-      <li><strong>Christian Rodriguez</strong></li>
+      <li><a href={locale === 'es' ? '/es' : '/'} class={currentPath === "/" || currentPath === "/es" ? "active" : ""}>{t(locale, 'nav.home')}</a></li>
     </ul>
     <ul class="nav-links">
-      <li><a href={locale === 'es' ? '/es' : '/'} class={currentPath === "/" || currentPath === "/es" ? "active" : ""}>{t(locale, 'nav.home')}</a></li>
-      <li><a href={locale === 'es' ? '/es/blog' : '/blog'} class={currentPath.startsWith("/blog") || currentPath.startsWith("/es/blog") ? "active" : ""}>{t(locale, 'nav.blog')}</a></li>
-      <li><a href={locale === 'es' ? '/es/about' : '/about'} class={currentPath === "/about" || currentPath === "/es/about" ? "active" : ""}>{t(locale, 'nav.about')}</a></li>
       <li class="nav-actions">
         <button id="theme-toggle" aria-label="Toggle theme" class="contrast icon-button" title="Toggle light/dark mode">
           <span id="theme-icon" aria-hidden="true">🌙</span>

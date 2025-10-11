@@ -1,12 +1,14 @@
 # Homepage Redesign Wireframes
 
 ## Current Issues
+
 - Hero section feels too promotional with CTA buttons
 - Blog cards have heavy borders and shadows (not minimal)
 - No personality or categorization of content
 - Footer is centered and generic
 
 ## Design Goals
+
 - Typography-first, minimal aesthetic
 - Text-focused content presentation
 - Add personality through content organization
@@ -63,12 +65,14 @@
 ```
 
 ### Benefits
+
 - Immediately shows content variety
 - Easy to scan and find topics of interest
 - Adds personality through categorization
 - Less intimidating than a wall of posts
 
 ### Implementation
+
 - Add `category` field to blog frontmatter
 - Group posts by category on homepage
 - Show 3-4 most recent per category
@@ -122,12 +126,14 @@
 ```
 
 ### Benefits
+
 - Ultra-minimal, text-focused
 - Shows posting frequency
 - Tags provide context without being intrusive
 - Monospace dates create visual rhythm
 
 ### Implementation
+
 - Remove blog cards entirely
 - Use `<ul>` with semantic markup
 - Monospace font for dates
@@ -184,12 +190,14 @@
 ```
 
 ### Benefits
+
 - Shows personality immediately
 - "Currently" section keeps content fresh
 - Minimal post list below
 - Invites people to come back for updates
 
 ### Implementation
+
 - Add "Now" page to navigation
 - Create "Currently" section (manually updated)
 - Minimal post list (no descriptions)
@@ -200,6 +208,7 @@
 ## Recommended Approach: Option B with "Now" Elements
 
 **Why?**
+
 - Most minimal and text-focused
 - Easiest to implement (uses existing data)
 - Can add "Currently" section later
@@ -207,6 +216,7 @@
 - Looks professional and readable
 
 **Next Steps:**
+
 1. Implement minimal list style (Option B)
 2. Add category tags to blog schema
 3. Create simple "Currently" component
@@ -217,16 +227,19 @@
 ## Typography & Spacing Details
 
 ### Fonts Applied
+
 - **Headings:** Crimson Text (serif) - 600/700 weight
 - **Body:** Inter (sans-serif) - 400/500/600 weight
 - **Dates/Code:** JetBrains Mono (monospace)
 
 ### Color Palette
+
 - **Primary:** Teal (#0891b2) - links, accents
 - **Warm Accent:** Coral (#ff6b6b) - special highlights
 - **Text:** PicoCSS defaults (responsive to dark mode)
 
 ### Key Spacing
+
 - Container max: 720px
 - Post list padding: 1.5rem vertical
 - Border: 1px bottom only (no cards)
@@ -252,6 +265,7 @@ After:
 ```
 
 ### Changes Made
+
 - ✅ Name uses Crimson Text serif (personality)
 - ✅ Removed gradient effect (cleaner)
 - ✅ Larger font size for nav links (1rem vs 0.9375rem)
@@ -283,6 +297,7 @@ After (Minimal List):
 ```
 
 ### Changes Made
+
 - ✅ Removed card borders and shadows
 - ✅ Border-bottom only (1px)
 - ✅ No background color (transparent)
