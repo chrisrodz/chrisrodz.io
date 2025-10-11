@@ -30,6 +30,13 @@ const alternateFullUrl = new URL(alternateUrl, Astro.site || 'https://chrisrodz.
   <meta name="description" content={description}>
   <link rel="canonical" href={canonicalURL}>
 
+  <!-- Sitemap -->
+  <link rel="sitemap" type="application/xml" href="/sitemap-index.xml">
+
+  <!-- RSS Feed -->
+  <link rel="alternate" type="application/rss+xml" title="Christian Rodriguez - Blog (English)" href="/rss.xml" />
+  <link rel="alternate" type="application/rss+xml" title="Christian Rodriguez - Blog (Español)" href="/es/rss.xml" />
+
   <!-- Alternate language links for SEO -->
   <link rel="alternate" hreflang={locale} href={canonicalURL} />
   <link rel="alternate" hreflang={alternateLocale} href={alternateFullUrl} />
@@ -69,6 +76,7 @@ const alternateFullUrl = new URL(alternateUrl, Astro.site || 'https://chrisrodz.
     const theme = localStorage.getItem('theme') || 'light';
     if (theme === 'dark') {
       document.documentElement.setAttribute('data-theme', 'dark');
+      themeIcon.textContent = '☀️';
     }
   </script>
 </head>
@@ -107,6 +115,19 @@ const alternateFullUrl = new URL(alternateUrl, Astro.site || 'https://chrisrodz.
     <slot />
   </main>
 
+  <footer class="container" style="margin-top: 4rem; padding: 2rem 0; border-top: 1px solid var(--pico-muted-border-color);">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+      <p style="color: var(--pico-muted-color); margin: 0;">
+        © 2025 Christian A. Rodríguez Encarnación
+      </p>
+      <div style="display: flex; gap: 1.5rem;">
+        <a href="/rss.xml" style="color: var(--pico-muted-color); text-decoration: none;">RSS</a>
+        <a href="mailto:hey@chrisrodz.io" style="color: var(--pico-muted-color); text-decoration: none;">Email</a>
+        <a href="https://github.com/chrisrodz" target="_blank" rel="noopener noreferrer" style="color: var(--pico-muted-color); text-decoration: none;">GitHub</a>
+      </div>
+    </div>
+  </footer>
+
   <!-- Dark mode toggle script -->
   <script is:inline>
     const themeToggle = document.getElementById('theme-toggle');
@@ -139,7 +160,7 @@ const alternateFullUrl = new URL(alternateUrl, Astro.site || 'https://chrisrodz.
   <script is:inline>
     const langToggle = document.getElementById('lang-toggle');
 
-    langToggle?.addEventListener('click', (e) => {
+    langToggle?.addEventListener('click', () => {
       // Set cookie to remember user's language preference
       const targetLang = langToggle.getAttribute('data-target-lang');
 
