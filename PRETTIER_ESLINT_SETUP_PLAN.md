@@ -21,6 +21,7 @@ yarn add -D prettier prettier-plugin-astro
 ```
 
 **Packages**:
+
 - `prettier` - Core formatter
 - `prettier-plugin-astro` - Official Astro plugin for formatting `.astro` files
 
@@ -31,18 +32,20 @@ yarn add -D eslint eslint-plugin-astro @typescript-eslint/parser @typescript-esl
 ```
 
 **Packages**:
+
 - `eslint` - Core linting engine
 - `eslint-plugin-astro` - Official ESLint plugin for Astro
 - `@typescript-eslint/parser` - TypeScript parser for ESLint
 - `@typescript-eslint/eslint-plugin` - TypeScript linting rules
 
-### Optional: Prettier + ESLint Integration
+### Prettier + ESLint Integration
 
 ```bash
 yarn add -D eslint-config-prettier
 ```
 
 **Package**:
+
 - `eslint-config-prettier` - Turns off ESLint rules that conflict with Prettier
 
 ---
@@ -72,6 +75,7 @@ yarn add -D eslint-config-prettier
 ```
 
 **Rationale**:
+
 - `singleQuote: true` - Consistent with most modern JS projects
 - `printWidth: 100` - Good balance for readability
 - `semi: true` - Explicit semicolons
@@ -148,14 +152,15 @@ export default [
     rules: {
       // Prettier handles these
       'max-len': 'off',
-      'quotes': 'off',
-      'semi': 'off',
+      quotes: 'off',
+      semi: 'off',
     },
   },
 ];
 ```
 
 **Rationale**:
+
 - Uses new ESLint flat config format (recommended for 2025+)
 - TypeScript support with sensible defaults
 - Astro-specific linting rules
@@ -214,6 +219,7 @@ Add the following scripts to the `scripts` section:
 ```
 
 **New Scripts**:
+
 - `format` - Format all files with Prettier
 - `format:check` - Check if files are formatted (CI-friendly)
 - `lint` - Run ESLint on all files
@@ -245,17 +251,12 @@ Add the following scripts to the `scripts` section:
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact",
-    "astro"
-  ]
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact", "astro"]
 }
 ```
 
 **Features**:
+
 - Format on save enabled
 - Prettier as default formatter
 - ESLint auto-fix on save
@@ -274,13 +275,14 @@ Add the following scripts to the `scripts` section:
 ```
 
 **Extensions**:
+
 - Astro official extension
 - Prettier extension
 - ESLint extension
 
 ---
 
-## Phase 5: Pre-commit Hook (Optional but Recommended)
+## Phase 5: Pre-commit Hook
 
 ### Install Husky + lint-staged
 
@@ -308,18 +310,14 @@ npx lint-staged
 ```json
 {
   "lint-staged": {
-    "*.{js,ts,astro}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.{json,md,css}": [
-      "prettier --write"
-    ]
+    "*.{js,ts,astro}": ["eslint --fix", "prettier --write"],
+    "*.{json,md,css}": ["prettier --write"]
   }
 }
 ```
 
 **Benefits**:
+
 - Only formats/lints changed files (fast)
 - Runs before every commit
 - Prevents committing badly formatted code
@@ -360,23 +358,27 @@ Add a new section to `CLAUDE.md`:
 ## Code Quality Tools
 
 ### Formatting (Prettier)
+
 - Auto-formats on save in VSCode
 - Run manually: `yarn format`
 - Check formatting: `yarn format:check`
 - Config: `.prettierrc`
 
 ### Linting (ESLint)
+
 - Auto-fixes on save in VSCode
 - Run manually: `yarn lint`
 - Fix auto-fixable issues: `yarn lint:fix`
 - Config: `eslint.config.js`
 
 ### Pre-commit Hooks (Husky + lint-staged)
+
 - Automatically formats and lints staged files before commit
 - Prevents committing improperly formatted code
 - Config: `lint-staged` in `package.json`
 
 ### Best Practices
+
 - ✅ Always run `yarn check` before pushing
 - ✅ Let VSCode auto-format on save
 - ✅ Fix ESLint warnings as you code
@@ -386,11 +388,11 @@ Add a new section to `CLAUDE.md`:
 
 ---
 
-## Phase 8: CI/CD Integration (Optional)
+## Phase 8: CI/CD Integration
 
 ### Update Vercel Build Command
 
-If using Vercel, update build command to include checks:
+Update build command to include checks:
 
 ```bash
 yarn check && yarn build
@@ -404,36 +406,6 @@ yarn check && yarn build
 }
 ```
 
-### GitHub Actions (Optional)
-
-Create `.github/workflows/lint.yml`:
-
-```yaml
-name: Lint & Format Check
-
-on:
-  pull_request:
-    branches: [main]
-  push:
-    branches: [main]
-
-jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'yarn'
-      - run: yarn install --frozen-lockfile
-      - run: yarn lint
-      - run: yarn format:check
-      - run: yarn astro check
-```
-
----
-
 ## Phase 9: Testing & Validation
 
 ### 1. Test Prettier
@@ -442,10 +414,12 @@ Create a poorly formatted test file:
 
 ```javascript
 // test.js
-const  foo={bar:1,baz:2};console.log(foo)
+const foo = { bar: 1, baz: 2 };
+console.log(foo);
 ```
 
 Run:
+
 ```bash
 yarn format
 ```
@@ -464,6 +438,7 @@ const unused = 'test';
 ```
 
 Run:
+
 ```bash
 yarn lint
 ```
@@ -491,6 +466,7 @@ Verify lint-staged runs and formats files.
 ## Checklist
 
 ### Setup Phase
+
 - [ ] Create new branch: `feature/add-prettier-eslint`
 - [ ] Install Prettier dependencies
 - [ ] Install ESLint dependencies
@@ -501,26 +477,31 @@ Verify lint-staged runs and formats files.
 - [ ] Update `package.json` scripts
 
 ### VSCode Configuration
+
 - [ ] Create/update `.vscode/settings.json`
 - [ ] Create/update `.vscode/extensions.json`
 - [ ] Install recommended VSCode extensions
 
 ### Optional Enhancements
+
 - [ ] Install Husky + lint-staged
 - [ ] Configure pre-commit hook
 - [ ] Add CI/CD checks
 
 ### Code Migration
+
 - [ ] Run `yarn format` on entire codebase
 - [ ] Run `yarn lint:fix` to auto-fix issues
 - [ ] Manually fix remaining lint warnings
 - [ ] Review all changes carefully
 
 ### Documentation
+
 - [ ] Update `CLAUDE.md` with code quality section
 - [ ] Update `.gitignore` if needed
 
 ### Testing & Validation
+
 - [ ] Test Prettier formatting
 - [ ] Test ESLint linting
 - [ ] Test VSCode integration
@@ -528,6 +509,7 @@ Verify lint-staged runs and formats files.
 - [ ] Run `yarn check` to verify all checks pass
 
 ### Finalization
+
 - [ ] Commit changes with clear message
 - [ ] Push to remote
 - [ ] Test on a fresh clone (optional)
@@ -538,6 +520,7 @@ Verify lint-staged runs and formats files.
 ## Expected Changes Summary
 
 ### New Files (8-10 files)
+
 1. `.prettierrc` - Prettier config
 2. `.prettierignore` - Prettier ignore patterns
 3. `eslint.config.js` - ESLint config
@@ -548,10 +531,12 @@ Verify lint-staged runs and formats files.
 8. `.github/workflows/lint.yml` - CI workflow (optional)
 
 ### Modified Files
+
 1. `package.json` - Add dependencies and scripts
 2. `CLAUDE.md` - Add code quality documentation
 
 ### Formatted Files
+
 - All `.astro`, `.ts`, `.js`, `.json` files will be formatted
 - Expect ~20-30 files to be modified
 
@@ -562,11 +547,13 @@ Verify lint-staged runs and formats files.
 ### Issue 1: Prettier conflicts with Tailwind class ordering
 
 **Solution**: Install `prettier-plugin-tailwindcss`:
+
 ```bash
 yarn add -D prettier-plugin-tailwindcss
 ```
 
 Add to `.prettierrc`:
+
 ```json
 {
   "plugins": ["prettier-plugin-astro", "prettier-plugin-tailwindcss"]
@@ -580,6 +567,7 @@ Add to `.prettierrc`:
 ### Issue 3: Format on save not working
 
 **Solution**:
+
 1. Ensure Prettier VSCode extension is installed
 2. Restart VSCode
 3. Check `.vscode/settings.json` is correct
@@ -588,12 +576,14 @@ Add to `.prettierrc`:
 ### Issue 4: Pre-commit hook too slow
 
 **Solution**:
+
 - Use `lint-staged` to only check changed files
 - Consider skipping formatting check in hook (rely on CI instead)
 
 ### Issue 5: Too many ESLint warnings
 
 **Solution**:
+
 - Start with `warn` instead of `error` for most rules
 - Gradually fix warnings over time
 - Adjust rules in `eslint.config.js` if too strict
@@ -603,6 +593,7 @@ Add to `.prettierrc`:
 ## Resources
 
 ### Official Documentation
+
 - [Astro Editor Setup](https://docs.astro.build/en/editor-setup/)
 - [Prettier Astro Plugin](https://github.com/withastro/prettier-plugin-astro)
 - [ESLint Astro Plugin](https://github.com/ota-meshi/eslint-plugin-astro)
@@ -610,6 +601,7 @@ Add to `.prettierrc`:
 - [ESLint Documentation](https://eslint.org/docs/latest/)
 
 ### Tools
+
 - [Prettier Playground](https://prettier.io/playground/) - Test formatting rules
 - [ESLint Playground](https://eslint.org/play/) - Test linting rules
 

@@ -6,8 +6,10 @@
 /* Pico CSS custom properties override */
 :root {
   /* Typography */
-  --pico-font-family: "Inter var", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --pico-font-family-serif: "Crimson Text", Georgia, "Times New Roman", serif;
+  --pico-font-family:
+    'Inter var', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
+    Arial, sans-serif;
+  --pico-font-family-serif: 'Crimson Text', Georgia, 'Times New Roman', serif;
   --pico-line-height: 1.75;
 
   /* Spacing */
@@ -52,7 +54,7 @@ nav.container {
 }
 
 /* Dark mode - keep PicoCSS defaults, minimal overrides */
-[data-theme="dark"] {
+[data-theme='dark'] {
   /* Use PicoCSS's default dark colors - they're already well-designed */
   /* Only override if absolutely necessary */
 }
@@ -64,7 +66,7 @@ nav.container {
   }
 
   body {
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -377,8 +379,8 @@ main a {
 }
 
 /* Ensure CTA-style links have proper touch targets */
-main a[href*="blog"],
-main a[href*="posts"],
+main a[href*='blog'],
+main a[href*='posts'],
 section a {
   min-height: 44px;
   display: inline-flex;

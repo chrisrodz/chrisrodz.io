@@ -1,17 +1,15 @@
 ---
-import Layout from "../../layouts/Layout.astro";
-import { getCollection, type CollectionEntry } from "astro:content";
-import { getBlogPostUrl } from "@/lib/i18n";
+import Layout from '../../layouts/Layout.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { getBlogPostUrl } from '@/lib/i18n';
 
 // Fetch all Spanish blog posts
-let allPosts: CollectionEntry<"blog">[] = [];
+let allPosts: CollectionEntry<'blog'>[] = [];
 try {
-  const posts = await getCollection("blog", ({ data }) => data.locale === "es");
-  allPosts = posts.sort(
-    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-  );
+  const posts = await getCollection('blog', ({ data }) => data.locale === 'es');
+  allPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 } catch (e) {
-  console.warn("No blog posts found:", e);
+  console.warn('No blog posts found:', e);
 }
 ---
 
@@ -27,16 +25,14 @@ try {
       <p
         style="font-size: 1.125rem; line-height: 1.8; color: var(--pico-color); margin-bottom: 1.5rem;"
       >
-        Soy Christian, ingeniero de software apasionado por construir cosas que
-        importan y nos faciliten la vida. Cuando no estoy sentado trabajando estoy sentado en la
-        bicicleta o pasando tiempo en familia.
+        Soy Christian, ingeniero de software apasionado por construir cosas que importan y nos
+        faciliten la vida. Cuando no estoy sentado trabajando estoy sentado en la bicicleta o
+        pasando tiempo en familia.
       </p>
 
-      <p
-        style="font-size: 1.125rem; line-height: 1.8; color: var(--pico-color);"
-      >
-        Escribo sobre escribir software, lecciones aprendidas de la vida, y lo
-        que sea que valga la pena compartir. Aquí puedes ver lo más reciente:
+      <p style="font-size: 1.125rem; line-height: 1.8; color: var(--pico-color);">
+        Escribo sobre escribir software, lecciones aprendidas de la vida, y lo que sea que valga la
+        pena compartir. Aquí puedes ver lo más reciente:
       </p>
     </div>
   </section>
@@ -51,9 +47,9 @@ try {
                 datetime={post.data.pubDate.toISOString()}
                 style="font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; color: var(--pico-muted-color); min-width: 100px; flex-shrink: 0;"
               >
-                {post.data.pubDate.toLocaleDateString("es-ES", {
-                  year: "numeric",
-                  month: "short",
+                {post.data.pubDate.toLocaleDateString('es-ES', {
+                  year: 'numeric',
+                  month: 'short',
                 })}
               </time>
               <a

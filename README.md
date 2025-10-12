@@ -9,11 +9,13 @@ A modern personal website built with Astro, featuring a blog, coffee tracking, a
 The project is now fully bootstrapped! Follow these steps to get started:
 
 ### 1. Install dependencies
+
 ```bash
 yarn install
 ```
 
 ### 2. Copy environment variables
+
 ```bash
 cp .env.example .env.local
 ```
@@ -36,6 +38,7 @@ STRAVA_REFRESH_TOKEN=your_strava_refresh_token
 ```
 
 ### 3. Start development
+
 ```bash
 yarn dev
 ```
@@ -49,6 +52,7 @@ The site works without Supabase, but you'll need it for coffee tracking and trai
 1. Create a project at [supabase.com](https://supabase.com)
 2. Copy your project URL and anon key to `.env.local`
 3. Run this SQL in the Supabase SQL editor:
+
 ```sql
 -- Enable UUID extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
@@ -241,11 +245,13 @@ vercel --prod
 Visit `/admin` to access the secure admin panel.
 
 **Authentication:**
+
 - Session-based auth with secure HttpOnly cookies
 - 24-hour session expiry
 - Password set via `ADMIN_SECRET` environment variable
 
 **Available Features:**
+
 - Add and manage coffee beans and brewing entries
 - View setup instructions for Supabase and Strava
 - Manage blog posts (coming soon)
@@ -270,6 +276,7 @@ Visit `/admin` to access the secure admin panel.
 ### Environment Setup
 
 The site gracefully degrades when services aren't configured:
+
 - **Without Supabase**: Coffee and training features show setup instructions
 - **Without Strava**: Training section shows connection instructions
 - **Without Admin Secret**: Admin panel shows setup instructions

@@ -5,7 +5,7 @@ export const GET: APIRoute = async () => {
   if (!supabase) {
     return new Response(JSON.stringify({ error: 'Database not configured' }), {
       status: 503,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'Content-Type': 'application/json' },
     });
   }
 
@@ -18,18 +18,18 @@ export const GET: APIRoute = async () => {
     if (error) {
       return new Response(JSON.stringify({ error: error.message }), {
         status: 500,
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
       });
     }
 
     return new Response(JSON.stringify({ data: coffees }), {
       status: 200,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'Content-Type': 'application/json' },
     });
-  } catch (error) {
+  } catch {
     return new Response(JSON.stringify({ error: 'Internal server error' }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'Content-Type': 'application/json' },
     });
   }
-}
+};

@@ -1,0 +1,21 @@
+# Build outputs
+dist/
+.vercel/
+.astro/
+
+# Dependencies
+node_modules/
+
+# Environment files
+.env
+.env.*
+
+# Lock files
+package-lock.json
+yarn.lock
+
+# Cache
+.cache/
+
+# Generated files
+public/

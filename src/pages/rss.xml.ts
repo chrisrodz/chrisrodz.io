@@ -8,13 +8,12 @@ export async function GET(context: APIContext) {
   const posts = await getCollection('blog', ({ data }) => data.locale === 'en');
 
   // Sort by date (newest first)
-  const sortedPosts = posts.sort(
-    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-  );
+  const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 
   return rss({
     title: 'Christian Rodriguez - Blog',
-    description: 'Software engineering, life lessons, and thoughts worth sharing by Christian Rodriguez',
+    description:
+      'Software engineering, life lessons, and thoughts worth sharing by Christian Rodriguez',
     site: context.site || 'https://chrisrodz.io',
     items: sortedPosts.map((post) => ({
       title: post.data.title,

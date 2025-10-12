@@ -30,51 +30,71 @@ if (supabase) {
     <p>Triathlon training activities and metrics</p>
   </header>
 
-  {error ? (
-    <section>
-      <p>Training tracking is not available yet. Please configure your Supabase database and Strava integration.</p>
-      <a href="/admin" role="button">Set up training tracking →</a>
-    </section>
-  ) : (
-    <section>
-      {activities && activities.length > 0 ? (
-        <div class="overflow-auto">
-          <table>
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Activity</th>
-                <th>Distance</th>
-                <th>Duration</th>
-                <th>Elevation</th>
-                <th>Avg HR</th>
-              </tr>
-            </thead>
-            <tbody>
-              {activities.map(activity => (
+  {
+    error ? (
+      <section>
+        <p>
+          Training tracking is not available yet. Please configure your Supabase database and Strava
+          integration.
+        </p>
+        <a href="/admin" role="button">
+          Set up training tracking →
+        </a>
+      </section>
+    ) : (
+      <section>
+        {activities && activities.length > 0 ? (
+          <div class="overflow-auto">
+            <table>
+              <thead>
                 <tr>
-                  <td>{new Date(activity.start_date).toLocaleDateString()}</td>
-                  <td>
-                    <strong>{activity.type}</strong>
-                    {activity.name && (
-                      <><br /><small>{activity.name}</small></>
-                    )}
-                  </td>
-                  <td>{activity.distance ? `${(activity.distance / 1000).toFixed(1)} km` : '-'}</td>
-                  <td>{activity.duration ? `${Math.floor(activity.duration / 60)}:${(activity.duration % 60).toString().padStart(2, '0')}` : '-'}</td>
-                  <td>{activity.elevation_gain ? `${activity.elevation_gain}m` : '-'}</td>
-                  <td>{activity.average_heartrate ? `${activity.average_heartrate} bpm` : '-'}</td>
+                  <th>Date</th>
+                  <th>Activity</th>
+                  <th>Distance</th>
+                  <th>Duration</th>
+                  <th>Elevation</th>
+                  <th>Avg HR</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) : (
-        <div>
-          <p>No training activities yet. Connect your Strava account to sync your workouts!</p>
-          <a href="/admin" role="button">Set up Strava Integration →</a>
-        </div>
-      )}
-    </section>
-  )}
+              </thead>
+              <tbody>
+                {activities.map((activity) => (
+                  <tr>
+                    <td>{new Date(activity.start_date).toLocaleDateString()}</td>
+                    <td>
+                      <strong>{activity.type}</strong>
+                      {activity.name && (
+                        <>
+                          <br />
+                          <small>{activity.name}</small>
+                        </>
+                      )}
+                    </td>
+                    <td>
+                      {activity.distance ? `${(activity.distance / 1000).toFixed(1)} km` : '-'}
+                    </td>
+                    <td>
+                      {activity.duration
+                        ? `${Math.floor(activity.duration / 60)}:${(activity.duration % 60).toString().padStart(2, '0')}`
+                        : '-'}
+                    </td>
+                    <td>{activity.elevation_gain ? `${activity.elevation_gain}m` : '-'}</td>
+                    <td>
+                      {activity.average_heartrate ? `${activity.average_heartrate} bpm` : '-'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div>
+            <p>No training activities yet. Connect your Strava account to sync your workouts!</p>
+            <a href="/admin" role="button">
+              Set up Strava Integration →
+            </a>
+          </div>
+        )}
+      </section>
+    )
+  }
 </Layout>

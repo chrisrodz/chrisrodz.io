@@ -1,7 +1,7 @@
 ---
-title: "Hola Mundo"
-description: "Presentando mi nuevo website personal donde voy a estar escribiendo de vez en cuando."
-slug: "bienvenido-a-mi-sitio"
+title: 'Hola Mundo'
+description: 'Presentando mi nuevo website personal donde voy a estar escribiendo de vez en cuando.'
+slug: 'bienvenido-a-mi-sitio'
 pubDate: 2025-10-09
 locale: es
 ---

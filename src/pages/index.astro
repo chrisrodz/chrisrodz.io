@@ -1,17 +1,15 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import { getCollection, type CollectionEntry } from "astro:content";
-import { getBlogPostUrl } from "@/lib/i18n";
+import Layout from '../layouts/Layout.astro';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import { getBlogPostUrl } from '@/lib/i18n';
 
 // Fetch all English blog posts
-let allPosts: CollectionEntry<"blog">[] = [];
+let allPosts: CollectionEntry<'blog'>[] = [];
 try {
-  const posts = await getCollection("blog", ({ data }) => data.locale === "en");
-  allPosts = posts.sort(
-    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
-  );
+  const posts = await getCollection('blog', ({ data }) => data.locale === 'en');
+  allPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
 } catch (e) {
-  console.warn("No blog posts found:", e);
+  console.warn('No blog posts found:', e);
 }
 ---
 
@@ -27,16 +25,14 @@ try {
       <p
         style="font-size: 1.125rem; line-height: 1.8; color: var(--pico-color); margin-bottom: 1.5rem;"
       >
-        My name is Christian. I'm a software engineer passionate about building
-        things that matter and make our lives better. When I'm not sitting at my
-        desk, I'm either on my bike or spending time with family.
+        My name is Christian. I'm a software engineer passionate about building things that matter
+        and make our lives better. When I'm not sitting at my desk, I'm either on my bike or
+        spending time with family.
       </p>
 
-      <p
-        style="font-size: 1.125rem; line-height: 1.8; color: var(--pico-color);"
-      >
-        I write about software engineering, life lessons, and whatever else is
-        worth sharing. Here's some of my latest:
+      <p style="font-size: 1.125rem; line-height: 1.8; color: var(--pico-color);">
+        I write about software engineering, life lessons, and whatever else is worth sharing. Here's
+        some of my latest:
       </p>
     </div>
   </section>
@@ -51,9 +47,9 @@ try {
                 datetime={post.data.pubDate.toISOString()}
                 style="font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; color: var(--pico-muted-color); min-width: 100px; flex-shrink: 0;"
               >
-                {post.data.pubDate.toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "short",
+                {post.data.pubDate.toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'short',
                 })}
               </time>
               <a

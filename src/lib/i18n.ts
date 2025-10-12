@@ -29,6 +29,7 @@ export function getLocaleFromUrl(url: URL): Locale {
  */
 export function t(locale: Locale, key: string, vars?: Record<string, string>): string {
   const keys = key.split('.');
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let value: any = translations[locale];
 
   for (const k of keys) {

@@ -10,7 +10,12 @@ export interface Props {
 }
 
 const locale: Locale = getLocaleFromUrl(Astro.url);
-const { title, description = t(locale, 'home.hero.subtitle'), image = "/og-image.png", alternateUrl: providedAlternateUrl } = Astro.props;
+const {
+  title,
+  description = t(locale, 'home.hero.subtitle'),
+  image = '/og-image.png',
+  alternateUrl: providedAlternateUrl,
+} = Astro.props;
 const currentPath = Astro.url.pathname;
 const canonicalURL = new URL(currentPath, Astro.site || 'https://chrisrodz.io');
 const ogImage = new URL(image, Astro.site || 'https://chrisrodz.io');
@@ -22,189 +27,237 @@ const alternateUrl = providedAlternateUrl || getAlternateUrl(currentPath, locale
 const alternateFullUrl = new URL(alternateUrl, Astro.site || 'https://chrisrodz.io');
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang={locale}>
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content={description}>
-  <link rel="canonical" href={canonicalURL}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
 
-  <!-- Sitemap -->
-  <link rel="sitemap" type="application/xml" href="/sitemap-index.xml">
+    <!-- Sitemap -->
+    <link rel="sitemap" type="application/xml" href="/sitemap-index.xml" />
 
-  <!-- RSS Feed -->
-  <link rel="alternate" type="application/rss+xml" title="Christian Rodriguez - Blog (English)" href="/rss.xml" />
-  <link rel="alternate" type="application/rss+xml" title="Christian Rodriguez - Blog (Español)" href="/es/rss.xml" />
+    <!-- RSS Feed -->
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Christian Rodriguez - Blog (English)"
+      href="/rss.xml"
+    />
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Christian Rodriguez - Blog (Español)"
+      href="/es/rss.xml"
+    />
 
-  <!-- Alternate language links for SEO -->
-  <link rel="alternate" hreflang={locale} href={canonicalURL} />
-  <link rel="alternate" hreflang={alternateLocale} href={alternateFullUrl} />
-  <link rel="alternate" hreflang="x-default" href={new URL('/', Astro.site || 'https://chrisrodz.io')} />
+    <!-- Alternate language links for SEO -->
+    <link rel="alternate" hreflang={locale} href={canonicalURL} />
+    <link rel="alternate" hreflang={alternateLocale} href={alternateFullUrl} />
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href={new URL('/', Astro.site || 'https://chrisrodz.io')}
+    />
 
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="website">
-  <meta property="og:url" content={canonicalURL}>
-  <meta property="og:title" content={`${title} | Christian Rodriguez`}>
-  <meta property="og:description" content={description}>
-  <meta property="og:image" content={ogImage}>
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={`${title} | Christian Rodriguez`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
 
-  <!-- Twitter -->
-  <meta property="twitter:card" content="summary_large_image">
-  <meta property="twitter:url" content={canonicalURL}>
-  <meta property="twitter:title" content={`${title} | Christian Rodriguez`}>
-  <meta property="twitter:description" content={description}>
-  <meta property="twitter:image" content={ogImage}>
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={canonicalURL} />
+    <meta property="twitter:title" content={`${title} | Christian Rodriguez`} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={ogImage} />
 
-  <title>{title} | Christian Rodriguez</title>
+    <title>{title} | Christian Rodriguez</title>
 
-  <!-- Favicon (Puzzle Piece emoji from Twemoji by Twitter, Inc - CC BY 4.0) -->
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-  <link rel="manifest" href="/site.webmanifest">
-  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <!-- Favicon (Puzzle Piece emoji from Twemoji by Twitter, Inc - CC BY 4.0) -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Crimson+Text:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Crimson+Text:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
 
-  <!-- Pico CSS -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <!-- Pico CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
 
-  <!-- Theme script (prevent FOUC) -->
-  <script is:inline>
-    // Check for saved theme preference or default to 'light' mode
-    const theme = localStorage.getItem('theme') || 'light';
-    if (theme === 'dark') {
-      document.documentElement.setAttribute('data-theme', 'dark');
-      themeIcon.textContent = '☀️';
-    }
-  </script>
-</head>
-<body>
-  <nav class="container main-nav">
-    <ul>
-      <li><a href={locale === 'es' ? '/es' : '/'} class={currentPath === "/" || currentPath === "/es" ? "active" : ""}>{t(locale, 'nav.home')}</a></li>
-    </ul>
-    <ul class="nav-links">
-      <li class="nav-actions">
-        <button id="theme-toggle" aria-label="Toggle theme" class="contrast icon-button" title="Toggle light/dark mode">
-          <span id="theme-icon" aria-hidden="true">🌙</span>
-        </button>
-      </li>
-      <li class="nav-actions">
-        <a
-          id="lang-toggle"
-          href={alternateUrl}
-          class="lang-toggle"
-          data-target-lang={locale === 'en' ? 'es' : 'en'}
-          data-tooltip={locale === 'en' ? 'Haz click para cambiar a Español' : 'Click for English'}
-          data-placement="bottom"
-          aria-label={locale === 'en' ? 'Switch to Spanish' : 'Cambiar a Inglés'}
-        >
-          <span class="lang-icon" aria-hidden="true">{locale === 'en' ? '🇵🇷' : '🇺🇸'}</span>
-          <span class="lang-text">{locale === 'en' ? 'ES' : 'EN'}</span>
-        </a>
-      </li>
-    </ul>
-    <button id="mobile-menu-toggle" class="mobile-menu-toggle" aria-label="Toggle menu" aria-expanded="false">
-      <span class="hamburger-icon"></span>
-    </button>
-  </nav>
-
-  <main class="container">
-    <slot />
-  </main>
-
-  <footer class="container" style="margin-top: 4rem; padding: 2rem 0; border-top: 1px solid var(--pico-muted-border-color);">
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-      <p style="color: var(--pico-muted-color); margin: 0;">
-        © 2025 Christian A. Rodríguez Encarnación
-      </p>
-      <div style="display: flex; gap: 1.5rem;">
-        <a href="/rss.xml" style="color: var(--pico-muted-color); text-decoration: none;">RSS</a>
-        <a href="mailto:hey@chrisrodz.io" style="color: var(--pico-muted-color); text-decoration: none;">Email</a>
-        <a href="https://github.com/chrisrodz" target="_blank" rel="noopener noreferrer" style="color: var(--pico-muted-color); text-decoration: none;">GitHub</a>
-      </div>
-    </div>
-  </footer>
-
-  <!-- Dark mode toggle script -->
-  <script is:inline>
-    const themeToggle = document.getElementById('theme-toggle');
-    const themeIcon = document.getElementById('theme-icon');
-    const html = document.documentElement;
-
-    function setTheme(theme) {
+    <!-- Theme script (prevent FOUC) -->
+    <script is:inline>
+      // Check for saved theme preference or default to 'light' mode
+      const theme = localStorage.getItem('theme') || 'light';
       if (theme === 'dark') {
-        html.setAttribute('data-theme', 'dark');
+        document.documentElement.setAttribute('data-theme', 'dark');
         themeIcon.textContent = '☀️';
-      } else {
-        html.setAttribute('data-theme', 'light');
-        themeIcon.textContent = '🌙';
       }
-      localStorage.setItem('theme', theme);
-    }
+    </script>
+  </head>
+  <body>
+    <nav class="container main-nav">
+      <ul>
+        <li>
+          <a
+            href={locale === 'es' ? '/es' : '/'}
+            class={currentPath === '/' || currentPath === '/es' ? 'active' : ''}
+            >{t(locale, 'nav.home')}</a
+          >
+        </li>
+      </ul>
+      <ul class="nav-links">
+        <li class="nav-actions">
+          <button
+            id="theme-toggle"
+            aria-label="Toggle theme"
+            class="contrast icon-button"
+            title="Toggle light/dark mode"
+          >
+            <span id="theme-icon" aria-hidden="true">🌙</span>
+          </button>
+        </li>
+        <li class="nav-actions">
+          <a
+            id="lang-toggle"
+            href={alternateUrl}
+            class="lang-toggle"
+            data-target-lang={locale === 'en' ? 'es' : 'en'}
+            data-tooltip={locale === 'en'
+              ? 'Haz click para cambiar a Español'
+              : 'Click for English'}
+            data-placement="bottom"
+            aria-label={locale === 'en' ? 'Switch to Spanish' : 'Cambiar a Inglés'}
+          >
+            <span class="lang-icon" aria-hidden="true">{locale === 'en' ? '🇵🇷' : '🇺🇸'}</span>
+            <span class="lang-text">{locale === 'en' ? 'ES' : 'EN'}</span>
+          </a>
+        </li>
+      </ul>
+      <button
+        id="mobile-menu-toggle"
+        class="mobile-menu-toggle"
+        aria-label="Toggle menu"
+        aria-expanded="false"
+      >
+        <span class="hamburger-icon"></span>
+      </button>
+    </nav>
 
-    // Set initial icon based on current theme
-    const currentTheme = html.getAttribute('data-theme') || 'light';
-    themeIcon.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
+    <main class="container">
+      <slot />
+    </main>
 
-    themeToggle?.addEventListener('click', () => {
-      const current = html.getAttribute('data-theme') || 'light';
-      const next = current === 'dark' ? 'light' : 'dark';
-      setTheme(next);
-    });
-  </script>
+    <footer
+      class="container"
+      style="margin-top: 4rem; padding: 2rem 0; border-top: 1px solid var(--pico-muted-border-color);"
+    >
+      <div
+        style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;"
+      >
+        <p style="color: var(--pico-muted-color); margin: 0;">
+          © 2025 Christian A. Rodríguez Encarnación
+        </p>
+        <div style="display: flex; gap: 1.5rem;">
+          <a href="/rss.xml" style="color: var(--pico-muted-color); text-decoration: none;">RSS</a>
+          <a
+            href="mailto:hey@chrisrodz.io"
+            style="color: var(--pico-muted-color); text-decoration: none;">Email</a
+          >
+          <a
+            href="https://github.com/chrisrodz"
+            target="_blank"
+            rel="noopener noreferrer"
+            style="color: var(--pico-muted-color); text-decoration: none;">GitHub</a
+          >
+        </div>
+      </div>
+    </footer>
 
-  <!-- Language switcher script -->
-  <script is:inline>
-    const langToggle = document.getElementById('lang-toggle');
+    <!-- Dark mode toggle script -->
+    <script is:inline>
+      const themeToggle = document.getElementById('theme-toggle');
+      const themeIcon = document.getElementById('theme-icon');
+      const html = document.documentElement;
 
-    langToggle?.addEventListener('click', () => {
-      // Set cookie to remember user's language preference
-      const targetLang = langToggle.getAttribute('data-target-lang');
+      function setTheme(theme) {
+        if (theme === 'dark') {
+          html.setAttribute('data-theme', 'dark');
+          themeIcon.textContent = '☀️';
+        } else {
+          html.setAttribute('data-theme', 'light');
+          themeIcon.textContent = '🌙';
+        }
+        localStorage.setItem('theme', theme);
+      }
 
-      // Set cookie for 1 year (365 days)
-      const expires = new Date();
-      expires.setFullYear(expires.getFullYear() + 1);
-      document.cookie = `preferred-lang=${targetLang}; path=/; expires=${expires.toUTCString()}; SameSite=Lax`;
+      // Set initial icon based on current theme
+      const currentTheme = html.getAttribute('data-theme') || 'light';
+      themeIcon.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
 
-      // Let the navigation proceed normally
-    });
-  </script>
-
-  <!-- Mobile menu toggle script -->
-  <script is:inline>
-    const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
-    const navLinks = document.querySelector('.nav-links');
-
-    mobileMenuToggle?.addEventListener('click', () => {
-      const isExpanded = mobileMenuToggle.getAttribute('aria-expanded') === 'true';
-      mobileMenuToggle.setAttribute('aria-expanded', !isExpanded);
-      navLinks?.classList.toggle('active');
-      mobileMenuToggle.classList.toggle('active');
-    });
-
-    // Close menu when clicking on a link
-    navLinks?.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => {
-        navLinks.classList.remove('active');
-        mobileMenuToggle?.classList.remove('active');
-        mobileMenuToggle?.setAttribute('aria-expanded', 'false');
+      themeToggle?.addEventListener('click', () => {
+        const current = html.getAttribute('data-theme') || 'light';
+        const next = current === 'dark' ? 'light' : 'dark';
+        setTheme(next);
       });
-    });
+    </script>
 
-    // Close menu when clicking outside
-    document.addEventListener('click', (e) => {
-      if (!e.target.closest('.main-nav')) {
-        navLinks?.classList.remove('active');
-        mobileMenuToggle?.classList.remove('active');
-        mobileMenuToggle?.setAttribute('aria-expanded', 'false');
-      }
-    });
-  </script>
-</body>
+    <!-- Language switcher script -->
+    <script is:inline>
+      const langToggle = document.getElementById('lang-toggle');
+
+      langToggle?.addEventListener('click', () => {
+        // Set cookie to remember user's language preference
+        const targetLang = langToggle.getAttribute('data-target-lang');
+
+        // Set cookie for 1 year (365 days)
+        const expires = new Date();
+        expires.setFullYear(expires.getFullYear() + 1);
+        document.cookie = `preferred-lang=${targetLang}; path=/; expires=${expires.toUTCString()}; SameSite=Lax`;
+
+        // Let the navigation proceed normally
+      });
+    </script>
+
+    <!-- Mobile menu toggle script -->
+    <script is:inline>
+      const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+      const navLinks = document.querySelector('.nav-links');
+
+      mobileMenuToggle?.addEventListener('click', () => {
+        const isExpanded = mobileMenuToggle.getAttribute('aria-expanded') === 'true';
+        mobileMenuToggle.setAttribute('aria-expanded', !isExpanded);
+        navLinks?.classList.toggle('active');
+        mobileMenuToggle.classList.toggle('active');
+      });
+
+      // Close menu when clicking on a link
+      navLinks?.querySelectorAll('a').forEach((link) => {
+        link.addEventListener('click', () => {
+          navLinks.classList.remove('active');
+          mobileMenuToggle?.classList.remove('active');
+          mobileMenuToggle?.setAttribute('aria-expanded', 'false');
+        });
+      });
+
+      // Close menu when clicking outside
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.main-nav')) {
+          navLinks?.classList.remove('active');
+          mobileMenuToggle?.classList.remove('active');
+          mobileMenuToggle?.setAttribute('aria-expanded', 'false');
+        }
+      });
+    </script>
+  </body>
 </html>

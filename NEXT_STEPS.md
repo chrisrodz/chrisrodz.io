@@ -3,6 +3,7 @@
 ## ✅ Completed (2025-10-11)
 
 ### SEO & Best Practices Audit
+
 - [x] Added global footer to all pages via Layout.astro
 - [x] Installed and configured @astrojs/sitemap integration
 - [x] Created robots.txt with sitemap reference
@@ -18,9 +19,11 @@
 ### High Priority
 
 #### 1. Create OG Image (og-image.png)
+
 **Current Issue**: Layout.astro references `/og-image.png` (line 13) but file doesn't exist
 **Impact**: Broken social media preview images
 **Implementation**:
+
 ```bash
 # Create 1200x630px image with:
 # - Your name/brand
@@ -28,23 +31,29 @@
 # - Clean, professional design
 # - Works in both light/dark themes
 ```
+
 **Files to modify**: Create `public/og-image.png`
 
 #### 2. Add favicon.png
+
 **Current Issue**: Layout.astro references `/favicon.png` (line 56) but only .svg exists
 **Impact**: Some browsers/contexts don't support SVG favicons
 **Implementation**:
+
 ```bash
 # Create standard favicon sizes:
 # - 16x16, 32x32, 192x192, 512x512
 # Consider using realfavicongenerator.net
 ```
+
 **Files to modify**: Create `public/favicon.png` (32x32 recommended)
 
 #### 3. Add Person/Author Schema to Homepage
+
 **Current Issue**: No structured data on homepage about you
 **Impact**: Missing opportunity for Google Knowledge Panel
 **Implementation**:
+
 ```typescript
 // Add to src/pages/index.astro
 const personSchema = {
@@ -66,8 +75,10 @@ const personSchema = {
 ### Medium Priority
 
 #### 4. Implement WebSite Schema with SearchAction
+
 **Benefit**: Enable site search in Google results
 **Implementation**:
+
 ```typescript
 const websiteSchema = {
   '@context': 'https://schema.org',
@@ -78,17 +89,20 @@ const websiteSchema = {
     '@type': 'SearchAction',
     target: {
       '@type': 'EntryPoint',
-      urlTemplate: 'https://chrisrodz.io/search?q={search_term_string}'
+      urlTemplate: 'https://chrisrodz.io/search?q={search_term_string}',
     },
-    'query-input': 'required name=search_term_string'
-  }
+    'query-input': 'required name=search_term_string',
+  },
 };
 ```
+
 **Note**: Requires implementing search functionality first
 
 #### 5. Add BreadcrumbList Schema
+
 **Benefit**: Better navigation in search results
 **Implementation**: Add to blog post pages
+
 ```typescript
 const breadcrumbSchema = {
   '@context': 'https://schema.org',
@@ -98,34 +112,38 @@ const breadcrumbSchema = {
       '@type': 'ListItem',
       position: 1,
       name: 'Home',
-      item: 'https://chrisrodz.io'
+      item: 'https://chrisrodz.io',
     },
     {
       '@type': 'ListItem',
       position: 2,
       name: 'Blog',
-      item: 'https://chrisrodz.io/blog'
+      item: 'https://chrisrodz.io/blog',
     },
     {
       '@type': 'ListItem',
       position: 3,
       name: post.data.title,
-      item: postUrl
-    }
-  ]
+      item: postUrl,
+    },
+  ],
 };
 ```
 
 #### 6. Improve OG Images with Per-Post Dynamic Images
+
 **Benefit**: Better social sharing with custom images per post
 **Implementation**: Consider using:
+
 - `@vercel/og` for dynamic OG image generation
 - Or create custom images per post in `public/blog/`
-**Reference**: https://vercel.com/docs/functions/og-image-generation
+  **Reference**: https://vercel.com/docs/functions/og-image-generation
 
 #### 7. Add Reading Time to Blog Posts
+
 **Benefit**: Better UX, commonly expected in blogs
 **Implementation**:
+
 ```typescript
 // Add to blog schema in src/content/config.ts
 readingTime: z.number().optional(),
@@ -136,8 +154,10 @@ const stats = readingTime(post.body);
 ```
 
 #### 8. Implement View Counter (Optional)
+
 **Benefit**: Social proof, engagement metrics
 **Options**:
+
 - Use existing Supabase setup to store view counts
 - Add simple analytics without tracking users
 - Consider privacy-friendly alternatives
@@ -145,30 +165,37 @@ const stats = readingTime(post.body);
 ### Low Priority / Nice to Have
 
 #### 9. Add RSS Feed Links to Footer
+
 **Benefit**: Make RSS feeds more discoverable
 **Implementation**: Add RSS icon/link to footer alongside Email/GitHub
 
 #### 10. Create /blog Index Page
+
 **Current State**: Homepage shows blog posts
 **Consideration**: Decide if you want a dedicated /blog page or keep current structure
 **Impact**: May affect SEO and site structure
 
 #### 11. Add Related Posts Section
+
 **Benefit**: Better engagement, longer session duration
 **Implementation**: Match posts by category or manually curate
 
 #### 12. Implement Newsletter Signup (Optional)
+
 **Benefit**: Build audience, direct communication
 **Options**:
+
 - Buttondown, ConvertKit, Substack
 - Self-hosted with your Supabase setup
 
 #### 13. Add Comment System (Optional)
+
 **Options**:
+
 - Giscus (GitHub Discussions)
 - Utterances (GitHub Issues)
 - Self-hosted with Supabase
-**Consideration**: Maintenance overhead vs. engagement benefit
+  **Consideration**: Maintenance overhead vs. engagement benefit
 
 ---
 
@@ -288,18 +315,21 @@ Please analyze the current chrisrodz.io codebase against these criteria, identif
 Before implementing improvements, establish baselines:
 
 ### Performance Metrics
+
 - [ ] Run Lighthouse audit (Desktop & Mobile)
 - [ ] Check Core Web Vitals (LCP, CLS, FID)
 - [ ] Measure Time to First Byte (TTFB)
 - [ ] Check bundle sizes
 
 ### SEO Metrics
+
 - [ ] Submit sitemap to Google Search Console
 - [ ] Submit sitemap to Bing Webmaster Tools
 - [ ] Check Google Rich Results Test
 - [ ] Validate structured data with Schema.org validator
 
 ### Accessibility
+
 - [ ] Run axe DevTools audit
 - [ ] Test with screen reader (VoiceOver/NVDA)
 - [ ] Check color contrast ratios
@@ -310,12 +340,14 @@ Before implementing improvements, establish baselines:
 ## 🎨 Design Considerations
 
 ### Current State
+
 - ✅ Clean, minimal design with PicoCSS
 - ✅ Responsive layout
 - ✅ Dark mode toggle
 - ✅ Good typography (Inter + Crimson Text)
 
 ### Potential Enhancements
+
 - Consider adding a hero image or illustration
 - Add subtle animations (page transitions, hover effects)
 - Improve code block styling (copy button, language badges)
@@ -326,6 +358,7 @@ Before implementing improvements, establish baselines:
 ## 📝 Content Ideas
 
 ### Blog Post Topics to Consider
+
 - "Building a Bilingual Blog with Astro"
 - "My Development Setup 2025"
 - "Lessons from X Months of Triathlon Training"
@@ -333,6 +366,7 @@ Before implementing improvements, establish baselines:
 - "The Coffee Brewing Guide I Wish I Had"
 
 ### Evergreen Pages to Add
+
 - `/uses` - Tools, software, hardware you use
 - `/now` - What you're currently focused on (inspired by Derek Sivers)
 - `/projects` - Showcase of side projects
@@ -343,17 +377,20 @@ Before implementing improvements, establish baselines:
 ## 🔄 Maintenance Checklist
 
 ### Weekly
+
 - [ ] Check for broken links (use `linkinator` or similar)
 - [ ] Review Search Console for errors
 - [ ] Monitor site uptime
 
 ### Monthly
+
 - [ ] Update dependencies (`yarn upgrade-interactive`)
 - [ ] Review analytics/metrics
 - [ ] Check for security updates
 - [ ] Audit accessibility with automated tools
 
 ### Quarterly
+
 - [ ] Comprehensive SEO audit
 - [ ] Performance optimization review
 - [ ] Content audit (update/remove outdated posts)
@@ -364,21 +401,25 @@ Before implementing improvements, establish baselines:
 ## 📚 Resources
 
 ### SEO
+
 - [Google Search Central](https://developers.google.com/search/docs)
 - [Schema.org](https://schema.org/)
 - [Bing Webmaster Guidelines](https://www.bing.com/webmasters/help/webmaster-guidelines-30fba23a)
 
 ### Performance
+
 - [web.dev](https://web.dev/)
 - [WebPageTest](https://www.webpagetest.org/)
 - [Core Web Vitals](https://web.dev/vitals/)
 
 ### Accessibility
+
 - [WCAG 2.2 Guidelines](https://www.w3.org/WAI/WCAG22/quickref/)
 - [A11y Project Checklist](https://www.a11yproject.com/checklist/)
 - [WebAIM](https://webaim.org/)
 
 ### Astro-Specific
+
 - [Astro Docs](https://docs.astro.build/)
 - [Astro Integrations](https://astro.build/integrations/)
 - [Astro Themes](https://astro.build/themes/) - for inspiration
@@ -413,5 +454,5 @@ Before implementing improvements, establish baselines:
 
 ---
 
-*Last updated: 2025-10-11*
-*Next review: 2025-11-11*
+_Last updated: 2025-10-11_
+_Next review: 2025-11-11_

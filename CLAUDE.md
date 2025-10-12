@@ -23,6 +23,7 @@ yarn new-post "Title" es    # Create only Spanish post
 ### Standard Workflow:
 
 1. **Create feature branch** from main:
+
    ```bash
    git checkout main
    git pull
@@ -34,15 +35,19 @@ yarn new-post "Title" es    # Create only Spanish post
    - Build to verify: `yarn build`
 
 3. **Commit AND push together** (never commit without pushing):
+
    ```bash
    git add . && git commit -m "descriptive message" && git push
    ```
+
    If the branch doesn't exist remotely yet, use:
+
    ```bash
    git push -u origin feature/description
    ```
 
 4. **Merge when ready**:
+
    ```bash
    git checkout main
    git merge feature/description
@@ -60,18 +65,21 @@ yarn new-post "Title" es    # Create only Spanish post
 **Only create PRs when explicitly requested.** For most autonomous development tasks, direct merge to main after local testing is sufficient.
 
 When a PR is requested:
+
 ```bash
 gh pr create --draft --title "Feature: [description]" --body "[description]"
 gh pr ready  # When ready for review
 ```
 
 ### Branch Naming Convention:
+
 - `feature/` - New features or enhancements
 - `fix/` - Bug fixes
 - `docs/` - Documentation updates
 - `refactor/` - Code refactoring
 
 ### Best Practices:
+
 - ✅ Keep commits atomic - one logical change per commit
 - ✅ Write clear, descriptive commit messages
 - ✅ Always test locally before committing
@@ -81,6 +89,7 @@ gh pr ready  # When ready for review
 - ❌ Never add Claude as a co-author to commits
 
 ### Deployment:
+
 - **Main branch** auto-deploys to production (Vercel)
 - **Feature branches** do NOT auto-deploy
 - **Preview deployments** available for PRs (when created)
@@ -88,9 +97,11 @@ gh pr ready  # When ready for review
 ## Architecture Overview
 
 ### SSR Mode with Astro v5
+
 This is an **SSR (Server-Side Rendered)** Astro application using the Vercel adapter (`output: 'server'`). All pages are dynamically rendered on-demand.
 
 **Critical**: Do NOT use `getStaticPaths()` for dynamic routes. Use SSR patterns instead:
+
 ```typescript
 // ❌ Wrong (static generation)
 export async function getStaticPaths() { ... }
@@ -105,6 +116,7 @@ const entry = await getEntry('blog', slug);
 Blog posts use Astro Content Collections with a translation-friendly folder structure:
 
 **Structure**:
+
 ```
 src/content/blog/
 ├── welcome-post-2025/       # Folder name = translation key
@@ -127,17 +139,17 @@ src/content/blog/
    - Spanish: `slug: "bienvenido-a-mi-sitio"` → `/es/blog/bienvenido-a-mi-sitio`
 
 4. **Finding posts by slug** (not by ID):
+
    ```typescript
    import { getCollection, render } from 'astro:content';
 
    const allPosts = await getCollection('blog');
-   const entry = allPosts.find(
-     (post) => post.data.slug === slug && post.data.locale === 'en'
-   );
+   const entry = allPosts.find((post) => post.data.slug === slug && post.data.locale === 'en');
    const { Content } = await render(entry);
    ```
 
 5. **Finding translations**: Use `getTranslationKey()` helper
+
    ```typescript
    import { getTranslatedPost } from '@/lib/i18n';
 
@@ -151,6 +163,7 @@ src/content/blog/
 Uses **PicoCSS v2** as the primary CSS framework with minimal custom overrides.
 
 **Important**: Always use PicoCSS CSS variables instead of hardcoded colors:
+
 - Text: `var(--pico-color)`
 - Headings: `var(--pico-h1-color)` through `var(--pico-h6-color)`
 - Primary: `var(--pico-primary)`
@@ -166,6 +179,7 @@ Dark mode: Toggled via `data-theme="dark"` attribute on `<html>`.
 The app uses **Supabase** (PostgreSQL) but gracefully degrades when not configured.
 
 **Null-safe database pattern**:
+
 ```typescript
 // src/lib/supabase.ts exports:
 export const supabase: SupabaseClient | null;
@@ -178,6 +192,7 @@ if (!supabase) {
 ```
 
 Features work standalone without Supabase:
+
 - Blog: Fully functional (uses file-based content)
 - Coffee/Training: Show setup instructions when DB missing
 - Admin: Shows setup instructions when ADMIN_SECRET missing
@@ -185,12 +200,14 @@ Features work standalone without Supabase:
 ### Authentication
 
 **Session-based auth** (not JWT):
+
 - Sessions stored in-memory Map (consider Redis for production)
 - 24-hour expiry
 - HttpOnly cookies with `secure` flag in production
 - No passwords in database (uses `ADMIN_SECRET` env var)
 
 **Auth flow**:
+
 ```typescript
 import { checkAuth, setAuthCookie, createSession } from '@/lib/auth';
 
@@ -209,6 +226,7 @@ if (verifyAdminSecret(password)) {
 ### Input Validation
 
 All forms use **Zod schemas** defined in `src/lib/validation.ts`:
+
 ```typescript
 import { coffeeSchema } from '@/lib/validation';
 
@@ -245,6 +263,7 @@ Never trust user input. Always validate with Zod before database operations.
 ## Environment Variables
 
 Required for full functionality (see `.env.example`):
+
 ```bash
 # Admin access
 ADMIN_SECRET=random_string
@@ -265,6 +284,7 @@ App functions without these (shows setup instructions instead).
 ## Database Schema
 
 Supabase tables (if configured):
+
 - `beans`: Coffee bean inventory
 - `coffees`: Brew logs (references beans)
 - `activities`: Training activities (Strava sync)
@@ -274,11 +294,13 @@ All tables have Row Level Security enabled with public read access.
 ## Common Patterns
 
 ### Creating a new page
+
 1. Add `.astro` file to `src/pages/`
 2. Import Layout: `import Layout from '@/layouts/Layout.astro';`
 3. Use PicoCSS classes/variables for styling
 
 ### Adding a blog post
+
 ```bash
 # Create both English and Spanish versions
 yarn new-post "My Post Title"
@@ -291,11 +313,13 @@ yarn new-post "My Post Title" es
 ```
 
 This creates:
+
 - `src/content/blog/my-post-title-2025/en.md` (and/or `es.md`)
 - Frontmatter includes: `title`, `description`, `slug`, `pubDate`, `tags`, `locale`
 - Edit the generated file(s) to customize the slug and add content
 
 ### Accessing blog posts in code
+
 ```typescript
 import { getCollection, render } from 'astro:content';
 import { getTranslatedPost, getBlogPostUrl } from '@/lib/i18n';
@@ -305,9 +329,7 @@ const posts = await getCollection('blog', ({ data }) => data.locale === 'en');
 
 // Find post by custom slug (not by ID)
 const allPosts = await getCollection('blog');
-const post = allPosts.find(
-  (p) => p.data.slug === 'my-slug' && p.data.locale === 'en'
-);
+const post = allPosts.find((p) => p.data.slug === 'my-slug' && p.data.locale === 'en');
 if (!post) return Astro.redirect('/404');
 
 // Render content
@@ -321,6 +343,7 @@ if (translatedPost) {
 ```
 
 ### Working with forms
+
 ```typescript
 import { coffeeSchema } from '@/lib/validation';
 
@@ -342,6 +365,7 @@ Deploys to **Vercel** with Node.js 20+ runtime.
 Auto-deploys on push to `main` branch.
 
 Required Vercel environment variables:
+
 - `ADMIN_SECRET` (required)
 - Supabase vars (optional)
 - Strava vars (optional)
@@ -349,6 +373,7 @@ Required Vercel environment variables:
 ## Type Safety
 
 Full TypeScript coverage. Key types:
+
 - `CollectionEntry<'blog'>`: Blog post type
 - `SupabaseClient | null`: Database client
 - Zod inferred types: `z.infer<typeof coffeeSchema>`
@@ -356,15 +381,18 @@ Full TypeScript coverage. Key types:
 ## Internationalization (i18n)
 
 The site supports English (default) and Spanish:
+
 - **English**: `/blog/post-slug`
 - **Spanish**: `/es/blog/post-slug`
 
 **Translation Structure**:
+
 - Blog posts in the same folder are translations of each other
 - Folder name serves as the translation key (e.g., `welcome-post-2025/`)
 - Each language version has its own custom `slug` in frontmatter
 
 **Example**:
+
 ```
 src/content/blog/welcome-post-2025/
 ├── en.md    # slug: "welcome-to-my-site"  → /blog/welcome-to-my-site
@@ -372,9 +400,62 @@ src/content/blog/welcome-post-2025/
 ```
 
 The language switcher in `Layout.astro` uses `getTranslatedPost()` to:
+
 1. Extract the translation key from the post's folder
 2. Find the sibling file with the target locale
 3. Get the correct translated URL using that post's custom slug
+
+## Code Quality Tools
+
+### Formatting (Prettier)
+
+- Auto-formats on save in VSCode
+- Run manually: `yarn format`
+- Check formatting: `yarn format:check`
+- Config: `.prettierrc`
+
+**Prettier settings**:
+
+- Single quotes
+- Semicolons enabled
+- 2-space tabs
+- 100 character line width
+- Includes `prettier-plugin-astro` for `.astro` file support
+
+### Linting (ESLint)
+
+- Auto-fixes on save in VSCode
+- Run manually: `yarn lint`
+- Fix auto-fixable issues: `yarn lint:fix`
+- Config: `eslint.config.js` (ESLint flat config format)
+
+**Key ESLint rules**:
+
+- Warns on unused variables (except those prefixed with `_`)
+- Warns on `console.log` (allows `console.warn` and `console.error`)
+- Enforces `const` over `let` where possible
+- Prohibits `var`
+- Includes Astro-specific linting rules
+
+### Pre-commit Hooks (Husky + lint-staged)
+
+- Automatically formats and lints staged files before commit
+- Prevents committing improperly formatted code
+- Config: `lint-staged` in `package.json`
+
+**What runs on commit**:
+
+- `*.{js,ts,astro}`: ESLint fix + Prettier format
+- `*.{json,md,css}`: Prettier format
+
+### Best Practices
+
+- ✅ Always run `yarn check` before pushing (runs type check + lint + format check)
+- ✅ Let VSCode auto-format on save (requires Prettier extension)
+- ✅ Fix ESLint warnings as you code
+- ✅ Pre-commit hooks will catch issues before they're committed
+- ❌ Don't disable ESLint rules without good reason
+- ❌ Don't skip pre-commit hooks (`--no-verify`) unless absolutely necessary
 
 ## Notes for Future Development
 

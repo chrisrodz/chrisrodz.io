@@ -24,71 +24,95 @@ if (Astro.request.method === 'POST') {
 ---
 
 <Layout title="Admin Dashboard">
-  {!isAuthed ? (
-    <section>
-      <h1>Admin Login</h1>
-      {loginError && (
-        <div style="padding: 1rem; margin: 1rem 0; background: #fee; border-radius: 4px; color: #c00;">
-          {loginError}
+  {
+    !isAuthed ? (
+      <section>
+        <h1>Admin Login</h1>
+        {loginError && (
+          <div style="padding: 1rem; margin: 1rem 0; background: #fee; border-radius: 4px; color: #c00;">
+            {loginError}
+          </div>
+        )}
+        <form method="POST">
+          <fieldset>
+            <label for="password">Admin Password</label>
+            <input
+              type="password"
+              name="password"
+              id="password"
+              placeholder="Enter admin password"
+              required
+            />
+            <button type="submit">Login</button>
+          </fieldset>
+        </form>
+      </section>
+    ) : (
+      <section>
+        <h1>Admin Dashboard</h1>
+        <p>Welcome to the admin panel. Manage your content and settings here.</p>
+
+        <div class="grid">
+          <div>
+            <h3>Coffee Management</h3>
+            <p>Add and manage coffee entries</p>
+            <a href="/admin/coffee" role="button">
+              Manage Coffee →
+            </a>
+          </div>
+
+          <div>
+            <h3>Blog Management</h3>
+            <p>Write and publish blog posts</p>
+            <a href="/admin/blog" role="button">
+              Manage Blog →
+            </a>
+          </div>
+
+          <div>
+            <h3>Settings</h3>
+            <p>Configure Supabase and Strava integration</p>
+            <a href="/admin/settings" role="button">
+              Settings →
+            </a>
+          </div>
         </div>
-      )}
-      <form method="POST">
-        <fieldset>
-          <label for="password">Admin Password</label>
-          <input type="password" name="password" id="password" placeholder="Enter admin password" required>
-          <button type="submit">Login</button>
-        </fieldset>
-      </form>
-    </section>
-  ) : (
-    <section>
-      <h1>Admin Dashboard</h1>
-      <p>Welcome to the admin panel. Manage your content and settings here.</p>
-      
-      <div class="grid">
-        <div>
-          <h3>Coffee Management</h3>
-          <p>Add and manage coffee entries</p>
-          <a href="/admin/coffee" role="button">Manage Coffee →</a>
-        </div>
-        
-        <div>
-          <h3>Blog Management</h3>
-          <p>Write and publish blog posts</p>
-          <a href="/admin/blog" role="button">Manage Blog →</a>
-        </div>
-        
-        <div>
-          <h3>Settings</h3>
-          <p>Configure Supabase and Strava integration</p>
-          <a href="/admin/settings" role="button">Settings →</a>
-        </div>
-      </div>
-      
-      <hr>
-      
-      <details>
-        <summary>Database Setup Instructions</summary>
-        <div>
-          <h4>Supabase Configuration</h4>
-          <p>To get started with the coffee and training tracking features:</p>
-          <ol>
-            <li>Create a Supabase project at <a href="https://supabase.com" target="_blank">supabase.com</a></li>
-            <li>Copy your project URL and anon key to your environment variables</li>
-            <li>Run the SQL schema provided in the README to create the required tables</li>
-            <li>Update your environment variables and restart the application</li>
-          </ol>
-          
-          <h4>Strava Integration</h4>
-          <p>To sync training activities from Strava:</p>
-          <ol>
-            <li>Create a Strava application at <a href="https://developers.strava.com" target="_blank">developers.strava.com</a></li>
-            <li>Set up OAuth and get your client credentials</li>
-            <li>Add your Strava credentials to environment variables</li>
-            <li>Implement the OAuth flow (coming soon)</li>
-          </ol>
-        </div>
-      </details>
-    </section>
-  )}
+
+        <hr />
+
+        <details>
+          <summary>Database Setup Instructions</summary>
+          <div>
+            <h4>Supabase Configuration</h4>
+            <p>To get started with the coffee and training tracking features:</p>
+            <ol>
+              <li>
+                Create a Supabase project at{' '}
+                <a href="https://supabase.com" target="_blank">
+                  supabase.com
+                </a>
+              </li>
+              <li>Copy your project URL and anon key to your environment variables</li>
+              <li>Run the SQL schema provided in the README to create the required tables</li>
+              <li>Update your environment variables and restart the application</li>
+            </ol>
+
+            <h4>Strava Integration</h4>
+            <p>To sync training activities from Strava:</p>
+            <ol>
+              <li>
+                Create a Strava application at{' '}
+                <a href="https://developers.strava.com" target="_blank">
+                  developers.strava.com
+                </a>
+              </li>
+              <li>Set up OAuth and get your client credentials</li>
+              <li>Add your Strava credentials to environment variables</li>
+              <li>Implement the OAuth flow (coming soon)</li>
+            </ol>
+          </div>
+        </details>
+      </section>
+    )
+  }
 </Layout>

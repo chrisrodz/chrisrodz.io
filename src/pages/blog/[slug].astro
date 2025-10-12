@@ -12,9 +12,7 @@ if (!slug) {
 
 // Find the English blog post by slug field
 const allPosts = await getCollection('blog');
-const entry = allPosts.find(
-  (post) => post.data.slug === slug && post.data.locale === 'en'
-);
+const entry = allPosts.find((post) => post.data.slug === slug && post.data.locale === 'en');
 
 if (!entry) {
   return Astro.redirect('/404');
@@ -68,26 +66,35 @@ const structuredData = {
   <article style="max-width: 70ch; margin: 0 auto;">
     <header style="margin-bottom: 3rem;">
       <nav style="margin-bottom: 1.5rem;">
-        <a href="/" style="text-decoration: none; color: var(--pico-muted-color); font-weight: 500; font-size: 0.9375rem;">
+        <a
+          href="/"
+          style="text-decoration: none; color: var(--pico-muted-color); font-weight: 500; font-size: 0.9375rem;"
+        >
           ← Back to home
         </a>
       </nav>
 
-      <h1 style="font-size: clamp(2rem, 4vw, 2.5rem); font-weight: 800; letter-spacing: -0.05em; line-height: 1.2; margin-bottom: 1rem;">
+      <h1
+        style="font-size: clamp(2rem, 4vw, 2.5rem); font-weight: 800; letter-spacing: -0.05em; line-height: 1.2; margin-bottom: 1rem;"
+      >
         {post.data.title}
       </h1>
 
-      <div style="display: flex; gap: 1.5rem; align-items: center; color: var(--pico-muted-color); font-size: 0.9375rem;">
+      <div
+        style="display: flex; gap: 1.5rem; align-items: center; color: var(--pico-muted-color); font-size: 0.9375rem;"
+      >
         <time datetime={post.data.pubDate.toISOString()}>
           {formattedDate}
         </time>
       </div>
 
-      {post.data.description && (
-        <p style="margin-top: 1.5rem; font-size: 1.125rem; color: var(--pico-muted-color); line-height: 1.6;">
-          {post.data.description}
-        </p>
-      )}
+      {
+        post.data.description && (
+          <p style="margin-top: 1.5rem; font-size: 1.125rem; color: var(--pico-muted-color); line-height: 1.6;">
+            {post.data.description}
+          </p>
+        )
+      }
     </header>
 
     <div class="prose">
@@ -96,11 +103,9 @@ const structuredData = {
   </article>
 
   <div style="max-width: 70ch; margin: 3rem auto 0;">
-    <hr style="margin: 3rem 0;">
+    <hr style="margin: 3rem 0;" />
     <nav>
-      <a href="/" role="button" class="secondary">
-        ← Back to home
-      </a>
+      <a href="/" role="button" class="secondary"> ← Back to home </a>
     </nav>
   </div>
 </Layout>

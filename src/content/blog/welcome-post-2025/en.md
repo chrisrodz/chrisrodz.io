@@ -1,7 +1,7 @@
 ---
-title: "Hello World"
-description: "Welcome to my website where I will be writing some thoughts out loud"
-slug: "welcome-to-my-site"
+title: 'Hello World'
+description: 'Welcome to my website where I will be writing some thoughts out loud'
+slug: 'welcome-to-my-site'
 pubDate: 2025-10-09
 locale: en
 ---
