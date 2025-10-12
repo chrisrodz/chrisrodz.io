@@ -20,7 +20,7 @@ yarn new-post "Title" es    # Create only Spanish post
 
 **Critical**: Always work on feature branches to protect `main` which auto-deploys to production.
 
-### Standard Workflow:
+### Standard Workflow
 
 1. **Create feature branch** from main:
 
@@ -55,12 +55,13 @@ yarn new-post "Title" es    # Create only Spanish post
    ```
 
 5. **Clean up** after merge:
+
    ```bash
    git branch -d feature/description
    git push origin --delete feature/description
    ```
 
-### Pull Requests (Optional):
+### Pull Requests (Optional)
 
 **Only create PRs when explicitly requested.** For most autonomous development tasks, direct merge to main after local testing is sufficient.
 
@@ -71,24 +72,25 @@ gh pr create --draft --title "Feature: [description]" --body "[description]"
 gh pr ready  # When ready for review
 ```
 
-### Branch Naming Convention:
+### Branch Naming Convention
 
 - `feature/` - New features or enhancements
 - `fix/` - Bug fixes
 - `docs/` - Documentation updates
 - `refactor/` - Code refactoring
 
-### Best Practices:
+### Best Practices
 
 - ✅ Keep commits atomic - one logical change per commit
-- ✅ Write clear, descriptive commit messages
+- ✅ Write clear, descriptive commit messages.
 - ✅ Always test locally before committing
 - ✅ Always push immediately after committing
 - ❌ Never commit without pushing (work could be lost)
 - ❌ Never commit directly to `main`
-- ❌ Never add Claude as a co-author to commits
+- ❌ Never add Claude or Anthropic as a co-author to commits
+- ❌ Never mention Claude or Anthropic in commit descriptions
 
-### Deployment:
+### Deployment
 
 - **Main branch** auto-deploys to production (Vercel)
 - **Feature branches** do NOT auto-deploy
