@@ -155,38 +155,45 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
           )}
 
           {/* Brew Method */}
-          <div>
-            <label className="block text-sm font-medium mb-3">Brew Method *</label>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <fieldset>
+            <legend className="block text-sm font-medium mb-3 text-gray-900 dark:text-gray-100">
+              Brew Method *
+            </legend>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3" role="radiogroup">
               {BREW_METHODS.map((method) => (
                 <button
                   key={method}
                   type="button"
+                  role="radio"
+                  aria-checked={brewMethod === method}
                   onClick={() => setBrewMethod(method)}
-                  className={`p-4 rounded-lg border-2 font-medium transition-all ${
+                  className={`p-4 rounded-lg border-2 font-medium transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
                     brewMethod === method
                       ? 'border-blue-600 bg-blue-50 dark:bg-blue-900/20 text-blue-900 dark:text-blue-100'
-                      : 'border-gray-300 dark:border-gray-600 hover:border-blue-400'
+                      : 'border-gray-300 dark:border-gray-600 text-gray-900 dark:text-gray-100 hover:border-blue-400'
                   }`}
-                  style={{ minHeight: '44px' }}
+                  style={{ minHeight: '48px' }}
                 >
                   {method}
                 </button>
               ))}
             </div>
-          </div>
+          </fieldset>
 
           {/* Bean Selection */}
           <div>
-            <label htmlFor="bean_id" className="block text-sm font-medium mb-2">
+            <label
+              htmlFor="bean_id"
+              className="block text-sm font-medium mb-2 text-gray-900 dark:text-gray-100"
+            >
               Coffee Bean
             </label>
             <select
               id="bean_id"
               value={beanId}
               onChange={(e) => setBeanId(e.target.value)}
-              className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800"
-              style={{ minHeight: '44px' }}
+              className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+              style={{ minHeight: '48px' }}
             >
               <option value="">No bean selected</option>
               {activeBeans.map((bean) => (
@@ -201,11 +208,15 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
           {/* Dose and Water/Yield */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="dose_grams" className="block text-sm font-medium mb-2">
+              <label
+                htmlFor="dose_grams"
+                className="block text-sm font-medium mb-2 text-gray-900 dark:text-gray-100"
+              >
                 Coffee Dose (grams) *
               </label>
               <input
                 type="number"
+                inputMode="decimal"
                 id="dose_grams"
                 value={doseGrams}
                 onChange={(e) => setDoseGrams(Number(e.target.value))}
@@ -213,17 +224,21 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
                 max="100"
                 step="1"
                 required
-                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800"
-                style={{ minHeight: '44px' }}
+                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                style={{ minHeight: '48px' }}
               />
             </div>
 
             <div>
-              <label htmlFor="yield_grams" className="block text-sm font-medium mb-2">
+              <label
+                htmlFor="yield_grams"
+                className="block text-sm font-medium mb-2 text-gray-900 dark:text-gray-100"
+              >
                 {brewMethod === 'Espresso' ? 'Yield (grams)' : 'Water (grams)'}
               </label>
               <input
                 type="number"
+                inputMode="decimal"
                 id="yield_grams"
                 value={yieldGrams}
                 onChange={(e) => setYieldGrams(Number(e.target.value))}
@@ -231,19 +246,23 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
                 max="200"
                 step="1"
                 placeholder={brewMethod === 'Espresso' ? 'Output weight' : 'Water added'}
-                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800"
-                style={{ minHeight: '44px' }}
+                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                style={{ minHeight: '48px' }}
               />
             </div>
           </div>
 
           {/* Grind Setting */}
           <div>
-            <label htmlFor="grind_setting" className="block text-sm font-medium mb-2">
+            <label
+              htmlFor="grind_setting"
+              className="block text-sm font-medium mb-2 text-gray-900 dark:text-gray-100"
+            >
               Grind Setting (1-40) *
             </label>
             <input
               type="number"
+              inputMode="numeric"
               id="grind_setting"
               value={grindSetting}
               onChange={(e) => setGrindSetting(Number(e.target.value))}
@@ -251,17 +270,19 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
               max="40"
               step="1"
               required
-              className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800"
-              style={{ minHeight: '44px' }}
+              className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+              style={{ minHeight: '48px' }}
             />
           </div>
 
           {/* Quality Rating */}
           <div>
-            <label className="block text-sm font-medium mb-2">Quality Rating *</label>
+            <label className="block text-sm font-medium mb-2 text-gray-900 dark:text-gray-100">
+              Quality Rating *
+            </label>
             <StarRating value={rating} onChange={setRating} />
             {rating === 0 && (
-              <p className="text-sm text-red-600 dark:text-red-400 mt-1">
+              <p className="text-sm text-red-600 dark:text-red-400 mt-1" role="alert">
                 Please select a rating
               </p>
             )}
@@ -269,7 +290,10 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
 
           {/* Brew Time */}
           <div>
-            <label htmlFor="brew_time" className="block text-sm font-medium mb-2">
+            <label
+              htmlFor="brew_time"
+              className="block text-sm font-medium mb-2 text-gray-900 dark:text-gray-100"
+            >
               Brew Time *
             </label>
             <input
@@ -278,8 +302,8 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
               value={brewTime}
               onChange={(e) => setBrewTime(e.target.value)}
               required
-              className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800"
-              style={{ minHeight: '44px' }}
+              className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+              style={{ minHeight: '48px' }}
             />
           </div>
 
@@ -288,20 +312,26 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
             <button
               type="button"
               onClick={() => setNotesExpanded(!notesExpanded)}
-              className="flex items-center gap-2 text-sm font-medium mb-2 hover:text-blue-600 transition-colors"
-              style={{ minHeight: '44px' }}
+              aria-expanded={notesExpanded}
+              aria-controls="notes-section"
+              className="flex items-center gap-2 text-sm font-medium mb-2 text-gray-900 dark:text-gray-100 hover:text-blue-600 dark:hover:text-blue-400 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-2"
+              style={{ minHeight: '48px' }}
             >
-              <span>{notesExpanded ? '▼' : '▶'}</span>
+              <span className="transition-transform" style={{ transform: notesExpanded ? 'rotate(90deg)' : 'none' }}>
+                ▶
+              </span>
               Notes (optional)
             </button>
             {notesExpanded && (
               <textarea
-                id="notes"
+                id="notes-section"
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 rows={4}
+                maxLength={500}
                 placeholder="Add any notes about this brew..."
-                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800"
+                aria-label="Brew notes"
+                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
               />
             )}
           </div>
@@ -311,8 +341,9 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
             <button
               type="submit"
               disabled={isSubmitting || rating === 0}
-              className="w-full p-4 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors text-lg"
-              style={{ minHeight: '44px' }}
+              className="w-full p-4 bg-blue-600 hover:bg-blue-700 active:bg-blue-800 disabled:bg-gray-400 disabled:cursor-not-allowed text-white rounded-lg font-medium transition-colors text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              style={{ minHeight: '48px' }}
+              aria-busy={isSubmitting}
             >
               {isSubmitting ? 'Logging...' : 'Log Coffee'}
             </button>
