@@ -1,0 +1,182 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { checkAuth } from '../../lib/auth';
+import { supabase } from '../../lib/supabase';
+import { CoffeeLogSchema } from '../../lib/schemas/cafe';
+import CoffeeLogForm from '../../components/cafe/CoffeeLogForm';
+import type { CoffeeBeanRow } from '../../lib/schemas/cafe';
+import type { BREW_METHODS } from '../../lib/schemas/cafe';
+
+export const prerender = false;
+
+// Check authentication
+const isAuthed = checkAuth(Astro.cookies);
+if (!isAuthed) {
+  return Astro.redirect('/admin');
+}
+
+let message = '';
+let messageType: 'success' | 'error' | null = null;
+
+// Handle form submission
+if (Astro.request.method === 'POST') {
+  if (!supabase) {
+    message = 'Error: Supabase is not configured';
+    messageType = 'error';
+  } else {
+    try {
+      const formData = await Astro.request.formData();
+      const action = formData.get('action');
+
+      if (action === 'log_coffee') {
+        // Parse and validate
+        const rawData = {
+          brew_method: formData.get('brew_method'),
+          bean_id: formData.get('bean_id') || null,
+          dose_grams: Number(formData.get('dose_grams')),
+          yield_grams: formData.get('yield_grams') ? Number(formData.get('yield_grams')) : null,
+          grind_setting: Number(formData.get('grind_setting')),
+          quality_rating: Number(formData.get('quality_rating')),
+          brew_time: formData.get('brew_time') as string,
+          notes: formData.get('notes') || null,
+        };
+
+        const validatedData = CoffeeLogSchema.parse(rawData);
+
+        // Insert into database
+        const { error } = await supabase.from('coffee_logs').insert({
+          brew_method: validatedData.brew_method,
+          bean_id: validatedData.bean_id,
+          dose_grams: validatedData.dose_grams,
+          yield_grams: validatedData.yield_grams,
+          grind_setting: validatedData.grind_setting,
+          quality_rating: validatedData.quality_rating,
+          brew_time: validatedData.brew_time,
+          notes: validatedData.notes,
+        });
+
+        if (error) throw error;
+
+        message = 'Coffee logged successfully!';
+        messageType = 'success';
+      }
+    } catch (error) {
+      console.error('Error logging coffee:', error);
+      if (error instanceof Error) {
+        message = `Error: ${error.message}`;
+      } else {
+        message = 'Error: Unknown error occurred';
+      }
+      messageType = 'error';
+    }
+  }
+}
+
+// Fetch active beans for dropdown
+let activeBeans: CoffeeBeanRow[] = [];
+if (supabase) {
+  try {
+    const { data } = await supabase
+      .from('coffee_beans')
+      .select('*')
+      .eq('is_active', true)
+      .order('created_at', { ascending: false });
+
+    activeBeans = data || [];
+  } catch (error) {
+    console.warn('Could not fetch beans:', error);
+  }
+}
+
+// Fetch smart defaults from last coffee log
+type BrewMethod = (typeof BREW_METHODS)[number];
+
+let smartDefaults: {
+  brew_method: BrewMethod | null;
+  grind_setting: number | null;
+  dose_grams: number | null;
+  yield_grams: number | null;
+} = {
+  brew_method: null,
+  grind_setting: null,
+  dose_grams: null,
+  yield_grams: null,
+};
+
+if (supabase) {
+  try {
+    const { data } = await supabase
+      .from('coffee_logs')
+      .select('brew_method, grind_setting, dose_grams, yield_grams')
+      .order('brew_time', { ascending: false })
+      .limit(1)
+      .single();
+
+    if (data) {
+      smartDefaults = data;
+    }
+  } catch (error) {
+    // No previous logs or error - use hardcoded defaults
+    console.warn('Could not fetch smart defaults:', error);
+  }
+}
+---
+
+<Layout title="Coffee Logger">
+  <nav class="mb-6">
+    <a
+      href="/admin"
+      class="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 rounded px-2 py-1"
+    >
+      ← Back to Dashboard
+    </a>
+  </nav>
+
+  <header class="mb-8">
+    <h1 class="text-3xl font-bold mb-2 text-gray-900 dark:text-gray-100">Coffee Logger</h1>
+    <p class="text-gray-600 dark:text-gray-400">Quick log your daily brews</p>
+  </header>
+
+  {
+    !supabase ? (
+      <section class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6">
+        <h2 class="text-xl font-semibold mb-4 text-yellow-900 dark:text-yellow-100">
+          Database Not Configured
+        </h2>
+        <p class="mb-4 text-yellow-900 dark:text-yellow-100">
+          Coffee tracking requires Supabase to be configured. Please set up your database:
+        </p>
+        <ol class="list-decimal list-inside space-y-2 mb-6 text-yellow-900 dark:text-yellow-100">
+          <li>Create a Supabase project</li>
+          <li>Run the schema.sql file in your Supabase SQL Editor</li>
+          <li>Add your Supabase credentials to .env</li>
+          <li>Restart the application</li>
+        </ol>
+        <a
+          href="/admin"
+          role="button"
+          class="inline-block px-6 py-3 bg-yellow-600 hover:bg-yellow-700 active:bg-yellow-800 text-white rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-offset-2"
+          style="min-height: 48px;"
+        >
+          Go to Admin Dashboard
+        </a>
+      </section>
+    ) : (
+      <section>
+        {message && messageType && (
+          <div
+            class={`p-4 rounded-lg mb-6 ${
+              messageType === 'success'
+                ? 'bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-900 dark:text-green-100'
+                : 'bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-900 dark:text-red-100'
+            }`}
+          >
+            {message}
+          </div>
+        )}
+
+        <CoffeeLogForm client:load activeBeans={activeBeans} smartDefaults={smartDefaults} />
+      </section>
+    )
+  }
+</Layout>
