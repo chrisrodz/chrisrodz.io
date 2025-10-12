@@ -9,7 +9,18 @@ export default defineConfig({
   output: 'server',
   adapter: vercel(),
   prefetch: true,
-  integrations: [tailwind(), sitemap()],
+  integrations: [
+    tailwind(),
+    sitemap({
+      filter: (page) => {
+        // Exclude admin pages from sitemap
+        if (page.includes('/admin')) return false;
+        // Exclude 404 page
+        if (page.includes('/404')) return false;
+        return true;
+      },
+    }),
+  ],
   i18n: {
     locales: ['en', 'es'],
     defaultLocale: 'en',

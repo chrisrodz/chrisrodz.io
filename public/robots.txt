@@ -2,5 +2,8 @@
 User-agent: *
 Allow: /
 
+# Disallow admin pages
+Disallow: /admin/
+
 # Sitemap
 Sitemap: https://chrisrodz.io/sitemap-index.xml
