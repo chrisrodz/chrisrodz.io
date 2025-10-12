@@ -61,11 +61,38 @@ yarn new-post "Title" es    # Create only Spanish post
    git push origin --delete feature/description
    ```
 
-### Pull Requests (Optional)
+### Pull Requests
 
-**Only create PRs when explicitly requested.** For most autonomous development tasks, direct merge to main after local testing is sufficient.
+**Use PRs for blog posts and when explicitly requested.** For other development tasks, direct merge to main after local testing is typically sufficient.
 
-When a PR is requested:
+**When to use PRs:**
+
+- ✅ **Always for blog posts** - allows review and control over publishing timing
+- ✅ When explicitly requested by the user
+- ✅ For significant features that need discussion/review
+- ❌ For routine bug fixes and minor improvements (direct merge is fine)
+
+**Blog Post PR Workflow:**
+
+```bash
+# 1. Create feature branch
+git checkout -b feature/post-title
+
+# 2. Create and write blog post
+yarn new-post "Post Title"
+# Edit the generated files with content
+
+# 3. Commit and push
+git add . && git commit -m "Add blog post about X" && git push -u origin feature/post-title
+
+# 4. Create PR for review
+gh pr create --title "Blog: Post Title" --body "Draft blog post about [topic]. Ready for review and editing."
+
+# 5. After author reviews and approves, merge
+gh pr merge --squash  # or merge via GitHub UI
+```
+
+**Other PR workflow:**
 
 ```bash
 gh pr create --draft --title "Feature: [description]" --body "[description]"
@@ -74,10 +101,16 @@ gh pr ready  # When ready for review
 
 ### Branch Naming Convention
 
-- `feature/` - New features or enhancements
+- `feature/` - New features or enhancements (including blog posts)
 - `fix/` - Bug fixes
 - `docs/` - Documentation updates
 - `refactor/` - Code refactoring
+
+**Examples:**
+
+- `feature/building-with-claude-code-post` (blog post)
+- `feature/add-comments-system` (new feature)
+- `fix/broken-navigation-link` (bug fix)
 
 ### Best Practices
 
@@ -303,22 +336,36 @@ All tables have Row Level Security enabled with public read access.
 
 ### Adding a blog post
 
+**ALWAYS use the branch + PR workflow for blog posts** to allow review before publishing.
+
 ```bash
-# Create both English and Spanish versions
-yarn new-post "My Post Title"
+# 1. Create feature branch
+git checkout main && git pull && git checkout -b feature/post-slug
 
-# Create only English version
-yarn new-post "My Post Title" en
+# 2. Generate post files
+yarn new-post "My Post Title"       # Both en.md and es.md
+yarn new-post "My Post Title" en    # English only
+yarn new-post "My Post Title" es    # Spanish only
 
-# Create only Spanish version
-yarn new-post "My Post Title" es
+# 3. Edit the generated files
+# - Customize title, description, and slug in frontmatter
+# - Write content in markdown
+# - Add appropriate tags
+
+# 4. Commit and push
+git add . && git commit -m "Add blog post about X" && git push -u origin feature/post-slug
+
+# 5. Create PR
+gh pr create --title "Blog: Post Title" --body "Ready for review"
+
+# 6. Author reviews, edits, and merges when ready
 ```
 
-This creates:
+**What gets created:**
 
 - `src/content/blog/my-post-title-2025/en.md` (and/or `es.md`)
 - Frontmatter includes: `title`, `description`, `slug`, `pubDate`, `tags`, `locale`
-- Edit the generated file(s) to customize the slug and add content
+- Each version has its own custom slug for SEO-friendly URLs
 
 ### Accessing blog posts in code
 
@@ -472,4 +519,4 @@ The language switcher in `Layout.astro` uses `getTranslatedPost()` to:
 
 ---
 
-**Last updated**: 2025-10-10
+**Last updated**: 2025-10-11
