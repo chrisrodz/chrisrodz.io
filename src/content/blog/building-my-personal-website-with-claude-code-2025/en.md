@@ -1,13 +1,13 @@
 ---
-title: 'Building My Personal Website with Claude Code'
-description: 'How I built a modern, bilingual personal website from scratch with the help of an AI coding assistant'
-slug: 'building-my-personal-website-with-claude-code'
-pubDate: 2025-10-12
+title: 'Website Tech Stack'
+description: 'The technical and not so technical decisions I took to create this site'
+slug: 'website-tech-stack'
+pubDate: 2025-10-13
 locale: en
 tags: ['web development', 'ai', 'astro', 'personal']
 ---
 
-# Building My Personal Website with Claude Code
+# Website Tech Stack
 
 ## Introduction
 

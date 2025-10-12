@@ -1,13 +1,13 @@
 ---
-title: 'Construyendo Mi Sitio Web Personal con Claude Code'
-description: 'Cómo construí un sitio web personal moderno y bilingüe desde cero con la ayuda de un asistente de programación IA'
-slug: 'construyendo-mi-sitio-web-con-claude-code'
-pubDate: 2025-10-12
+title: 'Tech Stack del Website'
+description: 'Las decisiones técnicas y no tan técnicas que tome para crear este site'
+slug: 'website-tech-stack'
+pubDate: 2025-10-13
 locale: es
 tags: ['desarrollo web', 'ia', 'astro', 'personal']
 ---
 
-# Construyendo Mi Sitio Web Personal con Claude Code
+# Tech Stack del Website
 
 ## Introducción
 
@@ -89,5 +89,3 @@ tags: ['desarrollo web', 'ia', 'astro', 'personal']
 ---
 
 **Pila Tecnológica:** Astro v5, TypeScript, PicoCSS, Tailwind CSS, Supabase, Vercel
-
-**Código Fuente:** [Enlace a tu repositorio de GitHub si es público]
