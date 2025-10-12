@@ -1,6 +1,7 @@
 import { defineConfig } from 'astro/config';
 import vercel from '@astrojs/vercel';
 import tailwind from '@astrojs/tailwind';
+import react from '@astrojs/react';
 
 import sitemap from '@astrojs/sitemap';
 
@@ -10,6 +11,7 @@ export default defineConfig({
   adapter: vercel(),
   prefetch: true,
   integrations: [
+    react(),
     tailwind(),
     sitemap({
       filter: (page) => {
