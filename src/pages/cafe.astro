@@ -46,164 +46,116 @@ const recentLogs = logs.slice(0, 30); // Show last 30
   title="Coffee Tracker"
   description="My coffee brewing journey - tracking beans, methods, and quality"
 >
-  <header class="mb-8">
-    <h1 class="text-3xl font-bold mb-2">Coffee Tracker</h1>
-    <p class="text-gray-600 dark:text-gray-400">
-      Tracking my coffee brewing journey, one cup at a time
-    </p>
+  <header class="mb">
+    <h1>Coffee Tracker</h1>
+    <p>Tracking my coffee brewing journey, one cup at a time</p>
   </header>
 
   {
     error ? (
-      <section class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-6">
-        <h2 class="text-xl font-semibold mb-2">Coffee Tracking Not Available</h2>
-        <p class="text-gray-700 dark:text-gray-300">
+      <section class="notice-box" data-variant="warning">
+        <h2>Coffee Tracking Not Available</h2>
+        <p>
           {error === 'Database not configured'
             ? 'The database is not configured yet. Coffee tracking will be available soon!'
             : error}
         </p>
       </section>
     ) : logs.length === 0 ? (
-      <section class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-6">
-        <h2 class="text-xl font-semibold mb-2">No Coffee Logs Yet</h2>
-        <p class="text-gray-700 dark:text-gray-300">
-          The coffee tracking journey is just beginning. Check back soon for updates!
-        </p>
+      <section class="notice-box" data-variant="info">
+        <h2>No Coffee Logs Yet</h2>
+        <p>The coffee tracking journey is just beginning. Check back soon for updates!</p>
       </section>
     ) : (
       <>
         {/* Stats Cards */}
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-          <div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-            <div class="text-sm text-gray-600 dark:text-gray-400 mb-1 font-medium">Total Logs</div>
-            <div class="text-4xl font-bold text-gray-900 dark:text-gray-100">
-              {stats?.totalLogs}
-            </div>
-          </div>
-          <div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-            <div class="text-sm text-gray-600 dark:text-gray-400 mb-1 font-medium">This Week</div>
-            <div class="text-4xl font-bold text-gray-900 dark:text-gray-100">
-              {stats?.logsThisWeek}
-            </div>
-          </div>
-          <div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-            <div class="text-sm text-gray-600 dark:text-gray-400 mb-1 font-medium">Avg Rating</div>
-            <div class="text-4xl font-bold text-gray-900 dark:text-gray-100">
-              {stats?.avgRating} / 5
-            </div>
-          </div>
+        <div class="grid-3 mb">
+          <article class="stat-card">
+            <small>Total Logs</small>
+            <p class="stat-value">{stats?.totalLogs}</p>
+          </article>
+          <article class="stat-card">
+            <small>This Week</small>
+            <p class="stat-value">{stats?.logsThisWeek}</p>
+          </article>
+          <article class="stat-card">
+            <small>Avg Rating</small>
+            <p class="stat-value">{stats?.avgRating} / 5</p>
+          </article>
         </div>
 
         {/* Visualizations */}
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        <div class="grid-2 mb">
           {/* Brew Method Distribution */}
-          <div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-            <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
-              Brew Method Distribution
-            </h2>
+          <article>
+            <h2>Brew Method Distribution</h2>
             <BrewMethodChart client:load data={brewMethodData} />
-          </div>
+          </article>
 
           {/* Quality Over Time */}
-          <div class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-            <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
-              Quality Over Time (Last 30 Days)
-            </h2>
+          <article>
+            <h2>Quality Over Time (Last 30 Days)</h2>
             <QualityChart client:load data={qualityData} />
-          </div>
+          </article>
         </div>
 
         {/* Most Used Beans */}
         {topBeans.length > 0 && (
-          <section class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700 mb-8">
-            <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">
-              Most Used Beans
-            </h2>
-            <div class="space-y-3">
-              {topBeans.map((item) => (
-                <div class="flex justify-between items-center">
-                  <div>
-                    <div class="font-medium">{item.bean.bean_name}</div>
-                    {item.bean.roaster && (
-                      <div class="text-sm text-gray-600 dark:text-gray-400">
-                        {item.bean.roaster}
-                      </div>
-                    )}
-                  </div>
-                  <div class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    {item.count} brews
-                  </div>
+          <article class="mb">
+            <h2>Most Used Beans</h2>
+            {topBeans.map((item) => (
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                <div>
+                  <strong>{item.bean.bean_name}</strong>
+                  {item.bean.roaster && <small style="display: block;">{item.bean.roaster}</small>}
                 </div>
-              ))}
-            </div>
-          </section>
+                <small>{item.count} brews</small>
+              </div>
+            ))}
+          </article>
         )}
 
         {/* Recent Logs Table */}
-        <section class="bg-white dark:bg-gray-800 rounded-lg p-6 border border-gray-200 dark:border-gray-700">
-          <h2 class="text-xl font-semibold mb-4 text-gray-900 dark:text-gray-100">Recent Brews</h2>
-          <div class="overflow-x-auto">
-            <table class="w-full">
+        <article>
+          <h2>Recent Brews</h2>
+          <div style="overflow-x: auto;">
+            <table>
               <thead>
-                <tr class="border-b-2 border-gray-300 dark:border-gray-600">
-                  <th class="text-left py-3 px-3 font-semibold text-gray-900 dark:text-gray-100">
-                    Date
-                  </th>
-                  <th class="text-left py-3 px-3 font-semibold text-gray-900 dark:text-gray-100">
-                    Bean
-                  </th>
-                  <th class="text-left py-3 px-3 font-semibold text-gray-900 dark:text-gray-100">
-                    Method
-                  </th>
-                  <th class="text-left py-3 px-3 font-semibold text-gray-900 dark:text-gray-100">
-                    Ratio
-                  </th>
-                  <th class="text-left py-3 px-3 font-semibold text-gray-900 dark:text-gray-100">
-                    Grind
-                  </th>
-                  <th class="text-left py-3 px-3 font-semibold text-gray-900 dark:text-gray-100">
-                    Rating
-                  </th>
-                  <th class="text-left py-3 px-3 font-semibold text-gray-900 dark:text-gray-100">
-                    Notes
-                  </th>
+                <tr>
+                  <th>Date</th>
+                  <th>Bean</th>
+                  <th>Method</th>
+                  <th>Ratio</th>
+                  <th>Grind</th>
+                  <th>Rating</th>
+                  <th>Notes</th>
                 </tr>
               </thead>
               <tbody>
                 {recentLogs.map((log) => (
-                  <tr class="border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                    <td class="py-3 px-3 text-sm text-gray-900 dark:text-gray-100">
+                  <tr>
+                    <td>
                       {new Date(log.brew_time).toLocaleDateString('en-US', {
                         month: 'short',
                         day: 'numeric',
                       })}
                     </td>
-                    <td class="py-3 px-3 text-sm text-gray-900 dark:text-gray-100">
-                      {log.bean?.bean_name || (
-                        <span class="text-gray-500 dark:text-gray-400">Unknown</span>
-                      )}
-                    </td>
-                    <td class="py-3 px-3 text-sm text-gray-900 dark:text-gray-100">
-                      {log.brew_method}
-                    </td>
-                    <td class="py-3 px-3 text-sm font-mono text-gray-900 dark:text-gray-100">
+                    <td>{log.bean?.bean_name || <small>Unknown</small>}</td>
+                    <td>{log.brew_method}</td>
+                    <td style="font-family: monospace;">
                       {formatBrewRatio(log.dose_grams, log.yield_grams)}
                     </td>
-                    <td class="py-3 px-3 text-sm text-gray-900 dark:text-gray-100">
-                      {log.grind_setting}
-                    </td>
-                    <td class="py-3 px-3 text-sm text-gray-900 dark:text-gray-100">
-                      {log.quality_rating} / 5
-                    </td>
-                    <td class="py-3 px-3 text-sm text-gray-600 dark:text-gray-400 max-w-xs truncate">
-                      {log.notes || '-'}
+                    <td>{log.grind_setting}</td>
+                    <td>{log.quality_rating} / 5</td>
+                    <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis;">
+                      <small>{log.notes || '-'}</small>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-        </section>
+        </article>
       </>
     )
   }
