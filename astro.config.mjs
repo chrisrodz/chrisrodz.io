@@ -1,6 +1,5 @@
 import { defineConfig } from 'astro/config';
 import vercel from '@astrojs/vercel';
-import tailwind from '@astrojs/tailwind';
 import react from '@astrojs/react';
 
 import sitemap from '@astrojs/sitemap';
@@ -12,7 +11,6 @@ export default defineConfig({
   prefetch: true,
   integrations: [
     react(),
-    tailwind(),
     sitemap({
       filter: (page) => {
         // Exclude admin pages from sitemap
