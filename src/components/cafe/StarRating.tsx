@@ -45,7 +45,7 @@ export default function StarRating({ value, onChange, className = '' }: StarRati
   };
 
   return (
-    <div className={`flex gap-3 ${className}`} role="radiogroup" aria-label="Quality rating">
+    <div className={`star-rating ${className}`} role="radiogroup" aria-label="Quality rating">
       {ratings.map((rating) => {
         const isFilled = hoverValue !== null ? rating <= hoverValue : rating <= value;
         const isSelected = rating === value;
@@ -64,31 +64,17 @@ export default function StarRating({ value, onChange, className = '' }: StarRati
             onKeyDown={(e) => handleKeyDown(e, rating)}
             onMouseEnter={() => setHoverValue(rating)}
             onMouseLeave={() => setHoverValue(null)}
-            className={`w-12 h-12 rounded-full border-2 transition-all hover:scale-110 active:scale-95 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 ${
-              isFilled
-                ? 'bg-blue-600 border-blue-600 dark:bg-blue-500 dark:border-blue-500'
-                : 'bg-transparent border-gray-300 dark:border-gray-600 hover:border-gray-400 dark:hover:border-gray-500'
-            }`}
-            style={{
-              minWidth: '48px',
-              minHeight: '48px',
-              cursor: 'pointer',
-            }}
+            className="star-button"
+            data-filled={isFilled}
             aria-label={`Rate ${rating} out of 5`}
           >
-            <span
-              className={`text-sm font-medium ${
-                isFilled ? 'text-white' : 'text-gray-600 dark:text-gray-400'
-              }`}
-            >
-              {rating}
-            </span>
+            <span>{rating}</span>
           </button>
         );
       })}
-      <span className="text-sm text-gray-600 dark:text-gray-400 self-center ml-2" aria-live="polite">
+      <small style={{ alignSelf: 'center', marginLeft: '0.5rem' }} aria-live="polite">
         {value > 0 ? `${value} / 5` : 'Not rated'}
-      </span>
+      </small>
     </div>
   );
 }
