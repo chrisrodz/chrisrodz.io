@@ -11,9 +11,9 @@ interface QualityChartProps {
 export default function QualityChart({ data }: QualityChartProps) {
   if (data.length === 0) {
     return (
-      <div className="text-center text-gray-500 dark:text-gray-400 py-8">
-        No quality data available
-      </div>
+      <p style={{ textAlign: 'center', padding: '2rem 0' }}>
+        <small>No quality data available</small>
+      </p>
     );
   }
 
@@ -38,11 +38,10 @@ export default function QualityChart({ data }: QualityChartProps) {
   const pathD = `M ${points.join(' L ')}`;
 
   return (
-    <div className="relative">
+    <div style={{ position: 'relative' }}>
       <svg
         viewBox={`0 0 ${width} ${height}`}
-        className="w-full"
-        style={{ height: '200px' }}
+        style={{ width: '100%', height: '200px' }}
       >
         {/* Y-axis labels */}
         {[1, 2, 3, 4, 5].map((rating) => {
@@ -55,16 +54,15 @@ export default function QualityChart({ data }: QualityChartProps) {
                 y1={y}
                 x2={width - padding}
                 y2={y}
-                stroke="currentColor"
+                stroke="var(--pico-muted-border-color)"
                 strokeWidth="0.5"
-                className="text-gray-300 dark:text-gray-600"
               />
               <text
                 x={padding - 5}
                 y={y + 1.5}
                 fontSize="4"
                 textAnchor="end"
-                className="fill-gray-600 dark:fill-gray-400"
+                fill="var(--pico-muted-color)"
               >
                 {rating}
               </text>
@@ -76,9 +74,8 @@ export default function QualityChart({ data }: QualityChartProps) {
         <path
           d={pathD}
           fill="none"
-          stroke="currentColor"
+          stroke="var(--pico-primary)"
           strokeWidth="2.5"
-          className="text-blue-600 dark:text-blue-400"
         />
 
         {/* Points */}
@@ -92,7 +89,8 @@ export default function QualityChart({ data }: QualityChartProps) {
               cx={x}
               cy={y}
               r="3.5"
-              className="fill-blue-600 dark:fill-blue-400 stroke-white dark:stroke-gray-800"
+              fill="var(--pico-primary)"
+              stroke="var(--pico-background-color)"
               strokeWidth="1"
             >
               <title>
@@ -104,7 +102,7 @@ export default function QualityChart({ data }: QualityChartProps) {
       </svg>
 
       {/* X-axis labels (show first, middle, last) */}
-      <div className="flex justify-between text-xs text-gray-600 dark:text-gray-400 mt-2 px-4">
+      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.5rem', padding: '0 1rem', fontSize: '0.75rem', color: 'var(--pico-muted-color)' }}>
         <span>{data[0]?.date}</span>
         {data.length > 2 && (
           <span>{data[Math.floor(data.length / 2)]?.date}</span>
