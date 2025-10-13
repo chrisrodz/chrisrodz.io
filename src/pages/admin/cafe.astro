@@ -2,7 +2,7 @@
 import Layout from '../../layouts/Layout.astro';
 import { checkAuth } from '../../lib/auth';
 import { supabase } from '../../lib/supabase';
-import { CoffeeLogSchema } from '../../lib/schemas/cafe';
+import { CoffeeLogSchema, CoffeeBeanSchema } from '../../lib/schemas/cafe';
 import CoffeeLogForm from '../../components/cafe/CoffeeLogForm';
 import type { CoffeeBeanRow } from '../../lib/schemas/cafe';
 import type { BREW_METHODS } from '../../lib/schemas/cafe';
@@ -28,7 +28,41 @@ if (Astro.request.method === 'POST') {
       const formData = await Astro.request.formData();
       const action = formData.get('action');
 
-      if (action === 'log_coffee') {
+      if (action === 'add_bean') {
+        // Parse and validate bean data
+        const rawBeanData = {
+          bean_name: formData.get('bean_name') as string,
+          roaster: formData.get('roaster') || null,
+          roast_date: formData.get('roast_date') || null,
+          notes: formData.get('notes') || null,
+          is_active: true,
+        };
+
+        const validatedBeanData = CoffeeBeanSchema.parse(rawBeanData);
+
+        // Insert into database
+        const { data: newBean, error } = await supabase
+          .from('coffee_beans')
+          .insert(validatedBeanData)
+          .select()
+          .single();
+
+        if (error) throw error;
+
+        // Check if this is an AJAX request (React component)
+        const acceptHeader = Astro.request.headers.get('accept');
+        if (acceptHeader?.includes('application/json')) {
+          // Return JSON for React component
+          return new Response(JSON.stringify({ bean: newBean }), {
+            status: 200,
+            headers: { 'Content-Type': 'application/json' },
+          });
+        } else {
+          // Fallback: traditional form submission with page refresh
+          message = 'Bean added successfully!';
+          messageType = 'success';
+        }
+      } else if (action === 'log_coffee') {
         // Parse and validate
         const rawData = {
           brew_method: formData.get('brew_method'),
@@ -180,3 +214,20 @@ if (supabase) {
     )
   }
 </Layout>
+
+<script>
+  import { initBeans } from '@/stores/beansStore';
+
+  // Initialize beans store with server data
+  const beansData = document.getElementById('beans-data')?.textContent;
+  if (beansData) {
+    try {
+      const beans = JSON.parse(beansData);
+      initBeans(beans);
+    } catch (e) {
+      console.error('Failed to parse beans data:', e);
+    }
+  }
+</script>
+
+<script id="beans-data" type="application/json" set:html={JSON.stringify(activeBeans)} />

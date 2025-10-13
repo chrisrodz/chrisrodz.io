@@ -1,5 +1,8 @@
 import { useState, useEffect } from 'react';
+import { useStore } from '@nanostores/react';
+import { beansStore, lastAddedBeanIdStore } from '@/stores/beansStore';
 import StarRating from './StarRating';
+import AddBeanForm from './AddBeanForm';
 import type { CoffeeBeanRow } from '@/lib/schemas/cafe';
 import { BREW_METHODS } from '@/lib/schemas/cafe';
 
@@ -15,12 +18,19 @@ interface CoffeeLogFormProps {
   smartDefaults: SmartDefaults;
 }
 
+const NEW_BEAN_VALUE = '__new_bean__';
+
 export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogFormProps) {
+  // Use Nano Store for beans (will update when AddBeanForm adds a new bean)
+  const beansFromStore = useStore(beansStore);
+  const beans = beansFromStore.length > 0 ? beansFromStore : activeBeans;
+  const lastAddedBeanId = useStore(lastAddedBeanIdStore);
   // Form state
   const [brewMethod, setBrewMethod] = useState<(typeof BREW_METHODS)[number]>(
     smartDefaults.brew_method || 'Espresso',
   );
   const [beanId, setBeanId] = useState<string>('');
+  const [showAddBeanForm, setShowAddBeanForm] = useState<boolean>(false);
   const [doseGrams, setDoseGrams] = useState<number>(smartDefaults.dose_grams || 18);
   const [yieldGrams, setYieldGrams] = useState<number>(smartDefaults.yield_grams || 0);
   const [grindSetting, setGrindSetting] = useState<number>(smartDefaults.grind_setting || 10);
@@ -45,6 +55,32 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
       .slice(0, 16);
     setBrewTime(formatted);
   }, []);
+
+  // Auto-select newly added bean
+  useEffect(() => {
+    if (lastAddedBeanId) {
+      setBeanId(lastAddedBeanId);
+      setShowAddBeanForm(false);
+    }
+  }, [lastAddedBeanId]);
+
+  // Handle bean selection change
+  const handleBeanChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const value = e.target.value;
+    if (value === NEW_BEAN_VALUE) {
+      setShowAddBeanForm(true);
+      setBeanId('');
+    } else {
+      setShowAddBeanForm(false);
+      setBeanId(value);
+    }
+  };
+
+  // Handle successful bean addition
+  const handleBeanAdded = (newBeanId: string) => {
+    setBeanId(newBeanId);
+    setShowAddBeanForm(false);
+  };
 
   // Cache smart defaults in sessionStorage for fallback
   useEffect(() => {
@@ -190,19 +226,29 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
             </label>
             <select
               id="bean_id"
-              value={beanId}
-              onChange={(e) => setBeanId(e.target.value)}
+              value={showAddBeanForm ? NEW_BEAN_VALUE : beanId}
+              onChange={handleBeanChange}
               className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
               style={{ minHeight: '48px' }}
             >
               <option value="">No bean selected</option>
-              {activeBeans.map((bean) => (
+              {beans.map((bean) => (
                 <option key={bean.id} value={bean.id}>
                   {bean.bean_name}
                   {bean.roaster && ` (${bean.roaster})`}
                 </option>
               ))}
+              <option value={NEW_BEAN_VALUE} className="font-medium text-blue-600 dark:text-blue-400">
+                + Add New Bean...
+              </option>
             </select>
+
+            {/* Inline Add Bean Form */}
+            {showAddBeanForm && (
+              <div className="mt-3">
+                <AddBeanForm onBeanAdded={handleBeanAdded} />
+              </div>
+            )}
           </div>
 
           {/* Dose and Water/Yield */}
