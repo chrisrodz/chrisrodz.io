@@ -243,7 +243,7 @@ Never trust user input. Always validate with Zod before database operations.
 ## Tech Stack
 
 - **Framework**: Astro v5.14+ (SSR mode)
-- **Styling**: Pico CSS v2 + Tailwind CSS
+- **Styling**: Pico CSS v2
 - **Database**: Supabase (PostgreSQL, optional with graceful degradation)
 - **Auth**: Custom session-based (nanoid)
 - **Validation**: Zod schemas
@@ -472,4 +472,4 @@ The language switcher in `Layout.astro` uses `getTranslatedPost()` to:
 
 ---
 
-**Last updated**: 2025-10-10
+**Last updated**: 2025-10-13
