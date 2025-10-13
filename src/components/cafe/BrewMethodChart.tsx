@@ -11,30 +11,25 @@ interface BrewMethodChartProps {
 export default function BrewMethodChart({ data }: BrewMethodChartProps) {
   if (data.length === 0) {
     return (
-      <div className="text-center text-gray-500 dark:text-gray-400 py-8">
-        No brew data available
-      </div>
+      <p style={{ textAlign: 'center', padding: '2rem 0' }}>
+        <small>No brew data available</small>
+      </p>
     );
   }
 
   const maxCount = Math.max(...data.map((d) => d.count));
 
   return (
-    <div className="space-y-4">
+    <div className="chart-container">
       {data.map((item) => (
-        <div key={item.method}>
-          <div className="flex justify-between items-center mb-1">
-            <span className="font-medium text-sm text-gray-900 dark:text-gray-100">{item.method}</span>
-            <span className="text-sm text-gray-600 dark:text-gray-400">
+        <div key={item.method} className="chart-item">
+          <div className="chart-label">
+            <strong>{item.method}</strong>
+            <small>
               {item.count} ({item.percentage}%)
-            </span>
+            </small>
           </div>
-          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3 overflow-hidden">
-            <div
-              className="h-full bg-blue-600 dark:bg-blue-500 rounded-full transition-all duration-500"
-              style={{ width: `${(item.count / maxCount) * 100}%` }}
-            />
-          </div>
+          <progress value={item.count} max={maxCount}></progress>
         </div>
       ))}
     </div>
