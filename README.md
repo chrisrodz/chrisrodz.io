@@ -24,8 +24,8 @@ Then edit `.env.local` with your actual values:
 
 ```bash
 # Supabase (required for coffee and training features)
-PUBLIC_SUPABASE_URL=your_project_url
-PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+SUPABASE_URL=your_project_url
+SUPABASE_ANON_KEY=your_anon_key
 SUPABASE_SERVICE_KEY=your_service_key
 
 # Admin (generate a random string for authentication)

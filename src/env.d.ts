@@ -2,8 +2,8 @@
 /// <reference types="astro/client" />
 
 interface ImportMetaEnv {
-  readonly PUBLIC_SUPABASE_URL: string;
-  readonly PUBLIC_SUPABASE_ANON_KEY: string;
+  readonly SUPABASE_URL: string;
+  readonly SUPABASE_ANON_KEY: string;
   readonly SUPABASE_SERVICE_KEY: string;
   readonly ADMIN_SECRET: string;
   readonly STRAVA_CLIENT_ID: string;
