@@ -158,7 +158,6 @@ Config files:
 ├── astro.config.mjs          # Astro configuration
 ├── package.json              # Dependencies and scripts
 ├── tsconfig.json             # TypeScript configuration
-├── tailwind.config.mjs       # Tailwind CSS configuration
 └── .env.example              # Environment variables template
 ```
 
@@ -298,7 +297,7 @@ The site uses [Pico CSS](https://picocss.com/) for beautiful, semantic styling w
 
 - **Framework**: [Astro](https://astro.build) v5.14+
 - **Language**: TypeScript
-- **Styling**: [Pico CSS](https://picocss.com/) + [Tailwind CSS](https://tailwindcss.com/)
+- **Styling**: [Pico CSS](https://picocss.com/)
 - **Database**: [Supabase](https://supabase.com) (PostgreSQL)
 - **Deployment**: [Vercel](https://vercel.com) (Node.js 20+)
 - **Validation**: [Zod](https://zod.dev)
