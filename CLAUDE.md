@@ -14,6 +14,11 @@ yarn preview          # Preview production build
 yarn new-post "Title"       # Create both en.md and es.md
 yarn new-post "Title" en    # Create only English post
 yarn new-post "Title" es    # Create only Spanish post
+
+# Internationalization
+yarn generate:i18n    # Generate TypeScript types from translation JSON
+yarn validate:i18n    # Validate translation completeness (both languages)
+yarn check            # Run all checks (validate + type check + lint + format)
 ```
 
 ## Git Workflow
@@ -382,10 +387,10 @@ Full TypeScript coverage. Key types:
 
 ## Internationalization (i18n)
 
-The site supports English (default) and Spanish:
+The site supports Spanish (default) and English:
 
-- **English**: `/blog/post-slug`
-- **Spanish**: `/es/blog/post-slug`
+- **Spanish** (default): `/blog/post-slug` (no prefix)
+- **English**: `/en/blog/post-slug`
 
 **Translation Structure**:
 
@@ -397,8 +402,27 @@ The site supports English (default) and Spanish:
 
 ```
 src/content/blog/welcome-post-2025/
-├── en.md    # slug: "welcome-to-my-site"  → /blog/welcome-to-my-site
-└── es.md    # slug: "bienvenido-a-mi-sitio" → /es/blog/bienvenido-a-mi-sitio
+├── en.md    # slug: "welcome-to-my-site"  → /en/blog/welcome-to-my-site
+└── es.md    # slug: "bienvenido-a-mi-sitio" → /blog/bienvenido-a-mi-sitio
+```
+
+**Type-Safe Translations**:
+
+- Translation keys auto-generated from JSON files (`src/i18n/en.json`, `src/i18n/es.json`)
+- Type safety via `TranslationKey` type in `src/lib/i18n-keys.ts`
+- Validation script ensures both language files have matching keys
+- Pre-commit hooks auto-regenerate types when translation files change
+
+**Usage**:
+
+```typescript
+import { getLocaleFromUrl, useTranslations } from '@/lib/i18n';
+
+const locale = getLocaleFromUrl(Astro.url); // 'es' or 'en'
+const { t, formatDate } = useTranslations(locale);
+
+// Type-safe translation with autocomplete
+const title = t('nav.home'); // 'Inicio' or 'Home'
 ```
 
 The language switcher in `Layout.astro` uses `getTranslatedPost()` to:
@@ -447,8 +471,15 @@ The language switcher in `Layout.astro` uses `getTranslatedPost()` to:
 
 **What runs on commit**:
 
-- `*.{js,ts,astro}`: ESLint fix + Prettier format
+- `src/i18n/*.json`: Validate translations → Generate types → Stage generated types → Prettier format
+- `*.{js,ts,astro}`: ESLint fix → Prettier format
 - `*.{json,md,css}`: Prettier format
+
+**Translation file hooks ensure:**
+
+- Both language files always have matching keys
+- TypeScript types auto-regenerate when translations change
+- Generated `i18n-keys.ts` file is automatically staged
 
 ### Best Practices
 
@@ -469,7 +500,9 @@ The language switcher in `Layout.astro` uses `getTranslatedPost()` to:
 6. **Test graceful degradation**: App should work without env vars configured.
 7. **Session storage is in-memory**: Consider Redis/database for production scale.
 8. **i18n translations**: Place translated blog posts in the same folder with locale-named files (`en.md`, `es.md`).
+9. **Translation system**: Use type-safe `t()` function for all user-facing text. Never hardcode strings. Pre-commit hooks validate translation completeness.
+10. **Spanish is default**: All non-prefixed URLs (`/about`, `/blog/slug`) serve Spanish content. English uses `/en/` prefix.
 
 ---
 
-**Last updated**: 2025-10-13
+**Last updated**: 2025-10-14

@@ -7,7 +7,6 @@
   "nav": {
     "home": "Home",
     "blog": "Blog",
-    "about": "About",
     "cafe": "Coffee",
     "training": "Training"
   },
@@ -30,29 +29,6 @@
     "intro": {
       "paragraph1": "My name is Christian. I'm a software engineer passionate about building things that matter and make our lives better. When I'm not sitting at my desk, I'm either on my bike or spending time with family.",
       "paragraph2": "I write about software engineering, life lessons, and whatever else is worth sharing. Here's some of my latest:"
-    }
-  },
-  "about": {
-    "title": "About",
-    "metaDescription": "Learn more about Christian Rodriguez - Software Engineer, Triathlete, and Dad",
-    "heading": "About Me",
-    "subtitle": "Software Engineer • Triathlete • Dad",
-    "sections": {
-      "greeting": "Hi, I'm Christian 👋",
-      "intro": "I'm a software engineer passionate about building things that matter. By day, I write code and solve problems. By early morning and evening, I train for triathlons. And in between, I'm a dad trying to keep up with my kids.",
-      "whatIDoTitle": "What I Do",
-      "whatIDo": "I specialize in building web applications with modern technologies. I love working with TypeScript, React, and all things JavaScript/Node.js. I'm particularly interested in developer experience, performance, and creating tools that make developers' lives easier.",
-      "triathlonTitle": "Triathlon Journey",
-      "triathlon": "Swimming, biking, and running have become more than just hobbies—they're how I think through problems, push my limits, and stay balanced. I track my training here and share what I learn along the way.",
-      "coffeeTitle": "Coffee & Code",
-      "coffee": "There's something meditative about the coffee brewing process. From selecting beans to dialing in the perfect espresso shot, it's another form of problem-solving that I enjoy. I log my experiments in the",
-      "coffeeLink": "coffee section",
-      "blogTitle": "This Blog",
-      "blog": "I write about software engineering, lessons learned from training, and whatever else seems worth sharing. The posts are a mix of technical deep-dives, training reflections, and occasional life updates.",
-      "connectTitle": "Let's Connect",
-      "connect": "I'm always happy to chat about code, triathlon, coffee, or anything in between. You can find me on:",
-      "githubLabel": "GitHub:",
-      "emailLabel": "Email:"
     }
   },
   "blog": {

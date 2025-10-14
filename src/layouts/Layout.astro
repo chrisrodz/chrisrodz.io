@@ -102,9 +102,7 @@ const currentYear = new Date().getFullYear().toString();
     <!-- Theme script (prevent FOUC) -->
     <script is:inline>
       const theme = localStorage.getItem('theme') || 'light';
-      if (theme === 'dark') {
-        document.documentElement.setAttribute('data-theme', 'dark');
-      }
+      document.documentElement.setAttribute('data-theme', theme);
     </script>
   </head>
   <body>
