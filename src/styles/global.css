@@ -636,24 +636,42 @@ section a {
 }
 
 /* Radio Card Buttons (Brew Method Selector) */
-.radio-card {
+/* Override Pico CSS default button styles */
+button.radio-card {
+  /* Reset Pico button defaults */
+  --pico-background-color: var(--pico-card-background-color);
+  --pico-border-color: var(--pico-form-element-border-color);
+  --pico-color: inherit;
+
+  /* Custom styles */
   background: var(--pico-card-background-color);
   border: 2px solid var(--pico-form-element-border-color);
   padding: var(--pico-spacing);
   font-weight: 500;
   transition: all 0.2s ease;
   cursor: pointer;
-  color: var(--pico-color);
+  color: var(--pico-color) !important;
+  box-shadow: none;
 }
 
-.radio-card:hover {
+button.radio-card:hover {
+  --pico-background-color: var(--pico-card-background-color);
+  --pico-border-color: var(--pico-primary);
+
   border-color: var(--pico-primary);
+  background: var(--pico-card-background-color);
+  color: var(--pico-primary) !important;
 }
 
-.radio-card[data-active='true'] {
+button.radio-card[data-active='true'] {
+  --pico-background-color: var(--pico-primary-focus);
+  --pico-border-color: var(--pico-primary);
+  --pico-color: var(--pico-primary);
+
   border-color: var(--pico-primary);
   background: var(--pico-primary-focus);
-  color: var(--pico-primary);
+  color: var(--pico-primary) !important;
+  font-weight: 600;
 }
 
 /* Star Rating Buttons */
