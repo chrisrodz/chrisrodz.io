@@ -19,13 +19,20 @@ export default defineConfig({
         if (page.includes('/404')) return false;
         return true;
       },
+      i18n: {
+        defaultLocale: 'es',
+        locales: {
+          es: 'es',
+          en: 'en',
+        },
+      },
     }),
   ],
   i18n: {
-    locales: ['en', 'es'],
-    defaultLocale: 'en',
+    locales: ['es', 'en'],
+    defaultLocale: 'es',
     routing: {
-      prefixDefaultLocale: false,
+      prefixDefaultLocale: false, // Spanish has no prefix
     },
   },
 });

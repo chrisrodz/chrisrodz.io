@@ -1,33 +1,129 @@
 {
+  "site": {
+    "title": "Christian Rodriguez",
+    "titleWithPage": "{page} | Christian Rodriguez",
+    "author": "Christian A. Rodríguez Encarnación"
+  },
   "nav": {
     "home": "Inicio",
     "blog": "Blog",
     "about": "Acerca",
-    "coffee": "Café",
+    "cafe": "Café",
     "training": "Entrenamiento"
   },
   "footer": {
-    "copyright": "© {year} Christian Rodriguez",
-    "coffee": "Café",
-    "training": "Entrenamiento",
-    "github": "GitHub",
-    "twitter": "Twitter"
+    "copyright": "© {year} Christian A. Rodríguez Encarnación",
+    "rss": "RSS",
+    "email": "Email",
+    "github": "GitHub"
+  },
+  "common": {
+    "backToHome": "Volver al inicio",
+    "loading": "Cargando...",
+    "error": "Error",
+    "notFound": "No Encontrado",
+    "readMore": "Leer más"
+  },
+  "home": {
+    "title": "Inicio",
+    "greeting": "Saludos!",
+    "intro": {
+      "paragraph1": "Soy Christian, ingeniero de software apasionado por construir cosas que importan y nos faciliten la vida. Cuando no estoy sentado trabajando estoy sentado en la bicicleta o pasando tiempo en familia.",
+      "paragraph2": "Escribo sobre escribir software, lecciones aprendidas de la vida, y lo que sea que valga la pena compartir. Aquí puedes ver lo más reciente:"
+    }
+  },
+  "about": {
+    "title": "Acerca",
+    "metaDescription": "Conoce más sobre Christian Rodriguez - Ingeniero de Software, Triatleta, y Papá",
+    "heading": "Acerca de Mí",
+    "subtitle": "Ingeniero de Software • Triatleta • Papá",
+    "sections": {
+      "greeting": "Hola, soy Christian 👋",
+      "intro": "Soy un ingeniero de software apasionado por construir cosas que importan. Durante el día, escribo código y resuelvo problemas. De madrugada y por la tarde, entreno para triatlones. Y en el medio, soy un papá tratando de mantener el ritmo de mis hijos.",
+      "whatIDoTitle": "Lo Que Hago",
+      "whatIDo": "Me especializo en construir aplicaciones web con tecnologías modernas. Me encanta trabajar con TypeScript, React, y todo lo relacionado con JavaScript/Node.js. Estoy particularmente interesado en la experiencia del desarrollador, rendimiento, y crear herramientas que faciliten la vida de los desarrolladores.",
+      "triathlonTitle": "Mi Viaje en el Triatlón",
+      "triathlon": "Nadar, montar bicicleta, y correr se han convertido en más que pasatiempos—son cómo pienso a través de problemas, empujo mis límites, y me mantengo balanceado. Registro mi entrenamiento aquí y comparto lo que aprendo en el camino.",
+      "coffeeTitle": "Café y Código",
+      "coffee": "Hay algo meditativo en el proceso de preparar café. Desde seleccionar los granos hasta afinar el shot de espresso perfecto, es otra forma de resolver problemas que disfruto. Registro mis experimentos en la",
+      "coffeeLink": "sección de café",
+      "blogTitle": "Este Blog",
+      "blog": "Escribo sobre ingeniería de software, lecciones aprendidas del entrenamiento, y lo que sea que valga la pena compartir. Los posts son una mezcla de análisis técnicos profundos, reflexiones de entrenamiento, y actualizaciones ocasionales de la vida.",
+      "connectTitle": "Conectemos",
+      "connect": "Siempre estoy feliz de conversar sobre código, triatlón, café, o cualquier cosa entre medio. Puedes encontrarme en:",
+      "githubLabel": "GitHub:",
+      "emailLabel": "Email:"
+    }
   },
   "blog": {
     "title": "Blog",
+    "metaTitle": "Blog",
     "readMore": "Leer más",
     "publishedOn": "Publicado el",
     "updatedOn": "Actualizado el",
     "backToAll": "← Volver a todos los posts",
-    "tags": "Etiquetas"
+    "tags": "Etiquetas",
+    "category": "Categoría",
+    "rssTitle": "Christian Rodriguez - Blog (Español)"
   },
-  "home": {
-    "hero": {
-      "title": "Christian Rodriguez",
-      "subtitle": "Ingeniero de Software, Triatleta, Papá"
+  "cafe": {
+    "title": "Registro de Café",
+    "metaDescription": "Mi jornada preparando café - registrando granos, métodos, y calidad",
+    "subtitle": "Registrando mi jornada con el café, una taza a la vez",
+    "notAvailableTitle": "Registro de Café No Disponible",
+    "notConfigured": "La base de datos aún no está configurada. ¡El registro de café estará disponible pronto!",
+    "noLogsTitle": "Sin Registros de Café Aún",
+    "noLogs": "La jornada del registro de café apenas comienza. ¡Vuelve pronto para actualizaciones!",
+    "stats": {
+      "totalLogs": "Total de Registros",
+      "thisWeek": "Esta Semana",
+      "avgRating": "Calificación Promedio"
+    },
+    "charts": {
+      "brewMethodTitle": "Distribución de Métodos de Preparación",
+      "qualityTitle": "Calidad en el Tiempo (Últimos 30 Días)",
+      "topBeansTitle": "Granos Más Usados"
+    },
+    "table": {
+      "date": "Fecha",
+      "bean": "Grano",
+      "method": "Método",
+      "ratio": "Proporción",
+      "rating": "Calificación",
+      "notes": "Notas"
     }
   },
-  "about": {
-    "title": "Acerca de Mí"
+  "training": {
+    "title": "Registro de Entrenamiento",
+    "metaTitle": "Registro de Entrenamiento",
+    "subtitle": "Actividades y métricas de entrenamiento de triatlón",
+    "notAvailable": "El registro de entrenamiento aún no está disponible. Por favor configura tu base de datos de Supabase e integración con Strava.",
+    "setupButton": "Configurar registro de entrenamiento →",
+    "table": {
+      "date": "Fecha",
+      "activity": "Actividad",
+      "distance": "Distancia",
+      "duration": "Duración",
+      "elevation": "Elevación",
+      "avgHr": "FC Promedio"
+    }
+  },
+  "errors": {
+    "404": {
+      "title": "404 - Página No Encontrada",
+      "message": "La página que buscas no existe.",
+      "backHome": "Volver al inicio"
+    }
+  },
+  "accessibility": {
+    "toggleTheme": "Cambiar tema",
+    "toggleThemeTitle": "Cambiar entre modo claro/oscuro",
+    "toggleMenu": "Alternar menú",
+    "switchToSpanish": "Cambiar a Español",
+    "switchToEnglish": "Switch to English"
+  },
+  "languageSwitch": {
+    "tooltipEs": "Haz click para cambiar a Español",
+    "tooltipEn": "Click for English"
   }
 }

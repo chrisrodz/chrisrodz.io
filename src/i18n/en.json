@@ -1,33 +1,129 @@
 {
+  "site": {
+    "title": "Christian Rodriguez",
+    "titleWithPage": "{page} | Christian Rodriguez",
+    "author": "Christian A. Rodríguez Encarnación"
+  },
   "nav": {
     "home": "Home",
     "blog": "Blog",
     "about": "About",
-    "coffee": "Coffee",
+    "cafe": "Coffee",
     "training": "Training"
   },
   "footer": {
-    "copyright": "© {year} Christian Rodriguez",
-    "coffee": "Coffee",
-    "training": "Training",
-    "github": "GitHub",
-    "twitter": "Twitter"
+    "copyright": "© {year} Christian A. Rodríguez Encarnación",
+    "rss": "RSS",
+    "email": "Email",
+    "github": "GitHub"
+  },
+  "common": {
+    "backToHome": "Back to home",
+    "loading": "Loading...",
+    "error": "Error",
+    "notFound": "Not Found",
+    "readMore": "Read more"
+  },
+  "home": {
+    "title": "Home",
+    "greeting": "Hello there!",
+    "intro": {
+      "paragraph1": "My name is Christian. I'm a software engineer passionate about building things that matter and make our lives better. When I'm not sitting at my desk, I'm either on my bike or spending time with family.",
+      "paragraph2": "I write about software engineering, life lessons, and whatever else is worth sharing. Here's some of my latest:"
+    }
+  },
+  "about": {
+    "title": "About",
+    "metaDescription": "Learn more about Christian Rodriguez - Software Engineer, Triathlete, and Dad",
+    "heading": "About Me",
+    "subtitle": "Software Engineer • Triathlete • Dad",
+    "sections": {
+      "greeting": "Hi, I'm Christian 👋",
+      "intro": "I'm a software engineer passionate about building things that matter. By day, I write code and solve problems. By early morning and evening, I train for triathlons. And in between, I'm a dad trying to keep up with my kids.",
+      "whatIDoTitle": "What I Do",
+      "whatIDo": "I specialize in building web applications with modern technologies. I love working with TypeScript, React, and all things JavaScript/Node.js. I'm particularly interested in developer experience, performance, and creating tools that make developers' lives easier.",
+      "triathlonTitle": "Triathlon Journey",
+      "triathlon": "Swimming, biking, and running have become more than just hobbies—they're how I think through problems, push my limits, and stay balanced. I track my training here and share what I learn along the way.",
+      "coffeeTitle": "Coffee & Code",
+      "coffee": "There's something meditative about the coffee brewing process. From selecting beans to dialing in the perfect espresso shot, it's another form of problem-solving that I enjoy. I log my experiments in the",
+      "coffeeLink": "coffee section",
+      "blogTitle": "This Blog",
+      "blog": "I write about software engineering, lessons learned from training, and whatever else seems worth sharing. The posts are a mix of technical deep-dives, training reflections, and occasional life updates.",
+      "connectTitle": "Let's Connect",
+      "connect": "I'm always happy to chat about code, triathlon, coffee, or anything in between. You can find me on:",
+      "githubLabel": "GitHub:",
+      "emailLabel": "Email:"
+    }
   },
   "blog": {
     "title": "Blog",
+    "metaTitle": "Blog",
     "readMore": "Read more",
     "publishedOn": "Published on",
     "updatedOn": "Updated on",
     "backToAll": "← Back to all posts",
-    "tags": "Tags"
+    "tags": "Tags",
+    "category": "Category",
+    "rssTitle": "Christian Rodriguez - Blog (English)"
   },
-  "home": {
-    "hero": {
-      "title": "Christian Rodriguez",
-      "subtitle": "Software Engineer, Triathlete, Dad"
+  "cafe": {
+    "title": "Coffee Tracker",
+    "metaDescription": "My coffee brewing journey - tracking beans, methods, and quality",
+    "subtitle": "Tracking my coffee brewing journey, one cup at a time",
+    "notAvailableTitle": "Coffee Tracking Not Available",
+    "notConfigured": "The database is not configured yet. Coffee tracking will be available soon!",
+    "noLogsTitle": "No Coffee Logs Yet",
+    "noLogs": "The coffee tracking journey is just beginning. Check back soon for updates!",
+    "stats": {
+      "totalLogs": "Total Logs",
+      "thisWeek": "This Week",
+      "avgRating": "Avg Rating"
+    },
+    "charts": {
+      "brewMethodTitle": "Brew Method Distribution",
+      "qualityTitle": "Quality Over Time (Last 30 Days)",
+      "topBeansTitle": "Most Used Beans"
+    },
+    "table": {
+      "date": "Date",
+      "bean": "Bean",
+      "method": "Method",
+      "ratio": "Ratio",
+      "rating": "Rating",
+      "notes": "Notes"
     }
   },
-  "about": {
-    "title": "About Me"
+  "training": {
+    "title": "Training Log",
+    "metaTitle": "Training Log",
+    "subtitle": "Triathlon training activities and metrics",
+    "notAvailable": "Training tracking is not available yet. Please configure your Supabase database and Strava integration.",
+    "setupButton": "Set up training tracking →",
+    "table": {
+      "date": "Date",
+      "activity": "Activity",
+      "distance": "Distance",
+      "duration": "Duration",
+      "elevation": "Elevation",
+      "avgHr": "Avg HR"
+    }
+  },
+  "errors": {
+    "404": {
+      "title": "404 - Page Not Found",
+      "message": "The page you're looking for doesn't exist.",
+      "backHome": "Go back home"
+    }
+  },
+  "accessibility": {
+    "toggleTheme": "Toggle theme",
+    "toggleThemeTitle": "Toggle light/dark mode",
+    "toggleMenu": "Toggle menu",
+    "switchToSpanish": "Switch to Spanish",
+    "switchToEnglish": "Cambiar a Inglés"
+  },
+  "languageSwitch": {
+    "tooltipEs": "Haz click para cambiar a Español",
+    "tooltipEn": "Click for English"
   }
 }
