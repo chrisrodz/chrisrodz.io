@@ -27,7 +27,7 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
   const lastAddedBeanId = useStore(lastAddedBeanIdStore);
   // Form state
   const [brewMethod, setBrewMethod] = useState<(typeof BREW_METHODS)[number]>(
-    smartDefaults.brew_method || 'Espresso',
+    smartDefaults.brew_method || 'Espresso'
   );
   const [beanId, setBeanId] = useState<string>('');
   const [showAddBeanForm, setShowAddBeanForm] = useState<boolean>(false);
@@ -171,10 +171,7 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
       {submitStatus.type === 'success' ? (
         <ins className="message-card">
           <h2>{submitStatus.message}</h2>
-          <button
-            type="button"
-            onClick={resetForm}
-          >
+          <button type="button" onClick={resetForm}>
             Log Another Coffee
           </button>
         </ins>
@@ -221,15 +218,10 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
                   {bean.roaster && ` (${bean.roaster})`}
                 </option>
               ))}
-              <option value={NEW_BEAN_VALUE}>
-                + Add New Bean...
-              </option>
+              <option value={NEW_BEAN_VALUE}>+ Add New Bean...</option>
             </select>
-
             {/* Inline Add Bean Form */}
-            {showAddBeanForm && (
-              <AddBeanForm onBeanAdded={handleBeanAdded} />
-            )}
+            {showAddBeanForm && <AddBeanForm onBeanAdded={handleBeanAdded} />}
           </label>
 
           {/* Dose and Water/Yield */}
@@ -286,7 +278,14 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
             <label>Quality Rating *</label>
             <StarRating value={rating} onChange={setRating} />
             {rating === 0 && (
-              <p style={{ fontSize: '0.875rem', color: 'var(--pico-del-color)', marginTop: '0.25rem' }} role="alert">
+              <p
+                style={{
+                  fontSize: '0.875rem',
+                  color: 'var(--pico-del-color)',
+                  marginTop: '0.25rem',
+                }}
+                role="alert"
+              >
                 Please select a rating
               </p>
             )}
@@ -314,7 +313,12 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
               className="secondary"
               style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
             >
-              <span style={{ transform: notesExpanded ? 'rotate(90deg)' : 'none', transition: 'transform 0.2s' }}>
+              <span
+                style={{
+                  transform: notesExpanded ? 'rotate(90deg)' : 'none',
+                  transition: 'transform 0.2s',
+                }}
+              >
                 ▶
               </span>
               Notes (optional)

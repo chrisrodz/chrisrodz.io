@@ -31,7 +31,9 @@ export default function QualityChart({ data }: QualityChartProps) {
   const points = data.map((point, index) => {
     const x = padding + index * xStep;
     const y =
-      height - padding - ((point.avgRating - minRating) / (maxRating - minRating)) * (height - padding * 2);
+      height -
+      padding -
+      ((point.avgRating - minRating) / (maxRating - minRating)) * (height - padding * 2);
     return `${x},${y}`;
   });
 
@@ -39,14 +41,13 @@ export default function QualityChart({ data }: QualityChartProps) {
 
   return (
     <div style={{ position: 'relative' }}>
-      <svg
-        viewBox={`0 0 ${width} ${height}`}
-        style={{ width: '100%', height: '200px' }}
-      >
+      <svg viewBox={`0 0 ${width} ${height}`} style={{ width: '100%', height: '200px' }}>
         {/* Y-axis labels */}
         {[1, 2, 3, 4, 5].map((rating) => {
           const y =
-            height - padding - ((rating - minRating) / (maxRating - minRating)) * (height - padding * 2);
+            height -
+            padding -
+            ((rating - minRating) / (maxRating - minRating)) * (height - padding * 2);
           return (
             <g key={rating}>
               <line
@@ -71,18 +72,15 @@ export default function QualityChart({ data }: QualityChartProps) {
         })}
 
         {/* Line */}
-        <path
-          d={pathD}
-          fill="none"
-          stroke="var(--pico-primary)"
-          strokeWidth="2.5"
-        />
+        <path d={pathD} fill="none" stroke="var(--pico-primary)" strokeWidth="2.5" />
 
         {/* Points */}
         {data.map((point, index) => {
           const x = padding + index * xStep;
           const y =
-            height - padding - ((point.avgRating - minRating) / (maxRating - minRating)) * (height - padding * 2);
+            height -
+            padding -
+            ((point.avgRating - minRating) / (maxRating - minRating)) * (height - padding * 2);
           return (
             <circle
               key={index}
@@ -102,11 +100,18 @@ export default function QualityChart({ data }: QualityChartProps) {
       </svg>
 
       {/* X-axis labels (show first, middle, last) */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '0.5rem', padding: '0 1rem', fontSize: '0.75rem', color: 'var(--pico-muted-color)' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          marginTop: '0.5rem',
+          padding: '0 1rem',
+          fontSize: '0.75rem',
+          color: 'var(--pico-muted-color)',
+        }}
+      >
         <span>{data[0]?.date}</span>
-        {data.length > 2 && (
-          <span>{data[Math.floor(data.length / 2)]?.date}</span>
-        )}
+        {data.length > 2 && <span>{data[Math.floor(data.length / 2)]?.date}</span>}
         <span>{data[data.length - 1]?.date}</span>
       </div>
     </div>
