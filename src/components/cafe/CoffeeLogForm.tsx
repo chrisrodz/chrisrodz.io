@@ -41,11 +41,11 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
   const [showAddBeanForm, setShowAddBeanForm] = useState<boolean>(false);
   const [doseGrams, setDoseGrams] = useState<number>(smartDefaults.dose_grams || 18);
   const [yieldGrams, setYieldGrams] = useState<number>(smartDefaults.yield_grams || 0);
-  const [grindSetting, setGrindSetting] = useState<number>(smartDefaults.grind_setting || 10);
+  const [grindSetting, setGrindSetting] = useState<number>(smartDefaults.grind_setting || 20);
   
   // Store the initial/original espresso grind setting to restore when switching back
   const [originalEspressoGrindSetting] = useState<number>(
-    smartDefaults.grind_setting || 10
+    smartDefaults.grind_setting || 20
   );
   
   const [rating, setRating] = useState<number>(0);
