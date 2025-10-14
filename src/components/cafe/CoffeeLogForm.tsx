@@ -25,6 +25,14 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
   const beansFromStore = useStore(beansStore);
   const beans = beansFromStore.length > 0 ? beansFromStore : activeBeans;
   const lastAddedBeanId = useStore(lastAddedBeanIdStore);
+  
+  // Recommended grind settings for Baratza Encore
+  const RECOMMENDED_GRIND_SETTINGS = {
+    'Espresso': 8,
+    'AeroPress': 12,
+    'French Press': 34,
+  } as const;
+  
   // Form state
   const [brewMethod, setBrewMethod] = useState<(typeof BREW_METHODS)[number]>(
     smartDefaults.brew_method || 'Espresso'
@@ -34,6 +42,12 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
   const [doseGrams, setDoseGrams] = useState<number>(smartDefaults.dose_grams || 18);
   const [yieldGrams, setYieldGrams] = useState<number>(smartDefaults.yield_grams || 0);
   const [grindSetting, setGrindSetting] = useState<number>(smartDefaults.grind_setting || 10);
+  
+  // Store the initial/original espresso grind setting to restore when switching back
+  const [originalEspressoGrindSetting] = useState<number>(
+    smartDefaults.grind_setting || 10
+  );
+  
   const [rating, setRating] = useState<number>(0);
   const [brewTime, setBrewTime] = useState<string>('');
   const [notes, setNotes] = useState<string>('');
@@ -64,6 +78,19 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
     }
   }, [lastAddedBeanId]);
 
+  // Auto-adjust grind setting when brew method changes
+  useEffect(() => {
+    const currentRecommendedSetting = RECOMMENDED_GRIND_SETTINGS[brewMethod];
+    
+    // If switching to Espresso, restore the original setting
+    if (brewMethod === 'Espresso') {
+      setGrindSetting(originalEspressoGrindSetting);
+    } else {
+      // For AeroPress and French Press, use recommended settings
+      setGrindSetting(currentRecommendedSetting);
+    }
+  }, [brewMethod, originalEspressoGrindSetting]);
+
   // Handle bean selection change
   const handleBeanChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const value = e.target.value;
@@ -80,6 +107,11 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
   const handleBeanAdded = (newBeanId: string) => {
     setBeanId(newBeanId);
     setShowAddBeanForm(false);
+  };
+
+  // Handle brew method change
+  const handleBrewMethodChange = (method: (typeof BREW_METHODS)[number]) => {
+    setBrewMethod(method);
   };
 
   // Cache smart defaults in sessionStorage for fallback
@@ -193,7 +225,7 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
                   type="button"
                   role="radio"
                   aria-checked={brewMethod === method}
-                  onClick={() => setBrewMethod(method)}
+                  onClick={() => handleBrewMethodChange(method)}
                   className="radio-card"
                   data-active={brewMethod === method}
                 >
@@ -260,6 +292,14 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
           {/* Grind Setting */}
           <label>
             Molienda (1-40) *
+            <small style={{ 
+              display: 'block', 
+              fontSize: '0.875rem', 
+              color: 'var(--pico-muted-color)', 
+              marginBottom: '0.25rem' 
+            }}>
+              Recomendado para {brewMethod}: {RECOMMENDED_GRIND_SETTINGS[brewMethod]}
+            </small>
             <input
               type="number"
               inputMode="numeric"
