@@ -152,14 +152,6 @@ const currentYear = new Date().getFullYear().toString();
           </a>
         </li>
       </ul>
-      <button
-        id="mobile-menu-toggle"
-        class="mobile-menu-toggle"
-        aria-label={t(locale, 'accessibility.toggleMenu')}
-        aria-expanded="false"
-      >
-        <span class="hamburger-icon"></span>
-      </button>
     </nav>
 
     <main class="container">
@@ -246,35 +238,6 @@ const currentYear = new Date().getFullYear().toString();
         const expires = new Date();
         expires.setFullYear(expires.getFullYear() + 1);
         document.cookie = `preferred-lang=${targetLang}; path=/; expires=${expires.toUTCString()}; SameSite=Lax`;
-      });
-    </script>
-
-    <!-- Mobile menu toggle script -->
-    <script is:inline>
-      const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
-      const navLinks = document.querySelector('.nav-links');
-
-      mobileMenuToggle?.addEventListener('click', () => {
-        const isExpanded = mobileMenuToggle.getAttribute('aria-expanded') === 'true';
-        mobileMenuToggle.setAttribute('aria-expanded', !isExpanded);
-        navLinks?.classList.toggle('active');
-        mobileMenuToggle.classList.toggle('active');
-      });
-
-      navLinks?.querySelectorAll('a').forEach((link) => {
-        link.addEventListener('click', () => {
-          navLinks.classList.remove('active');
-          mobileMenuToggle?.classList.remove('active');
-          mobileMenuToggle?.setAttribute('aria-expanded', 'false');
-        });
-      });
-
-      document.addEventListener('click', (e) => {
-        if (!e.target.closest('.main-nav')) {
-          navLinks?.classList.remove('active');
-          mobileMenuToggle?.classList.remove('active');
-          mobileMenuToggle?.setAttribute('aria-expanded', 'false');
-        }
       });
     </script>
   </body>

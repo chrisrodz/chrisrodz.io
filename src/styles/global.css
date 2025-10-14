@@ -154,73 +154,7 @@ nav.main-nav .icon-button {
   justify-content: center;
 }
 
-/* Mobile menu toggle button (hamburger) */
-.mobile-menu-toggle {
-  display: none;
-  background: var(--pico-secondary-background);
-  border: 2px solid var(--pico-muted-border-color);
-  border-radius: 0.375rem;
-  padding: 0.75rem;
-  cursor: pointer;
-  min-width: 48px;
-  min-height: 48px;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  z-index: 1001;
-  transition: all 0.2s ease;
-}
-
-.mobile-menu-toggle:hover {
-  background: var(--pico-primary-focus);
-  border-color: var(--pico-primary);
-}
-
-.hamburger-icon {
-  display: block;
-  width: 24px;
-  height: 3px;
-  background: var(--pico-color);
-  position: relative;
-  transition: background 0.3s ease;
-  border-radius: 2px;
-}
-
-.hamburger-icon::before,
-.hamburger-icon::after {
-  content: '';
-  display: block;
-  width: 24px;
-  height: 3px;
-  background: var(--pico-color);
-  position: absolute;
-  transition: all 0.3s ease;
-  border-radius: 2px;
-}
-
-.hamburger-icon::before {
-  top: -7px;
-}
-
-.hamburger-icon::after {
-  top: 7px;
-}
-
-.mobile-menu-toggle.active .hamburger-icon {
-  background: transparent;
-}
-
-.mobile-menu-toggle.active .hamburger-icon::before {
-  top: 0;
-  transform: rotate(45deg);
-}
-
-.mobile-menu-toggle.active .hamburger-icon::after {
-  top: 0;
-  transform: rotate(-45deg);
-}
-
-/* Mobile menu styles */
+/* Mobile: keep nav items visible, no hamburger menu needed */
 @media (max-width: 767px) {
   nav.main-nav {
     display: flex;
@@ -228,55 +162,14 @@ nav.main-nav .icon-button {
     align-items: center;
   }
 
-  .mobile-menu-toggle {
-    display: flex;
-  }
-
   nav.main-nav .nav-links {
-    position: fixed;
-    top: 0;
-    right: -100%;
-    width: 280px;
-    height: 100vh;
-    background: var(--pico-background-color);
-    flex-direction: column;
-    gap: 0;
-    padding: 5rem 2rem 2rem;
-    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
-    transition: right 0.3s ease;
-    z-index: 1000;
-    overflow-y: auto;
+    display: flex;
+    gap: 0.75rem;
   }
 
-  nav.main-nav .nav-links.active {
-    right: 0;
-  }
-
-  nav.main-nav .nav-links li {
-    width: 100%;
-    border-bottom: 1px solid var(--pico-muted-border-color);
-  }
-
-  nav.main-nav .nav-links li.nav-actions {
-    border-bottom: none;
-  }
-
-  nav.main-nav .nav-links a {
-    display: block;
-    width: 100%;
-    padding: 1rem 0.5rem;
-    font-size: 1.125rem;
-  }
-
-  nav.main-nav .nav-links .lang-toggle {
-    width: 100%;
-    justify-content: center;
-    margin-top: 1rem;
-  }
-
-  nav.main-nav .nav-links .icon-button {
-    width: 100%;
-    margin-top: 1rem;
+  /* Hide the mobile menu toggle */
+  .mobile-menu-toggle {
+    display: none;
   }
 }
 
