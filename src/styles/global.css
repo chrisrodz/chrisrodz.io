@@ -99,7 +99,8 @@ body {
 /* Navigation styling */
 nav.main-nav {
   border-bottom: 2px solid var(--pico-muted-border-color);
-  padding: 1.5rem 0;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
   position: relative;
   display: flex;
   justify-content: space-between;
@@ -295,7 +296,8 @@ nav.main-nav .icon-button {
 /* Footer */
 footer {
   margin-top: 4rem;
-  padding: 2.5rem 0;
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
   border-top: 1px solid var(--pico-muted-border-color);
   text-align: center;
   color: var(--pico-muted-color);
