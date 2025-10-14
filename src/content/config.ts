@@ -15,7 +15,7 @@ const blog = defineCollection({
     pubDate: z.coerce.date(),
     updatedDate: z.coerce.date().optional(),
     heroImage: z.string().optional(),
-    locale: z.enum(['en', 'es']).default('en'),
+    locale: z.enum(['en', 'es']).default('es'),
     category: z.enum(['engineering', 'triathlon', 'coffee', 'life']).optional(),
   }),
 });
@@ -33,7 +33,7 @@ const legal = defineCollection({
     slug: z.string(), // Custom URL slug (e.g., "privacy")
     app: z.string(), // App name (e.g., "dobleseis")
     updatedDate: z.coerce.date(),
-    locale: z.enum(['en', 'es']).default('en'),
+    locale: z.enum(['en', 'es']).default('es'),
   }),
 });
 

@@ -1,22 +1,19 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { getLocaleFromUrl, useTranslations } from '@/lib/i18n';
+
+const locale = getLocaleFromUrl(Astro.url);
+const { t } = useTranslations(locale);
 ---
 
-<Layout title="Page Not Found" description="The page you're looking for doesn't exist.">
-  <div style="text-align: center; padding: 6rem 0;">
-    <h1
-      style="font-size: clamp(3rem, 8vw, 6rem); font-weight: 800; letter-spacing: -0.05em; margin-bottom: 1rem;"
-    >
-      404
-    </h1>
-    <p style="font-size: 1.5rem; color: var(--pico-muted-color); margin-bottom: 2rem;">
-      Page not found
+<Layout title={t('errors.404.title')}>
+  <div style="text-align: center; padding: 4rem 0;">
+    <h1 style="font-size: 6rem; margin: 0;">404</h1>
+    <p style="font-size: 1.5rem; margin: 2rem 0;">
+      {t('errors.404.message')}
     </p>
-    <p style="color: var(--pico-muted-color); margin-bottom: 2rem;">
-      The page you're looking for doesn't exist or has been moved.
-    </p>
-    <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-      <a href="/" role="button">Go home</a>
-    </div>
+    <a href={locale === 'en' ? '/en' : '/'} role="button">
+      {t('errors.404.backHome')}
+    </a>
   </div>
 </Layout>

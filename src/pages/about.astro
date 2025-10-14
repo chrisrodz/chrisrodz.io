@@ -1,74 +1,65 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { getLocaleFromUrl, useTranslations } from '@/lib/i18n';
+
+const locale = getLocaleFromUrl(Astro.url);
+const { t } = useTranslations(locale);
 ---
 
-<Layout
-  title="About"
-  description="Learn more about Christian Rodriguez - Software Engineer, Triathlete, and Dad"
->
+<Layout title={t('about.title')} description={t('about.metaDescription')}>
   <article style="max-width: 70ch; margin: 0 auto;">
     <header class="hero">
-      <h1>About Me</h1>
-      <p>Software Engineer • Triathlete • Dad</p>
+      <h1>{t('about.heading')}</h1>
+      <p>{t('about.subtitle')}</p>
     </header>
 
     <div class="prose" style="margin-top: 3rem;">
-      <h2>Hi, I'm Christian 👋</h2>
+      <h2>{t('about.sections.greeting')}</h2>
 
       <p>
-        I'm a software engineer passionate about building things that matter. By day, I write code
-        and solve problems. By early morning and evening, I train for triathlons. And in between,
-        I'm a dad trying to keep up with my kids.
+        {t('about.sections.intro')}
       </p>
 
-      <h3>What I Do</h3>
+      <h3>{t('about.sections.whatIDoTitle')}</h3>
 
       <p>
-        I specialize in building web applications with modern technologies. I love working with
-        TypeScript, React, and all things JavaScript/Node.js. I'm particularly interested in
-        developer experience, performance, and creating tools that make developers' lives easier.
+        {t('about.sections.whatIDo')}
       </p>
 
-      <h3>Triathlon Journey</h3>
+      <h3>{t('about.sections.triathlonTitle')}</h3>
 
       <p>
-        Swimming, biking, and running have become more than just hobbies—they're how I think through
-        problems, push my limits, and stay balanced. I track my training here and share what I learn
-        along the way.
+        {t('about.sections.triathlon')}
       </p>
 
-      <h3>Coffee & Code</h3>
+      <h3>{t('about.sections.coffeeTitle')}</h3>
 
       <p>
-        There's something meditative about the coffee brewing process. From selecting beans to
-        dialing in the perfect espresso shot, it's another form of problem-solving that I enjoy. I
-        log my experiments in the <a href="/coffee">coffee section</a>.
+        {t('about.sections.coffee')}
+        <a href={locale === 'en' ? '/en/cafe' : '/cafe'}>{t('about.sections.coffeeLink')}</a>.
       </p>
 
-      <h3>This Blog</h3>
+      <h3>{t('about.sections.blogTitle')}</h3>
 
       <p>
-        I write about software engineering, lessons learned from training, and whatever else seems
-        worth sharing. The posts are a mix of technical deep-dives, training reflections, and
-        occasional life updates.
+        {t('about.sections.blog')}
       </p>
 
-      <h3>Let's Connect</h3>
+      <h3>{t('about.sections.connectTitle')}</h3>
 
       <p>
-        I'm always happy to chat about code, triathlon, coffee, or anything in between. You can find
-        me on:
+        {t('about.sections.connect')}
       </p>
 
       <ul>
         <li>
-          <strong>GitHub:</strong>
+          <strong>{t('about.sections.githubLabel')}</strong>
           <a href="https://github.com/chrisrodz" target="_blank" rel="noopener noreferrer">
             @chrisrodz
           </a>
         </li>
         <li>
-          <strong>Email:</strong>
+          <strong>{t('about.sections.emailLabel')}</strong>
           <a href="mailto:hey@chrisrodz.io">hey@chrisrodz.io</a>
         </li>
       </ul>
@@ -76,7 +67,7 @@ import Layout from '../layouts/Layout.astro';
       <hr style="margin: 3rem 0;" />
 
       <p style="text-align: center;">
-        <a href="/" role="button">Back to home</a>
+        <a href={locale === 'en' ? '/en' : '/'} role="button">{t('common.backToHome')}</a>
       </p>
     </div>
   </article>
