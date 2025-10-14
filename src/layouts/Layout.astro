@@ -7,6 +7,7 @@ export interface Props {
   description?: string;
   image?: string;
   alternateUrl?: string; // Optional: for translated pages with different slugs
+  isAdmin?: boolean; // Easter egg: show admin quick links
 }
 
 const locale: Locale = getLocaleFromUrl(Astro.url);
@@ -15,6 +16,7 @@ const {
   description = t(locale, 'home.intro.paragraph1'),
   image = '/og-image.png',
   alternateUrl: providedAlternateUrl,
+  isAdmin = false,
 } = Astro.props;
 const currentPath = Astro.url.pathname;
 const canonicalURL = new URL(currentPath, Astro.site || 'https://chrisrodz.io');
@@ -172,7 +174,7 @@ const currentYear = new Date().getFullYear().toString();
         <p style="color: var(--pico-muted-color); margin: 0;">
           {t(locale, 'footer.copyright', { year: currentYear })}
         </p>
-        <div style="display: flex; gap: 1.5rem;">
+        <div style="display: flex; gap: 1.5rem; align-items: center;">
           <a href="/rss.xml" style="color: var(--pico-muted-color); text-decoration: none;">
             {t(locale, 'footer.rss')}
           </a>
@@ -190,6 +192,20 @@ const currentYear = new Date().getFullYear().toString();
           >
             {t(locale, 'footer.github')}
           </a>
+          {
+            isAdmin && (
+              <a
+                href="/admin/cafe"
+                style="font-size: 1.25rem; text-decoration: none; opacity: 0.6; transition: opacity 0.2s, transform 0.2s;"
+                onmouseover="this.style.opacity='1'; this.style.transform='scale(1.2)'"
+                onmouseout="this.style.opacity='0.6'; this.style.transform='scale(1)'"
+                title="Quick coffee log"
+                aria-label="Quick access to coffee logger"
+              >
+                ☕
+              </a>
+            )
+          }
         </div>
       </div>
     </footer>
