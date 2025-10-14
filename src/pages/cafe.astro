@@ -11,6 +11,10 @@ import {
 } from '../lib/cafe-stats';
 import BrewMethodChart from '../components/cafe/BrewMethodChart';
 import QualityChart from '../components/cafe/QualityChart';
+import { getLocaleFromUrl, useTranslations } from '@/lib/i18n';
+
+const locale = getLocaleFromUrl(Astro.url);
+const { t, formatDate } = useTranslations(locale);
 
 // Fetch all coffee logs with bean details
 let logs: CoffeeLogWithBean[] = [];
@@ -42,44 +46,41 @@ const topBeans = logs.length > 0 ? getMostUsedBeans(logs) : [];
 const recentLogs = logs.slice(0, 30); // Show last 30
 ---
 
-<Layout
-  title="Coffee Tracker"
-  description="My coffee brewing journey - tracking beans, methods, and quality"
->
+<Layout title={t('cafe.title')} description={t('cafe.metaDescription')}>
   <header class="mb">
-    <h1>Coffee Tracker</h1>
-    <p>Tracking my coffee brewing journey, one cup at a time</p>
+    <h1>{t('cafe.heading')}</h1>
+    <p>{t('cafe.subtitle')}</p>
   </header>
 
   {
     error ? (
       <section class="notice-box" data-variant="warning">
-        <h2>Coffee Tracking Not Available</h2>
+        <h2>{t('cafe.errors.heading')}</h2>
         <p>
           {error === 'Database not configured'
-            ? 'The database is not configured yet. Coffee tracking will be available soon!'
-            : error}
+            ? t('cafe.errors.notConfigured')
+            : t('cafe.errors.failed')}
         </p>
       </section>
     ) : logs.length === 0 ? (
       <section class="notice-box" data-variant="info">
-        <h2>No Coffee Logs Yet</h2>
-        <p>The coffee tracking journey is just beginning. Check back soon for updates!</p>
+        <h2>{t('cafe.noLogsYet.heading')}</h2>
+        <p>{t('cafe.noLogsYet.message')}</p>
       </section>
     ) : (
       <>
         {/* Stats Cards */}
         <div class="grid-3 mb">
           <article class="stat-card">
-            <small>Total Logs</small>
+            <small>{t('cafe.stats.totalLogs')}</small>
             <p class="stat-value">{stats?.totalLogs}</p>
           </article>
           <article class="stat-card">
-            <small>This Week</small>
+            <small>{t('cafe.stats.thisWeek')}</small>
             <p class="stat-value">{stats?.logsThisWeek}</p>
           </article>
           <article class="stat-card">
-            <small>Avg Rating</small>
+            <small>{t('cafe.stats.avgRating')}</small>
             <p class="stat-value">{stats?.avgRating} / 5</p>
           </article>
         </div>
@@ -88,13 +89,13 @@ const recentLogs = logs.slice(0, 30); // Show last 30
         <div class="grid-2 mb">
           {/* Brew Method Distribution */}
           <article>
-            <h2>Brew Method Distribution</h2>
+            <h2>{t('cafe.sections.brewMethods')}</h2>
             <BrewMethodChart client:load data={brewMethodData} />
           </article>
 
           {/* Quality Over Time */}
           <article>
-            <h2>Quality Over Time (Last 30 Days)</h2>
+            <h2>{t('cafe.sections.qualityOverTime')}</h2>
             <QualityChart client:load data={qualityData} />
           </article>
         </div>
@@ -102,14 +103,16 @@ const recentLogs = logs.slice(0, 30); // Show last 30
         {/* Most Used Beans */}
         {topBeans.length > 0 && (
           <article class="mb">
-            <h2>Most Used Beans</h2>
+            <h2>{t('cafe.sections.topBeans')}</h2>
             {topBeans.map((item) => (
               <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
                 <div>
                   <strong>{item.bean.bean_name}</strong>
                   {item.bean.roaster && <small style="display: block;">{item.bean.roaster}</small>}
                 </div>
-                <small>{item.count} brews</small>
+                <small>
+                  {item.count} {t('cafe.misc.brews')}
+                </small>
               </div>
             ))}
           </article>
@@ -117,30 +120,30 @@ const recentLogs = logs.slice(0, 30); // Show last 30
 
         {/* Recent Logs Table */}
         <article>
-          <h2>Recent Brews</h2>
+          <h2>{t('cafe.sections.recentBrews')}</h2>
           <div style="overflow-x: auto;">
             <table>
               <thead>
                 <tr>
-                  <th>Date</th>
-                  <th>Bean</th>
-                  <th>Method</th>
-                  <th>Ratio</th>
-                  <th>Grind</th>
-                  <th>Rating</th>
-                  <th>Notes</th>
+                  <th>{t('cafe.table.date')}</th>
+                  <th>{t('cafe.table.bean')}</th>
+                  <th>{t('cafe.table.method')}</th>
+                  <th>{t('cafe.table.ratio')}</th>
+                  <th>{t('cafe.table.grind')}</th>
+                  <th>{t('cafe.table.rating')}</th>
+                  <th>{t('cafe.table.notes')}</th>
                 </tr>
               </thead>
               <tbody>
                 {recentLogs.map((log) => (
                   <tr>
                     <td>
-                      {new Date(log.brew_time).toLocaleDateString('en-US', {
+                      {formatDate(new Date(log.brew_time), {
                         month: 'short',
                         day: 'numeric',
                       })}
                     </td>
-                    <td>{log.bean?.bean_name || <small>Unknown</small>}</td>
+                    <td>{log.bean?.bean_name || <small>{t('cafe.misc.unknown')}</small>}</td>
                     <td>{log.brew_method}</td>
                     <td style="font-family: monospace;">
                       {formatBrewRatio(log.dose_grams, log.yield_grams)}
