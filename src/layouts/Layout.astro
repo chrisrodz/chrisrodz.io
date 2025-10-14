@@ -1,13 +1,13 @@
 ---
 import '../styles/global.css';
 import { getLocaleFromUrl, t, getAlternateUrl, type Locale } from '@/lib/i18n';
+import { checkAuth } from '@/lib/auth';
 
 export interface Props {
   title: string;
   description?: string;
   image?: string;
   alternateUrl?: string; // Optional: for translated pages with different slugs
-  isAdmin?: boolean; // Easter egg: show admin quick links
 }
 
 const locale: Locale = getLocaleFromUrl(Astro.url);
@@ -16,8 +16,10 @@ const {
   description = t(locale, 'home.intro.paragraph1'),
   image = '/og-image.png',
   alternateUrl: providedAlternateUrl,
-  isAdmin = false,
 } = Astro.props;
+
+// Check if user is authenticated (Easter egg: show admin quick links)
+const isAdmin = checkAuth(Astro.cookies);
 const currentPath = Astro.url.pathname;
 const canonicalURL = new URL(currentPath, Astro.site || 'https://chrisrodz.io');
 const ogImage = new URL(image, Astro.site || 'https://chrisrodz.io');

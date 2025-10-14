@@ -23,7 +23,7 @@ if (Astro.request.method === 'POST') {
 }
 ---
 
-<Layout title="Admin Dashboard" isAdmin={isAuthed}>
+<Layout title="Admin Dashboard">
   {
     !isAuthed ? (
       <section>
