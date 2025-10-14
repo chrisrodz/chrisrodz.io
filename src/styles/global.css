@@ -304,6 +304,26 @@ footer {
   font-size: 0.875rem;
 }
 
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+/* Mobile: links above copyright */
+@media (max-width: 767px) {
+  .footer-content {
+    flex-direction: column-reverse;
+    gap: 1.5rem;
+  }
+
+  .footer-links {
+    justify-content: center;
+  }
+}
+
 footer a {
   text-decoration: none;
   color: var(--pico-muted-color);

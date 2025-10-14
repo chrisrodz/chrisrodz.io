@@ -170,13 +170,11 @@ const currentYear = new Date().getFullYear().toString();
       class="container"
       style="margin-top: 4rem; padding-top: 2rem; padding-bottom: 2rem; border-top: 1px solid var(--pico-muted-border-color);"
     >
-      <div
-        style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;"
-      >
-        <p style="color: var(--pico-muted-color); margin: 0;">
+      <div class="footer-content">
+        <p class="footer-copyright" style="color: var(--pico-muted-color); margin: 0;">
           {t(locale, 'footer.copyright', { year: currentYear })}
         </p>
-        <div style="display: flex; gap: 1.5rem; align-items: center;">
+        <div class="footer-links" style="display: flex; gap: 1.5rem; align-items: center;">
           <a href="/rss.xml" style="color: var(--pico-muted-color); text-decoration: none;">
             {t(locale, 'footer.rss')}
           </a>
