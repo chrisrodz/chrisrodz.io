@@ -11,23 +11,32 @@ export const onRequest = defineMiddleware(async (context, next) => {
   }
 
   // 2. Only redirect on homepage to avoid breaking deep links
-  // Allow redirects from both / and /es to properly handle Accept-Language
-  if (url.pathname !== '/' && url.pathname !== '/es') {
+  // Allow redirects from both / and /en to properly handle Accept-Language
+  if (url.pathname !== '/' && url.pathname !== '/en') {
     return next();
   }
 
-  // 3. Check Accept-Language header (W3C standard)
+  // 3. Check Accept-Language header (W3C standard) with robust parsing
   const acceptLang = request.headers.get('accept-language') || '';
-  const browserPrefersSpanish = acceptLang.toLowerCase().includes('es');
+
+  // Parse Accept-Language header more robustly
+  // Handles cases like: "es-MX, es-419, es;q=0.9, en;q=0.8"
+  const languages = acceptLang
+    .split(',')
+    .map((lang) => lang.split(';')[0].trim().toLowerCase())
+    .filter((lang) => lang.length > 0);
+
+  const browserPrefersEnglish = languages.some((lang) => lang.startsWith('en'));
 
   // 4. Redirect logic based on browser language preference
-  if (browserPrefersSpanish && url.pathname === '/') {
-    // User prefers Spanish and is on English homepage -> redirect to Spanish
-    return redirect('/es', 302);
+  // FLIPPED: Spanish is now default
+  if (browserPrefersEnglish && url.pathname === '/') {
+    // User prefers English and is on Spanish homepage -> redirect to English
+    return redirect('/en', 302);
   }
 
-  if (!browserPrefersSpanish && url.pathname === '/es') {
-    // User prefers English and is on Spanish homepage -> redirect to English
+  if (!browserPrefersEnglish && url.pathname === '/en') {
+    // User prefers Spanish and is on English homepage -> redirect to Spanish
     return redirect('/', 302);
   }
 

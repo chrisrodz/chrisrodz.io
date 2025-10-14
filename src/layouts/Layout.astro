@@ -12,7 +12,7 @@ export interface Props {
 const locale: Locale = getLocaleFromUrl(Astro.url);
 const {
   title,
-  description = t(locale, 'home.hero.subtitle'),
+  description = t(locale, 'home.intro.paragraph1'),
   image = '/og-image.png',
   alternateUrl: providedAlternateUrl,
 } = Astro.props;
@@ -21,10 +21,14 @@ const canonicalURL = new URL(currentPath, Astro.site || 'https://chrisrodz.io');
 const ogImage = new URL(image, Astro.site || 'https://chrisrodz.io');
 
 // Generate alternate language URLs
-const alternateLocale: Locale = locale === 'en' ? 'es' : 'en';
+const alternateLocale: Locale = locale === 'es' ? 'en' : 'es';
 // Use provided alternateUrl (e.g., for translated blog posts) or generate one
 const alternateUrl = providedAlternateUrl || getAlternateUrl(currentPath, locale, alternateLocale);
 const alternateFullUrl = new URL(alternateUrl, Astro.site || 'https://chrisrodz.io');
+
+// Format title with site name
+const fullTitle = t(locale, 'site.titleWithPage', { page: title });
+const currentYear = new Date().getFullYear().toString();
 ---
 
 <!doctype html>
@@ -42,14 +46,14 @@ const alternateFullUrl = new URL(alternateUrl, Astro.site || 'https://chrisrodz.
     <link
       rel="alternate"
       type="application/rss+xml"
-      title="Christian Rodriguez - Blog (English)"
-      href="/rss.xml"
+      title={t('en', 'blog.rssTitle')}
+      href="/en/rss.xml"
     />
     <link
       rel="alternate"
       type="application/rss+xml"
-      title="Christian Rodriguez - Blog (Español)"
-      href="/es/rss.xml"
+      title={t('es', 'blog.rssTitle')}
+      href="/rss.xml"
     />
 
     <!-- Alternate language links for SEO -->
@@ -64,20 +68,20 @@ const alternateFullUrl = new URL(alternateUrl, Astro.site || 'https://chrisrodz.
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalURL} />
-    <meta property="og:title" content={`${title} | Christian Rodriguez`} />
+    <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={ogImage} />
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:url" content={canonicalURL} />
-    <meta property="twitter:title" content={`${title} | Christian Rodriguez`} />
+    <meta property="twitter:title" content={fullTitle} />
     <meta property="twitter:description" content={description} />
     <meta property="twitter:image" content={ogImage} />
 
-    <title>{title} | Christian Rodriguez</title>
+    <title>{fullTitle}</title>
 
-    <!-- Favicon (Puzzle Piece emoji from Twemoji by Twitter, Inc - CC BY 4.0) -->
+    <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
@@ -97,11 +101,9 @@ const alternateFullUrl = new URL(alternateUrl, Astro.site || 'https://chrisrodz.
 
     <!-- Theme script (prevent FOUC) -->
     <script is:inline>
-      // Check for saved theme preference or default to 'light' mode
       const theme = localStorage.getItem('theme') || 'light';
       if (theme === 'dark') {
         document.documentElement.setAttribute('data-theme', 'dark');
-        themeIcon.textContent = '☀️';
       }
     </script>
   </head>
@@ -110,8 +112,8 @@ const alternateFullUrl = new URL(alternateUrl, Astro.site || 'https://chrisrodz.
       <ul>
         <li>
           <a
-            href={locale === 'es' ? '/es' : '/'}
-            class={currentPath === '/' || currentPath === '/es' ? 'active' : ''}
+            href={locale === 'en' ? '/en' : '/'}
+            class={currentPath === '/' || currentPath === '/en' ? 'active' : ''}
             >{t(locale, 'nav.home')}</a
           >
         </li>
@@ -120,9 +122,9 @@ const alternateFullUrl = new URL(alternateUrl, Astro.site || 'https://chrisrodz.
         <li class="nav-actions">
           <button
             id="theme-toggle"
-            aria-label="Toggle theme"
+            aria-label={t(locale, 'accessibility.toggleTheme')}
             class="contrast icon-button"
-            title="Toggle light/dark mode"
+            title={t(locale, 'accessibility.toggleThemeTitle')}
           >
             <span id="theme-icon" aria-hidden="true">🌙</span>
           </button>
@@ -132,22 +134,26 @@ const alternateFullUrl = new URL(alternateUrl, Astro.site || 'https://chrisrodz.
             id="lang-toggle"
             href={alternateUrl}
             class="lang-toggle"
-            data-target-lang={locale === 'en' ? 'es' : 'en'}
-            data-tooltip={locale === 'en'
-              ? 'Haz click para cambiar a Español'
-              : 'Click for English'}
+            data-target-lang={locale === 'es' ? 'en' : 'es'}
+            data-tooltip={t(
+              locale,
+              locale === 'es' ? 'languageSwitch.tooltipEn' : 'languageSwitch.tooltipEs'
+            )}
             data-placement="bottom"
-            aria-label={locale === 'en' ? 'Switch to Spanish' : 'Cambiar a Inglés'}
+            aria-label={t(
+              locale,
+              locale === 'es' ? 'accessibility.switchToEnglish' : 'accessibility.switchToSpanish'
+            )}
           >
-            <span class="lang-icon" aria-hidden="true">{locale === 'en' ? '🇵🇷' : '🇺🇸'}</span>
-            <span class="lang-text">{locale === 'en' ? 'ES' : 'EN'}</span>
+            <span class="lang-icon" aria-hidden="true">{locale === 'es' ? '🇺🇸' : '🇵🇷'}</span>
+            <span class="lang-text">{locale === 'es' ? 'EN' : 'ES'}</span>
           </a>
         </li>
       </ul>
       <button
         id="mobile-menu-toggle"
         class="mobile-menu-toggle"
-        aria-label="Toggle menu"
+        aria-label={t(locale, 'accessibility.toggleMenu')}
         aria-expanded="false"
       >
         <span class="hamburger-icon"></span>
@@ -166,20 +172,26 @@ const alternateFullUrl = new URL(alternateUrl, Astro.site || 'https://chrisrodz.
         style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;"
       >
         <p style="color: var(--pico-muted-color); margin: 0;">
-          © 2025 Christian A. Rodríguez Encarnación
+          {t(locale, 'footer.copyright', { year: currentYear })}
         </p>
         <div style="display: flex; gap: 1.5rem;">
-          <a href="/rss.xml" style="color: var(--pico-muted-color); text-decoration: none;">RSS</a>
+          <a href="/rss.xml" style="color: var(--pico-muted-color); text-decoration: none;">
+            {t(locale, 'footer.rss')}
+          </a>
           <a
             href="mailto:hey@chrisrodz.io"
-            style="color: var(--pico-muted-color); text-decoration: none;">Email</a
+            style="color: var(--pico-muted-color); text-decoration: none;"
           >
+            {t(locale, 'footer.email')}
+          </a>
           <a
             href="https://github.com/chrisrodz"
             target="_blank"
             rel="noopener noreferrer"
-            style="color: var(--pico-muted-color); text-decoration: none;">GitHub</a
+            style="color: var(--pico-muted-color); text-decoration: none;"
           >
+            {t(locale, 'footer.github')}
+          </a>
         </div>
       </div>
     </footer>
@@ -201,7 +213,6 @@ const alternateFullUrl = new URL(alternateUrl, Astro.site || 'https://chrisrodz.
         localStorage.setItem('theme', theme);
       }
 
-      // Set initial icon based on current theme
       const currentTheme = html.getAttribute('data-theme') || 'light';
       themeIcon.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
 
@@ -217,15 +228,10 @@ const alternateFullUrl = new URL(alternateUrl, Astro.site || 'https://chrisrodz.
       const langToggle = document.getElementById('lang-toggle');
 
       langToggle?.addEventListener('click', () => {
-        // Set cookie to remember user's language preference
         const targetLang = langToggle.getAttribute('data-target-lang');
-
-        // Set cookie for 1 year (365 days)
         const expires = new Date();
         expires.setFullYear(expires.getFullYear() + 1);
         document.cookie = `preferred-lang=${targetLang}; path=/; expires=${expires.toUTCString()}; SameSite=Lax`;
-
-        // Let the navigation proceed normally
       });
     </script>
 
@@ -241,7 +247,6 @@ const alternateFullUrl = new URL(alternateUrl, Astro.site || 'https://chrisrodz.
         mobileMenuToggle.classList.toggle('active');
       });
 
-      // Close menu when clicking on a link
       navLinks?.querySelectorAll('a').forEach((link) => {
         link.addEventListener('click', () => {
           navLinks.classList.remove('active');
@@ -250,7 +255,6 @@ const alternateFullUrl = new URL(alternateUrl, Astro.site || 'https://chrisrodz.
         });
       });
 
-      // Close menu when clicking outside
       document.addEventListener('click', (e) => {
         if (!e.target.closest('.main-nav')) {
           navLinks?.classList.remove('active');
