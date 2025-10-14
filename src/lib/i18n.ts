@@ -1,6 +1,7 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 import en from '../i18n/en.json';
 import es from '../i18n/es.json';
+import type { TranslationKey } from './i18n-keys';
 
 export type Locale = 'en' | 'es';
 
@@ -11,23 +12,25 @@ const translations: Record<Locale, typeof en> = {
 
 /**
  * Extract locale from URL pathname
- * /es/blog -> 'es'
- * /blog -> 'en'
+ * /en/blog -> 'en'
+ * /blog -> 'es' (Spanish is now default)
  */
 export function getLocaleFromUrl(url: URL): Locale {
   const pathname = url.pathname;
-  if (pathname.startsWith('/es/') || pathname === '/es') {
-    return 'es';
+  // English now has the prefix
+  if (pathname.startsWith('/en/') || pathname === '/en') {
+    return 'en';
   }
-  return 'en';
+  // Spanish is default (no prefix)
+  return 'es';
 }
 
 /**
  * Get translation for a key using dot notation
- * t('en', 'nav.home') -> 'Home'
  * t('es', 'nav.home') -> 'Inicio'
+ * t('en', 'nav.home') -> 'Home'
  */
-export function t(locale: Locale, key: string, vars?: Record<string, string>): string {
+export function t(locale: Locale, key: TranslationKey, vars?: Record<string, string>): string {
   const keys = key.split('.');
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let value: any = translations[locale];
@@ -58,24 +61,24 @@ export function t(locale: Locale, key: string, vars?: Record<string, string>): s
 
 /**
  * Generate URL for alternate language
- * getAlternateUrl('/blog/my-post', 'en', 'es') -> '/es/blog/my-post'
- * getAlternateUrl('/es/blog/mi-post', 'es', 'en') -> '/blog/mi-post'
+ * getAlternateUrl('/blog/my-post', 'es', 'en') -> '/en/blog/my-post'
+ * getAlternateUrl('/en/blog/my-post', 'en', 'es') -> '/blog/my-post'
  */
 export function getAlternateUrl(
   currentPath: string,
   _currentLocale: Locale,
   targetLocale: Locale
 ): string {
-  // If switching to English (default), remove /es prefix
-  if (targetLocale === 'en') {
-    return currentPath.replace(/^\/es(\/|$)/, '/') || '/';
+  // If switching to Spanish (default), remove /en prefix
+  if (targetLocale === 'es') {
+    return currentPath.replace(/^\/en(\/|$)/, '/') || '/';
   }
 
-  // If switching to Spanish, add /es prefix
-  if (targetLocale === 'es') {
-    // Remove any existing /es prefix first
-    const cleanPath = currentPath.replace(/^\/es(\/|$)/, '/');
-    return `/es${cleanPath === '/' ? '' : cleanPath}`;
+  // If switching to English, add /en prefix
+  if (targetLocale === 'en') {
+    // Remove any existing /en prefix first
+    const cleanPath = currentPath.replace(/^\/en(\/|$)/, '/');
+    return `/en${cleanPath === '/' ? '' : cleanPath}`;
   }
 
   return currentPath;
@@ -119,13 +122,28 @@ export function getPostSlug(post: CollectionEntry<'blog'>): string {
 
 /**
  * Build blog post URL based on locale
+ * Spanish (default): /blog/slug
+ * English: /en/blog/slug
  */
 export function getBlogPostUrl(post: CollectionEntry<'blog'>): string {
   const slug = post.data.slug;
-  const locale = post.data.locale || 'en';
+  const locale = post.data.locale || 'es'; // Default to Spanish
 
-  if (locale === 'es') {
-    return `/es/blog/${slug}`;
+  if (locale === 'en') {
+    return `/en/blog/${slug}`;
   }
   return `/blog/${slug}`;
+}
+
+/**
+ * Helper for components that need translations
+ */
+export function useTranslations(locale: Locale) {
+  return {
+    t: (key: TranslationKey, vars?: Record<string, string>) => t(locale, key, vars),
+    locale,
+    formatDate: (date: Date, options?: Intl.DateTimeFormatOptions) =>
+      date.toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US', options),
+    formatNumber: (num: number) => num.toLocaleString(locale === 'es' ? 'es-ES' : 'en-US'),
+  };
 }

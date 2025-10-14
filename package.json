@@ -3,17 +3,19 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "astro dev",
+    "dev": "yarn generate:i18n && astro dev",
     "start": "astro dev",
-    "build": "astro check && astro build",
+    "build": "yarn generate:i18n && astro check && astro build",
     "preview": "astro preview",
     "astro": "astro",
     "new-post": "node scripts/new-post.js",
+    "generate:i18n": "node scripts/generate-i18n-types.js",
+    "validate:i18n": "node scripts/validate-translations.js",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint . --ext .js,.ts,.astro",
     "lint:fix": "eslint . --ext .js,.ts,.astro --fix",
-    "check": "astro check && yarn lint && yarn format:check",
+    "check": "yarn validate:i18n && astro check && yarn lint && yarn format:check",
     "prepare": "husky"
   },
   "dependencies": {
@@ -48,6 +50,12 @@
     "prettier-plugin-astro": "^0.14.1"
   },
   "lint-staged": {
+    "src/i18n/*.json": [
+      "yarn validate:i18n",
+      "yarn generate:i18n",
+      "git add src/lib/i18n-keys.ts",
+      "prettier --write"
+    ],
     "*.{js,ts,astro}": [
       "eslint --fix",
       "prettier --write"
