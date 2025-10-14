@@ -62,6 +62,7 @@
     "publishedOn": "Publicado el",
     "updatedOn": "Actualizado el",
     "backToAll": "← Volver a todos los posts",
+    "backToHome": "Volver al inicio",
     "tags": "Etiquetas",
     "category": "Categoría",
     "rssTitle": "Christian Rodriguez - Blog (Español)"
@@ -69,26 +70,38 @@
   "cafe": {
     "title": "Registro de Café",
     "metaDescription": "Mi jornada preparando café - registrando granos, métodos, y calidad",
+    "heading": "Registro de Café",
     "subtitle": "Registrando mi jornada con el café, una taza a la vez",
-    "notAvailableTitle": "Registro de Café No Disponible",
-    "notConfigured": "La base de datos aún no está configurada. ¡El registro de café estará disponible pronto!",
-    "noLogsTitle": "Sin Registros de Café Aún",
-    "noLogs": "La jornada del registro de café apenas comienza. ¡Vuelve pronto para actualizaciones!",
+    "errors": {
+      "heading": "Registro de Café No Disponible",
+      "notConfigured": "La base de datos aún no está configurada. ¡El registro de café estará disponible pronto!",
+      "failed": "Error al cargar registros de café"
+    },
+    "noLogsYet": {
+      "heading": "Sin Registros de Café Aún",
+      "message": "La jornada del registro de café apenas comienza. ¡Vuelve pronto para actualizaciones!"
+    },
     "stats": {
       "totalLogs": "Total de Registros",
       "thisWeek": "Esta Semana",
       "avgRating": "Calificación Promedio"
     },
-    "charts": {
-      "brewMethodTitle": "Distribución de Métodos de Preparación",
-      "qualityTitle": "Calidad en el Tiempo (Últimos 30 Días)",
-      "topBeansTitle": "Granos Más Usados"
+    "sections": {
+      "brewMethods": "Distribución de Métodos de Preparación",
+      "qualityOverTime": "Calidad en el Tiempo (Últimos 30 Días)",
+      "topBeans": "Granos Más Usados",
+      "recentBrews": "Preparaciones Recientes"
+    },
+    "misc": {
+      "brews": "preparaciones",
+      "unknown": "Desconocido"
     },
     "table": {
       "date": "Fecha",
       "bean": "Grano",
       "method": "Método",
       "ratio": "Proporción",
+      "grind": "Molienda",
       "rating": "Calificación",
       "notes": "Notas"
     }
@@ -96,9 +109,16 @@
   "training": {
     "title": "Registro de Entrenamiento",
     "metaTitle": "Registro de Entrenamiento",
+    "heading": "Registro de Entrenamiento",
     "subtitle": "Actividades y métricas de entrenamiento de triatlón",
-    "notAvailable": "El registro de entrenamiento aún no está disponible. Por favor configura tu base de datos de Supabase e integración con Strava.",
-    "setupButton": "Configurar registro de entrenamiento →",
+    "errors": {
+      "notConfigured": "El registro de entrenamiento aún no está disponible. Por favor configura tu base de datos de Supabase e integración con Strava.",
+      "setupButton": "Configurar registro de entrenamiento →"
+    },
+    "noActivities": {
+      "message": "Sin actividades de entrenamiento aún. ¡Conecta tu cuenta de Strava para sincronizar tus entrenamientos!",
+      "setupButton": "Configurar Integración con Strava →"
+    },
     "table": {
       "date": "Fecha",
       "activity": "Actividad",

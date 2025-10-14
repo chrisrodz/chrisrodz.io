@@ -62,6 +62,7 @@
     "publishedOn": "Published on",
     "updatedOn": "Updated on",
     "backToAll": "← Back to all posts",
+    "backToHome": "Back to home",
     "tags": "Tags",
     "category": "Category",
     "rssTitle": "Christian Rodriguez - Blog (English)"
@@ -69,26 +70,38 @@
   "cafe": {
     "title": "Coffee Tracker",
     "metaDescription": "My coffee brewing journey - tracking beans, methods, and quality",
+    "heading": "Coffee Tracker",
     "subtitle": "Tracking my coffee brewing journey, one cup at a time",
-    "notAvailableTitle": "Coffee Tracking Not Available",
-    "notConfigured": "The database is not configured yet. Coffee tracking will be available soon!",
-    "noLogsTitle": "No Coffee Logs Yet",
-    "noLogs": "The coffee tracking journey is just beginning. Check back soon for updates!",
+    "errors": {
+      "heading": "Coffee Tracking Not Available",
+      "notConfigured": "The database is not configured yet. Coffee tracking will be available soon!",
+      "failed": "Failed to load coffee logs"
+    },
+    "noLogsYet": {
+      "heading": "No Coffee Logs Yet",
+      "message": "The coffee tracking journey is just beginning. Check back soon for updates!"
+    },
     "stats": {
       "totalLogs": "Total Logs",
       "thisWeek": "This Week",
       "avgRating": "Avg Rating"
     },
-    "charts": {
-      "brewMethodTitle": "Brew Method Distribution",
-      "qualityTitle": "Quality Over Time (Last 30 Days)",
-      "topBeansTitle": "Most Used Beans"
+    "sections": {
+      "brewMethods": "Brew Method Distribution",
+      "qualityOverTime": "Quality Over Time (Last 30 Days)",
+      "topBeans": "Most Used Beans",
+      "recentBrews": "Recent Brews"
+    },
+    "misc": {
+      "brews": "brews",
+      "unknown": "Unknown"
     },
     "table": {
       "date": "Date",
       "bean": "Bean",
       "method": "Method",
       "ratio": "Ratio",
+      "grind": "Grind",
       "rating": "Rating",
       "notes": "Notes"
     }
@@ -96,9 +109,16 @@
   "training": {
     "title": "Training Log",
     "metaTitle": "Training Log",
+    "heading": "Training Log",
     "subtitle": "Triathlon training activities and metrics",
-    "notAvailable": "Training tracking is not available yet. Please configure your Supabase database and Strava integration.",
-    "setupButton": "Set up training tracking →",
+    "errors": {
+      "notConfigured": "Training tracking is not available yet. Please configure your Supabase database and Strava integration.",
+      "setupButton": "Set up training tracking →"
+    },
+    "noActivities": {
+      "message": "No training activities yet. Connect your Strava account to sync your workouts!",
+      "setupButton": "Set up Strava Integration →"
+    },
     "table": {
       "date": "Date",
       "activity": "Activity",
