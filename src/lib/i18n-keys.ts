@@ -39,6 +39,7 @@ export type TranslationKey =
   | 'cafe.errors.heading'
   | 'cafe.errors.notConfigured'
   | 'cafe.errors.failed'
+  | 'cafe.errors.setupButton'
   | 'cafe.noLogsYet.heading'
   | 'cafe.noLogsYet.message'
   | 'cafe.stats.totalLogs'

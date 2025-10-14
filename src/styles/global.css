@@ -643,6 +643,7 @@ section a {
   font-weight: 500;
   transition: all 0.2s ease;
   cursor: pointer;
+  color: var(--pico-color);
 }
 
 .radio-card:hover {

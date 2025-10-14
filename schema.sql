@@ -1,94 +1,115 @@
 -- Coffee Tracking Database Schema for Supabase
 -- Run this in your Supabase SQL Editor to set up the coffee tracking feature
 
--- Enable UUID extension
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+-- Coffee Beans table: stores coffee bean information
+create table public.coffee_beans (
+  id uuid not null default gen_random_uuid (),
+  created_at timestamp with time zone not null default timezone ('utc'::text, now()),
+  bean_name text not null,
+  roaster text null,
+  origin text null,
+  roast_date date null,
+  notes text null,
+  is_active boolean null default true,
+  constraint coffee_beans_pkey primary key (id)
+) tablespace pg_default;
 
--- Beans table: stores coffee bean information
-CREATE TABLE IF NOT EXISTS beans (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  name TEXT NOT NULL,
-  roaster TEXT,
-  origin TEXT,
-  roast_date DATE,
-  notes TEXT,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
-);
+create index if not exists coffee_beans_active_idx on public.coffee_beans using btree (is_active) tablespace pg_default
+where
+  (is_active = true);
 
--- Coffees table: stores individual brew logs
-CREATE TABLE IF NOT EXISTS coffees (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  bean_id UUID NOT NULL REFERENCES beans(id) ON DELETE CASCADE,
-  brew_date DATE NOT NULL,
-  brew_method TEXT,
-  coffee_grams NUMERIC(6,2),
-  water_grams NUMERIC(6,2),
-  rating INTEGER CHECK (rating >= 1 AND rating <= 10),
-  notes TEXT,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
-);
+-- Coffee Logs table: stores individual brew logs
+create table public.coffee_logs (
+  id uuid not null default gen_random_uuid (),
+  created_at timestamp with time zone not null default timezone ('utc'::text, now()),
+  brew_method text not null,
+  bean_id uuid null,
+  dose_grams numeric(4, 1) not null,
+  yield_grams numeric(4, 1) null,
+  grind_setting integer not null,
+  quality_rating integer not null,
+  brew_time timestamp with time zone not null,
+  notes text null,
+  constraint coffee_logs_pkey primary key (id),
+  constraint coffee_logs_bean_id_fkey foreign key (bean_id) references coffee_beans (id) on delete set null,
+  constraint coffee_logs_dose_grams_check check (
+    (
+      (dose_grams > (0)::numeric)
+      and (dose_grams <= (100)::numeric)
+    )
+  ),
+  constraint coffee_logs_quality_rating_check check (
+    (
+      (quality_rating >= 1)
+      and (quality_rating <= 5)
+    )
+  ),
+  constraint coffee_logs_yield_grams_check check (
+    (
+      (yield_grams is null)
+      or (
+        (yield_grams > (0)::numeric)
+        and (yield_grams <= (200)::numeric)
+      )
+    )
+  ),
+  constraint coffee_logs_grind_setting_check check (
+    (
+      (grind_setting >= 1)
+      and (grind_setting <= 40)
+    )
+  ),
+  constraint coffee_logs_brew_method_check check (
+    (
+      brew_method = any (
+        array[
+          'Espresso'::text,
+          'AeroPress'::text,
+          'French Press'::text
+        ]
+      )
+    )
+  )
+) tablespace pg_default;
+
+create index if not exists coffee_logs_brew_time_idx on public.coffee_logs using btree (brew_time desc) tablespace pg_default;
+
+create index if not exists coffee_logs_bean_id_idx on public.coffee_logs using btree (bean_id) tablespace pg_default;
 
 -- Activities table: stores training/Strava activities
-CREATE TABLE IF NOT EXISTS activities (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-  strava_id BIGINT UNIQUE,
-  name TEXT NOT NULL,
-  type TEXT NOT NULL,
-  distance NUMERIC(10,2),
-  moving_time INTEGER,
-  elapsed_time INTEGER,
-  total_elevation_gain NUMERIC(10,2),
-  start_date TIMESTAMPTZ NOT NULL,
-  average_speed NUMERIC(6,2),
-  max_speed NUMERIC(6,2),
-  average_heartrate NUMERIC(5,1),
-  max_heartrate NUMERIC(5,1),
-  kudos_count INTEGER DEFAULT 0,
-  created_at TIMESTAMPTZ DEFAULT NOW(),
-  updated_at TIMESTAMPTZ DEFAULT NOW()
-);
+create table public.activities (
+  id uuid not null default gen_random_uuid (),
+  created_at timestamp with time zone not null default timezone ('utc'::text, now()),
+  strava_id bigint unique,
+  name text,
+  type text not null,
+  start_date timestamp with time zone not null,
+  distance numeric(10, 2),
+  duration integer,
+  elevation_gain numeric(8, 2),
+  average_heartrate numeric(5, 1),
+  max_heartrate integer,
+  constraint activities_pkey primary key (id)
+) tablespace pg_default;
 
--- Create indexes for better query performance
-CREATE INDEX IF NOT EXISTS idx_coffees_brew_date ON coffees(brew_date DESC);
-CREATE INDEX IF NOT EXISTS idx_coffees_bean_id ON coffees(bean_id);
-CREATE INDEX IF NOT EXISTS idx_activities_start_date ON activities(start_date DESC);
-CREATE INDEX IF NOT EXISTS idx_activities_strava_id ON activities(strava_id);
+create index if not exists activities_start_date_idx on public.activities using btree (start_date desc) tablespace pg_default;
+
+create index if not exists activities_strava_id_idx on public.activities using btree (strava_id) tablespace pg_default;
 
 -- Enable Row Level Security (RLS)
-ALTER TABLE beans ENABLE ROW LEVEL SECURITY;
-ALTER TABLE coffees ENABLE ROW LEVEL SECURITY;
-ALTER TABLE activities ENABLE ROW LEVEL SECURITY;
+alter table coffee_beans enable row level security;
+alter table coffee_logs enable row level security;
+alter table activities enable row level security;
 
 -- Create policies for public read access
-CREATE POLICY "Allow public read access to beans" ON beans
-  FOR SELECT USING (true);
+create policy "Allow public read access to coffee_beans" on coffee_beans
+  for select using (true);
 
-CREATE POLICY "Allow public read access to coffees" ON coffees
-  FOR SELECT USING (true);
+create policy "Allow public read access to coffee_logs" on coffee_logs
+  for select using (true);
 
-CREATE POLICY "Allow public read access to activities" ON activities
-  FOR SELECT USING (true);
+create policy "Allow public read access to activities" on activities
+  for select using (true);
 
 -- Note: Write access should be restricted to authenticated users via your application
 -- The ADMIN_SECRET in your .env handles write authentication in the app layer
-
--- Function to update updated_at timestamp
-CREATE OR REPLACE FUNCTION update_updated_at_column()
-RETURNS TRIGGER AS $$
-BEGIN
-  NEW.updated_at = NOW();
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
-
--- Create triggers to auto-update updated_at
-CREATE TRIGGER update_beans_updated_at BEFORE UPDATE ON beans
-  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
-
-CREATE TRIGGER update_coffees_updated_at BEFORE UPDATE ON coffees
-  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
-
-CREATE TRIGGER update_activities_updated_at BEFORE UPDATE ON activities
-  FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();

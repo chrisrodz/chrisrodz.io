@@ -51,7 +51,8 @@
     "errors": {
       "heading": "Coffee Tracking Not Available",
       "notConfigured": "The database is not configured yet. Coffee tracking will be available soon!",
-      "failed": "Failed to load coffee logs"
+      "failed": "Failed to load coffee logs",
+      "setupButton": "Configure Database →"
     },
     "noLogsYet": {
       "heading": "No Coffee Logs Yet",

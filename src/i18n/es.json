@@ -51,7 +51,8 @@
     "errors": {
       "heading": "Registro de Café No Disponible",
       "notConfigured": "La base de datos aún no está configurada. ¡El registro de café estará disponible pronto!",
-      "failed": "Error al cargar registros de café"
+      "failed": "Error al cargar registros de café",
+      "setupButton": "Configurar base de datos →"
     },
     "noLogsYet": {
       "heading": "Sin Registros de Café Aún",

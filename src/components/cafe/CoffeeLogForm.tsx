@@ -139,7 +139,7 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
 
       setSubmitStatus({
         type: 'success',
-        message: 'Coffee logged successfully!',
+        message: '¡Café registrado exitosamente!',
       });
 
       // Reset form but keep smart defaults
@@ -155,7 +155,7 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
     } catch (error) {
       setSubmitStatus({
         type: 'error',
-        message: error instanceof Error ? error.message : 'An error occurred',
+        message: error instanceof Error ? error.message : 'Ocurrió un error',
       });
     } finally {
       setIsSubmitting(false);
@@ -185,7 +185,7 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
 
           {/* Brew Method */}
           <fieldset>
-            <legend>Brew Method *</legend>
+            <legend>Método de Preparación *</legend>
             <div className="grid-3" role="radiogroup">
               {BREW_METHODS.map((method) => (
                 <button
@@ -205,20 +205,20 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
 
           {/* Bean Selection */}
           <label>
-            Coffee Bean
+            Grano de Café
             <select
               id="bean_id"
               value={showAddBeanForm ? NEW_BEAN_VALUE : beanId}
               onChange={handleBeanChange}
             >
-              <option value="">No bean selected</option>
+              <option value="">Ningún grano seleccionado</option>
               {beans.map((bean) => (
                 <option key={bean.id} value={bean.id}>
                   {bean.bean_name}
                   {bean.roaster && ` (${bean.roaster})`}
                 </option>
               ))}
-              <option value={NEW_BEAN_VALUE}>+ Add New Bean...</option>
+              <option value={NEW_BEAN_VALUE}>+ Agregar Nuevo Grano...</option>
             </select>
             {/* Inline Add Bean Form */}
             {showAddBeanForm && <AddBeanForm onBeanAdded={handleBeanAdded} />}
@@ -227,7 +227,7 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
           {/* Dose and Water/Yield */}
           <div className="grid-2">
             <label>
-              Coffee Dose (grams) *
+              Dosis de Café (gramos) *
               <input
                 type="number"
                 inputMode="decimal"
@@ -242,7 +242,7 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
             </label>
 
             <label>
-              {brewMethod === 'Espresso' ? 'Yield (grams)' : 'Water (grams)'}
+              {brewMethod === 'Espresso' ? 'Rendimiento (gramos)' : 'Agua (gramos)'}
               <input
                 type="number"
                 inputMode="decimal"
@@ -252,14 +252,14 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
                 min="1"
                 max="200"
                 step="1"
-                placeholder={brewMethod === 'Espresso' ? 'Output weight' : 'Water added'}
+                placeholder={brewMethod === 'Espresso' ? 'Peso de salida' : 'Agua agregada'}
               />
             </label>
           </div>
 
           {/* Grind Setting */}
           <label>
-            Grind Setting (1-40) *
+            Molienda (1-40) *
             <input
               type="number"
               inputMode="numeric"
@@ -275,7 +275,7 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
 
           {/* Quality Rating */}
           <div>
-            <label>Quality Rating *</label>
+            <label>Calificación de Calidad *</label>
             <StarRating value={rating} onChange={setRating} />
             {rating === 0 && (
               <p
@@ -286,14 +286,14 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
                 }}
                 role="alert"
               >
-                Please select a rating
+                Por favor selecciona una calificación
               </p>
             )}
           </div>
 
           {/* Brew Time */}
           <label>
-            Brew Time *
+            Hora de Preparación *
             <input
               type="datetime-local"
               id="brew_time"
@@ -321,7 +321,7 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
               >
                 ▶
               </span>
-              Notes (optional)
+              Notas (opcional)
             </button>
             {notesExpanded && (
               <textarea
@@ -330,8 +330,8 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
                 onChange={(e) => setNotes(e.target.value)}
                 rows={4}
                 maxLength={500}
-                placeholder="Add any notes about this brew..."
-                aria-label="Brew notes"
+                placeholder="Agrega cualquier nota sobre esta preparación..."
+                aria-label="Notas de preparación"
               />
             )}
           </div>
@@ -343,7 +343,7 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
             className="full-width"
             aria-busy={isSubmitting}
           >
-            {isSubmitting ? 'Logging...' : 'Log Coffee'}
+            {isSubmitting ? 'Registrando...' : 'Registrar Café'}
           </button>
         </form>
       )}
