@@ -4,8 +4,8 @@ import { getBlogPostUrl } from '@/lib/i18n';
 import type { APIContext } from 'astro';
 
 export async function GET(context: APIContext) {
-  // Get all English blog posts (default RSS feed is English)
-  const posts = await getCollection('blog', ({ data }) => data.locale === 'en');
+  // Get all Spanish blog posts (default RSS feed is Spanish)
+  const posts = await getCollection('blog', ({ data }) => data.locale === 'es');
 
   // Sort by date (newest first)
   const sortedPosts = posts.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
@@ -13,7 +13,7 @@ export async function GET(context: APIContext) {
   return rss({
     title: 'Christian Rodriguez - Blog',
     description:
-      'Software engineering, life lessons, and thoughts worth sharing by Christian Rodriguez',
+      'Ingeniería de software, lecciones de vida y pensamientos que vale la pena compartir',
     site: context.site || 'https://chrisrodz.io',
     items: sortedPosts.map((post) => ({
       title: post.data.title,
@@ -22,6 +22,6 @@ export async function GET(context: APIContext) {
       link: getBlogPostUrl(post),
       categories: post.data.category ? [post.data.category] : undefined,
     })),
-    customData: `<language>en-us</language>`,
+    customData: `<language>es</language>`,
   });
 }
