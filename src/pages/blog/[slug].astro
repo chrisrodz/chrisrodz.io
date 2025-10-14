@@ -1,7 +1,10 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
-import { getTranslatedPost, getBlogPostUrl } from '@/lib/i18n';
+import { getTranslatedPost, getBlogPostUrl, getLocaleFromUrl, useTranslations } from '@/lib/i18n';
+
+const locale = getLocaleFromUrl(Astro.url);
+const { t, formatDate } = useTranslations(locale);
 
 // Get the slug from the URL params
 const { slug } = Astro.params;
@@ -10,9 +13,9 @@ if (!slug) {
   return Astro.redirect('/404');
 }
 
-// Find the English blog post by slug field
+// Find the Spanish blog post by slug field (Spanish is now default)
 const allPosts = await getCollection('blog');
-const entry = allPosts.find((post) => post.data.slug === slug && post.data.locale === 'en');
+const entry = allPosts.find((post) => post.data.slug === slug && post.data.locale === 'es');
 
 if (!entry) {
   return Astro.redirect('/404');
@@ -21,12 +24,12 @@ if (!entry) {
 const { Content } = await render(entry);
 const post = entry;
 
-// Check if Spanish translation exists and get its URL
-const translatedPost = await getTranslatedPost(post, 'es');
+// Check if English translation exists and get its URL
+const translatedPost = await getTranslatedPost(post, 'en');
 const alternateUrl = translatedPost ? getBlogPostUrl(translatedPost) : undefined;
 
 // Format date
-const formattedDate = post.data.pubDate.toLocaleDateString('en-US', {
+const formattedDate = formatDate(post.data.pubDate, {
   year: 'numeric',
   month: 'long',
   day: 'numeric',
@@ -50,7 +53,7 @@ const structuredData = {
     name: 'Christian Rodriguez',
     url: 'https://chrisrodz.io',
   },
-  inLanguage: 'en',
+  inLanguage: 'es',
   url: new URL(getBlogPostUrl(post), Astro.site || 'https://chrisrodz.io').toString(),
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -70,7 +73,7 @@ const structuredData = {
           href="/"
           style="text-decoration: none; color: var(--pico-muted-color); font-weight: 500; font-size: 0.9375rem;"
         >
-          ← Back to home
+          ← {t('blog.backToHome')}
         </a>
       </nav>
 
@@ -105,7 +108,7 @@ const structuredData = {
   <div style="max-width: 70ch; margin: 3rem auto 0;">
     <hr style="margin: 3rem 0;" />
     <nav>
-      <a href="/" role="button" class="secondary"> ← Back to home </a>
+      <a href="/" role="button" class="secondary"> ← {t('blog.backToHome')} </a>
     </nav>
   </div>
 </Layout>
