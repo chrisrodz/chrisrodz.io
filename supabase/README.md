@@ -192,7 +192,40 @@ All tables have Row Level Security (RLS) enabled with public read access.
 
 ### Local Development
 
-No environment variables needed! Just run `yarn db:start`.
+**Automatic Setup:**
+
+When you run `yarn db:start` for the first time, Supabase automatically generates stable API keys that persist across Docker restarts. These keys are stored in Docker volumes (not files).
+
+**Update .env.local:**
+
+Your `.env.local` should use the local Supabase credentials:
+
+```bash
+# Get current local credentials
+yarn db:status
+
+# Or use the helper script
+./scripts/update-env-local.sh
+```
+
+Example `.env.local` for local development:
+
+```bash
+# Supabase - Local Development
+SUPABASE_URL=http://127.0.0.1:54321
+SUPABASE_ANON_KEY=sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH
+SUPABASE_SERVICE_KEY=sb_secret_N7UND0UgjKTVK-Uodkm0Hg_xSvEMPvz
+
+# Admin
+ADMIN_SECRET=your_secret_here
+```
+
+**Important:** These local credentials:
+
+- ✅ **Persist across Docker restarts** (stored in `supabase_config_chrisrodz.io` volume)
+- ✅ **Are safe to commit to .env.local** (local development only)
+- ✅ **Only work when `yarn db:start` is running**
+- ❌ **Don't work in production** (use real Supabase credentials there)
 
 ### Remote Connection
 
