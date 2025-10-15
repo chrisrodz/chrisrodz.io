@@ -128,7 +128,7 @@ const currentYear = new Date().getFullYear().toString();
             class="contrast icon-button"
             title={t(locale, 'accessibility.toggleThemeTitle')}
           >
-            <span id="theme-icon" aria-hidden="true">🌙</span>
+            <span id="theme-icon" aria-hidden="true">🌕</span>
           </button>
         </li>
         <li class="nav-actions">
@@ -211,16 +211,16 @@ const currentYear = new Date().getFullYear().toString();
       function setTheme(theme) {
         if (theme === 'dark') {
           html.setAttribute('data-theme', 'dark');
-          themeIcon.textContent = '☀️';
+          themeIcon.textContent = '🌞';
         } else {
           html.setAttribute('data-theme', 'light');
-          themeIcon.textContent = '🌙';
+          themeIcon.textContent = '🌕';
         }
         localStorage.setItem('theme', theme);
       }
 
       const currentTheme = html.getAttribute('data-theme') || 'light';
-      themeIcon.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
+      themeIcon.textContent = currentTheme === 'dark' ? '🌞' : '🌕';
 
       themeToggle?.addEventListener('click', () => {
         const current = html.getAttribute('data-theme') || 'light';

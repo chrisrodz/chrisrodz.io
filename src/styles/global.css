@@ -22,6 +22,23 @@
   --accent-warm: #ff6b6b; /* Coral accent for personality */
 }
 
+/* Light mode overrides - must match PicoCSS specificity */
+[data-theme='light'],
+:root:not([data-theme='dark']) {
+  /* Softer background - easier on the eyes than pure white */
+  --pico-background-color: #eeeeee;
+
+  /* Cards: white on gray background creates visual depth and hierarchy */
+  --pico-card-background-color: #ffffff;
+
+  /* Borders: adjusted for better contrast against the darker background */
+  --pico-card-border-color: #d5d9de;
+  --pico-muted-border-color: #d0d4d9;
+
+  /* Form elements: slightly darker borders for better definition */
+  --pico-form-element-border-color: #c5cbd5;
+}
+
 /* Ensure proper horizontal spacing on all screen sizes */
 .container,
 main.container,
@@ -152,6 +169,32 @@ nav.main-nav .icon-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Theme toggle button: match page background in light mode */
+[data-theme='light'] nav.main-nav .icon-button.contrast,
+:root:not([data-theme='dark']) nav.main-nav .icon-button.contrast {
+  background-color: #eeeeee;
+  color: var(--pico-color);
+  border: 2px solid var(--pico-muted-border-color);
+}
+
+[data-theme='light'] nav.main-nav .icon-button.contrast:hover,
+:root:not([data-theme='dark']) nav.main-nav .icon-button.contrast:hover {
+  background-color: #e0e0e0;
+  border-color: var(--pico-primary);
+}
+
+/* Theme toggle button: subtle dark background in dark mode */
+[data-theme='dark'] nav.main-nav .icon-button.contrast {
+  background-color: #252936;
+  color: var(--pico-color);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+[data-theme='dark'] nav.main-nav .icon-button.contrast:hover {
+  background-color: #2f3441;
+  border-color: var(--pico-primary);
 }
 
 /* Mobile: keep nav items visible, no hamburger menu needed */
