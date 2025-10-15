@@ -1,7 +1,0 @@
-Puzzle Piece Emoji Favicon
-
-Graphics by Twitter, Inc and other contributors
-Source: Twemoji (https://twemoji.twitter.com/)
-License: CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/)
-
-Generated via: https://favicon.io/emoji-favicons/puzzle-piece
