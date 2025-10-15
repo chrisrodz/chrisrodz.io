@@ -19,6 +19,17 @@ yarn new-post "Title" es    # Create only Spanish post
 yarn generate:i18n    # Generate TypeScript types from translation JSON
 yarn validate:i18n    # Validate translation completeness (both languages)
 yarn check            # Run all checks (validate + type check + lint + format)
+
+# Database (Supabase)
+yarn db:start         # Start local Supabase (Docker required)
+yarn db:stop          # Stop local Supabase
+yarn db:reset         # Reset local DB and run migrations
+yarn db:migration <name>    # Create new migration file
+yarn db:types         # Generate TypeScript types from local DB
+yarn db:types:remote  # Generate types from remote DB (requires linking)
+yarn db:push          # Push migrations to remote DB
+yarn db:pull          # Pull schema from remote DB
+yarn db:status        # Show Supabase services status
 ```
 
 ## Git Workflow
@@ -203,6 +214,57 @@ Features work standalone without Supabase:
 - Blog: Fully functional (uses file-based content)
 - Coffee/Training: Show setup instructions when DB missing
 - Admin: Shows setup instructions when ADMIN_SECRET missing
+
+#### Database Migrations (Supabase CLI)
+
+Database schema is managed via **migrations** in `supabase/migrations/`:
+
+**Local Development:**
+
+```bash
+# Start local Supabase (requires Docker)
+yarn db:start
+
+# Access Studio: http://127.0.0.1:54323
+# Database: postgresql://postgres:postgres@127.0.0.1:54322/postgres
+```
+
+**Creating Migrations:**
+
+```bash
+# Create new migration
+yarn db:migration add_feature_name
+
+# Edit: supabase/migrations/YYYYMMDDHHMMSS_add_feature_name.sql
+# Test: yarn db:reset
+# Push to remote: yarn db:push
+```
+
+**Type Generation:**
+
+```bash
+# Generate TypeScript types from database schema
+yarn db:types              # From local database
+yarn db:types:remote       # From remote database (requires linking)
+
+# Output: src/lib/database.types.ts
+```
+
+**Remote Operations:**
+
+```bash
+# One-time setup
+supabase login
+supabase link --project-ref your-project-ref
+
+# Pull remote schema
+yarn db:pull
+
+# Push local migrations
+yarn db:push
+```
+
+See `supabase/README.md` for detailed migration workflow and best practices.
 
 ### Authentication
 
