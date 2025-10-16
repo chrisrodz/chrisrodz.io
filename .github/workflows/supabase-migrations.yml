@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - feature/supabase-cli-setup # For testing before merge
     paths:
       - 'supabase/migrations/**'
   workflow_dispatch: # Allows manual triggering
