@@ -19,7 +19,7 @@ export const isSupabaseConfigured = isValidUrl(supabaseUrl) && !!supabaseAnonKey
 
 // Only create client if properly configured
 export const supabase: SupabaseClient | null = isSupabaseConfigured
-  ? createClient(supabaseUrl, supabaseAnonKey, {
+  ? createClient(supabaseUrl!, supabaseAnonKey!, {
       auth: {
         flowType: 'pkce', // Recommended for SSR
       },
@@ -34,5 +34,5 @@ export function getServiceSupabase(): SupabaseClient | null {
     return null;
   }
 
-  return createClient(supabaseUrl, serviceKey);
+  return createClient(supabaseUrl!, serviceKey);
 }
