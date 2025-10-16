@@ -12,3 +12,4 @@ BEGIN
     RAISE NOTICE 'GitHub Actions test migration executed successfully';
   END IF;
 END $$;
+
