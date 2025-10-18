@@ -25,10 +25,10 @@
   },
   "home": {
     "title": "Inicio",
-    "greeting": "Saludos!",
+    "greeting": "¡Qué es la que hay!",
     "intro": {
-      "paragraph1": "Soy Christian, ingeniero de software apasionado por construir cosas que importan y nos faciliten la vida. Cuando no estoy sentado trabajando estoy sentado en la bicicleta o pasando tiempo en familia.",
-      "paragraph2": "Escribo sobre escribir software, lecciones aprendidas de la vida, y lo que sea que valga la pena compartir. Aquí puedes ver lo más reciente:"
+      "paragraph1": "Soy Christian, ingeniero de software apasionado por construir cosas que faciliten la vida de los demás. Cuando no estoy sentado trabajando, estoy sentado en la bicicleta o pasando tiempo en familia.",
+      "paragraph2": "Escribo sobre software engineering, lecciones aprendidas de la vida, y lo que sea que valga la pena compartir. Aquí puedes ver lo más reciente:"
     }
   },
   "blog": {
