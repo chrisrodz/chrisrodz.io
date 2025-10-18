@@ -30,7 +30,7 @@ jobs:
       - name: Create environment file
         run: |
           echo "Creating .env.local for Copilot agents..."
-          cat > .env.local << 'EOF'
+          cat > .env.local << EOF
           # GitHub Actions environment for Copilot agents
           ADMIN_SECRET=${{ secrets.ADMIN_SECRET || 'test_admin_secret_for_development' }}
 
