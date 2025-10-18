@@ -119,6 +119,13 @@ const currentYear = new Date().getFullYear().toString();
             >{t(locale, 'nav.home')}</a
           >
         </li>
+        <li>
+          <a
+            href={locale === 'en' ? '/en/cafe' : '/cafe'}
+            class={currentPath === '/cafe' || currentPath === '/en/cafe' ? 'active' : ''}
+            >{t(locale, 'nav.cafe')}</a
+          >
+        </li>
       </ul>
       <ul class="nav-links">
         <li class="nav-actions">
