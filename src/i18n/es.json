@@ -59,10 +59,38 @@
       "heading": "Sin Logs de Café Aún",
       "message": "La jornada del log de café apenas comienza. ¡Vuelve pronto para actualizaciones!"
     },
+    "why": {
+      "paragraph1": "Me compré una Breville Bambino Plus y me di cuenta rápidamente que el espresso es una madriguera de conejo. Cada variable importa: dosis, rendimiento, tamaño de molienda, temperatura, presión...",
+      "paragraph2": "Esta app me ayuda a calibrar granos nuevos y recordar lo que funcionó. Además, es una buena excusa para construir algo y compartirlo públicamente.",
+      "paragraph3": "Actualmente optimizando para shots con notas de chocolate alrededor de 1:2-1:2.5 de proporción en ~25 segundos."
+    },
+    "todaysCoffee": {
+      "heading": "Café de Hoy",
+      "emptyIcon": "📭",
+      "emptyHeading": "No hay café registrado hoy",
+      "emptyMessage": "Aún no he preparado nada...",
+      "grind": "Molienda",
+      "ratio": "proporción",
+      "dialedIn": "¡Calibrado!",
+      "greatShot": "Excelente shot",
+      "decent": "Decente",
+      "needsWork": "Necesita trabajo",
+      "notes": "Notas"
+    },
     "stats": {
       "totalLogs": "Total de Logs",
       "thisWeek": "Esta Semana",
-      "avgRating": "Calificación Promedio"
+      "avgRating": "Calificación Promedio",
+      "avgDose": "Dosis Promedio"
+    },
+    "equipment": {
+      "heading": "Mi Equipo",
+      "machine": "Máquina",
+      "grinder": "Molino",
+      "methods": "Métodos",
+      "machineModel": "Breville Bambino Plus",
+      "grinderModel": "Baratza Encore ESP",
+      "methodsList": "Espresso, AeroPress, French Press"
     },
     "sections": {
       "brewMethods": "Distribución de Métodos de Preparación",
@@ -80,8 +108,7 @@
       "method": "Método",
       "ratio": "Proporción",
       "grind": "Molienda",
-      "rating": "Calificación",
-      "notes": "Notas"
+      "rating": "Calificación"
     }
   },
   "training": {
