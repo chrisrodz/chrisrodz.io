@@ -3,11 +3,12 @@ name: Setup Environment for GitHub Copilot
 on:
   workflow_dispatch: # Allow manual triggering
   push:
-    branches: [main]
+    branches: [main, copilot/debug-failing-github-action]
     paths:
       - '.github/copilot-instructions.md'
       - '.github/instructions/**'
       - '.copilotrc'
+      - '.github/workflows/copilot-setup.yml'
 
 jobs:
   setup-copilot-environment:
@@ -32,17 +33,17 @@ jobs:
           echo "Creating .env.local for Copilot agents..."
           cat > .env.local << EOF
           # GitHub Actions environment for Copilot agents
-          ADMIN_SECRET=\${{ secrets.ADMIN_SECRET || 'test_admin_secret_for_development' }}
+          ADMIN_SECRET=${{ secrets.ADMIN_SECRET || 'test_admin_secret_for_development' }}
 
           # Supabase Configuration (optional - graceful degradation)
-          SUPABASE_URL=\${{ secrets.SUPABASE_URL }}
-          SUPABASE_ANON_KEY=\${{ secrets.SUPABASE_ANON_KEY }}
-          SUPABASE_SERVICE_KEY=\${{ secrets.SUPABASE_SERVICE_KEY }}
+          SUPABASE_URL=${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY=${{ secrets.SUPABASE_ANON_KEY }}
+          SUPABASE_SERVICE_KEY=${{ secrets.SUPABASE_SERVICE_KEY }}
 
           # Strava Configuration (optional)
-          STRAVA_CLIENT_ID=\${{ secrets.STRAVA_CLIENT_ID }}
-          STRAVA_CLIENT_SECRET=\${{ secrets.STRAVA_CLIENT_SECRET }}
-          STRAVA_REFRESH_TOKEN=\${{ secrets.STRAVA_REFRESH_TOKEN }}
+          STRAVA_CLIENT_ID=${{ secrets.STRAVA_CLIENT_ID }}
+          STRAVA_CLIENT_SECRET=${{ secrets.STRAVA_CLIENT_SECRET }}
+          STRAVA_REFRESH_TOKEN=${{ secrets.STRAVA_REFRESH_TOKEN }}
           EOF
 
       - name: Validate Copilot configuration
@@ -125,12 +126,14 @@ jobs:
           echo "- ✅ \`.github/quick-setup.sh\` - Automated setup script" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Environment Variables" >> $GITHUB_STEP_SUMMARY
-          if [ -n "\${{ secrets.SUPABASE_URL }}" ]; then
+          SUPABASE_URL="${{ secrets.SUPABASE_URL }}"
+          ADMIN_SECRET="${{ secrets.ADMIN_SECRET }}"
+          if [ -n "$SUPABASE_URL" ]; then
             echo "- ✅ Supabase configuration available" >> $GITHUB_STEP_SUMMARY
           else
             echo "- ⚠️  Supabase configuration not set (graceful degradation enabled)" >> $GITHUB_STEP_SUMMARY
           fi
-          if [ -n "\${{ secrets.ADMIN_SECRET }}" ]; then
+          if [ -n "$ADMIN_SECRET" ]; then
             echo "- ✅ Admin secret configured" >> $GITHUB_STEP_SUMMARY
           else
             echo "- ⚠️  Using default admin secret for development" >> $GITHUB_STEP_SUMMARY
