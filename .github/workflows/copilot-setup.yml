@@ -3,11 +3,12 @@ name: Setup Environment for GitHub Copilot
 on:
   workflow_dispatch: # Allow manual triggering
   push:
-    branches: [main]
+    branches: [main, copilot/debug-failing-github-action]
     paths:
       - '.github/copilot-instructions.md'
       - '.github/instructions/**'
       - '.copilotrc'
+      - '.github/workflows/copilot-setup.yml'
 
 jobs:
   setup-copilot-environment:
