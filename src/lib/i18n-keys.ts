@@ -13,6 +13,7 @@ export type TranslationKey =
   | 'footer.rss'
   | 'footer.email'
   | 'footer.github'
+  | 'footer.x'
   | 'common.backToHome'
   | 'common.loading'
   | 'common.error'

@@ -14,7 +14,8 @@
     "copyright": "© {year} Christian A. Rodríguez Encarnación",
     "rss": "RSS",
     "email": "Email",
-    "github": "GitHub"
+    "github": "GitHub",
+    "x": "X"
   },
   "common": {
     "backToHome": "Volver al inicio",
