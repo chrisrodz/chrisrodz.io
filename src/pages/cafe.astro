@@ -299,10 +299,20 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
     font-size: 1.5rem;
   }
 
+  .todays-coffee-list {
+    background: var(--pico-card-background-color);
+    border: 1px solid var(--pico-card-border-color);
+    border-radius: var(--pico-border-radius);
+    padding: var(--pico-spacing);
+  }
+
   .todays-coffee-empty {
     text-align: center;
     padding: 2rem 1rem;
     color: var(--pico-muted-color);
+    background: var(--pico-card-background-color);
+    border: 1px solid var(--pico-card-border-color);
+    border-radius: var(--pico-border-radius);
   }
 
   .empty-icon {
