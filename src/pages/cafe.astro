@@ -201,7 +201,7 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
           <h2>{t('cafe.sections.brewMethods')}</h2>
           <div class="brew-method-bars">
             {brewMethodData.map((method) => {
-              const percentage = ((method.count / stats.totalLogs) * 100).toFixed(0);
+              const percentage = stats ? ((method.count / stats.totalLogs) * 100).toFixed(0) : '0';
               return (
                 <div class="bar-container">
                   <span class="method-name">{method.method}</span>
