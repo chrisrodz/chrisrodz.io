@@ -38,20 +38,43 @@ if (!supabase) {
   }
 }
 
+// Get today's coffee logs
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+const todaysCoffee = logs.filter((log) => {
+  const logDate = new Date(log.brew_time);
+  logDate.setHours(0, 0, 0, 0);
+  return logDate.getTime() === today.getTime();
+});
+
 // Calculate statistics
 const stats = logs.length > 0 ? calculateStats(logs) : null;
 const brewMethodData = logs.length > 0 ? getBrewMethodDistribution(logs) : [];
 const qualityData = logs.length > 0 ? getQualityOverTime(logs) : [];
 const topBeans = logs.length > 0 ? getMostUsedBeans(logs) : [];
 const recentLogs = logs.slice(0, 30); // Show last 30
+
+// Calculate average dose for hero stats
+const avgDose =
+  logs.length > 0 ? logs.reduce((sum, log) => sum + (log.dose_grams || 0), 0) / logs.length : 0;
+
+// Helper function to format time
+function formatTime(date: Date): string {
+  return new Intl.DateTimeFormat('en-US', {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+  }).format(date);
+}
+
+// Helper function to calculate brew ratio
+function calculateRatio(dose: number | null, yield_grams: number | null): string {
+  if (!dose || !yield_grams) return '-';
+  return `1:${(yield_grams / dose).toFixed(1)}`;
+}
 ---
 
 <Layout title={t('cafe.title')} description={t('cafe.metaDescription')}>
-  <header class="mb">
-    <h1>{t('cafe.heading')}</h1>
-    <p>{t('cafe.subtitle')}</p>
-  </header>
-
   {
     error ? (
       <section class="notice-box" data-variant="warning">
@@ -69,59 +92,139 @@ const recentLogs = logs.slice(0, 30); // Show last 30
       </section>
     ) : (
       <>
-        {/* Stats Cards */}
-        <div class="grid-3 mb">
-          <article class="stat-card">
-            <small>{t('cafe.stats.totalLogs')}</small>
+        {/* 1. WHY I'M TRACKING THIS */}
+        <section class="coffee-why-section">
+          <p class="coffee-why-text">{t('cafe.why.text')}</p>
+        </section>
+
+        {/* 2. TODAY'S COFFEE HERO CARD */}
+        <section class="todays-coffee-section">
+          <h2 class="todays-coffee-heading">{t('cafe.todaysCoffee.heading')}</h2>
+          {todaysCoffee.length === 0 ? (
+            <div class="todays-coffee-empty">
+              <div class="empty-icon">{t('cafe.todaysCoffee.emptyIcon')}</div>
+              <p>{t('cafe.todaysCoffee.emptyHeading')}</p>
+              <small>{t('cafe.todaysCoffee.emptyMessage')}</small>
+            </div>
+          ) : (
+            <div class="todays-coffee-list">
+              {todaysCoffee.map((log, index) => (
+                <>
+                  {index > 0 && <hr class="coffee-divider" />}
+                  <article class="coffee-entry">
+                    <div class="coffee-time">{formatTime(new Date(log.brew_time))}</div>
+
+                    <div class="coffee-method-bean">
+                      <div class="coffee-method">{log.brew_method}</div>
+                      <div class="coffee-bean">{log.bean?.bean_name || t('cafe.misc.unknown')}</div>
+                    </div>
+
+                    <div class="coffee-metrics">
+                      <div>
+                        {log.dose_grams}g → {log.yield_grams}g (
+                        {calculateRatio(log.dose_grams, log.yield_grams)}{' '}
+                        {t('cafe.todaysCoffee.ratio')})
+                      </div>
+                      <div>
+                        {t('cafe.todaysCoffee.grind')}: {log.grind_setting}
+                      </div>
+                    </div>
+
+                    <div
+                      class="coffee-rating"
+                      role="group"
+                      aria-label={`${t('cafe.table.rating')}: ${log.quality_rating} out of 5 stars`}
+                    >
+                      <span class="stars" aria-hidden="true">
+                        {'⭐'.repeat(log.quality_rating || 0)}
+                      </span>
+                      <span class="rating-text">
+                        {log.quality_rating === 5
+                          ? t('cafe.todaysCoffee.dialedIn')
+                          : log.quality_rating >= 4
+                            ? t('cafe.todaysCoffee.greatShot')
+                            : log.quality_rating >= 3
+                              ? t('cafe.todaysCoffee.decent')
+                              : t('cafe.todaysCoffee.needsWork')}
+                      </span>
+                    </div>
+
+                    {log.notes && (
+                      <div class="coffee-notes">
+                        <small>
+                          {t('cafe.todaysCoffee.notes')}: {log.notes.substring(0, 50)}
+                          {log.notes.length > 50 ? '...' : ''}
+                        </small>
+                      </div>
+                    )}
+                  </article>
+                </>
+              ))}
+            </div>
+          )}
+        </section>
+
+        {/* 3. HERO STATS CARDS */}
+        <div class="hero-stats-grid">
+          <article class="hero-stat-card">
             <p class="stat-value">{stats?.totalLogs}</p>
+            <small>{t('cafe.stats.totalLogs')}</small>
           </article>
-          <article class="stat-card">
-            <small>{t('cafe.stats.thisWeek')}</small>
-            <p class="stat-value">{stats?.logsThisWeek}</p>
-          </article>
-          <article class="stat-card">
+          <article class="hero-stat-card">
+            <p class="stat-value">{stats?.avgRating}</p>
             <small>{t('cafe.stats.avgRating')}</small>
-            <p class="stat-value">{stats?.avgRating} / 5</p>
+          </article>
+          <article class="hero-stat-card">
+            <p class="stat-value">{avgDose.toFixed(1)}g</p>
+            <small>{t('cafe.stats.avgDose')}</small>
           </article>
         </div>
 
-        {/* Visualizations */}
-        <div class="grid-2 mb">
-          {/* Brew Method Distribution */}
-          <article>
-            <h2>{t('cafe.sections.brewMethods')}</h2>
-            <BrewMethodChart client:load data={brewMethodData} />
-          </article>
+        {/* 4. MY SETUP */}
+        <section class="my-setup-section">
+          <h2>{t('cafe.equipment.heading')}</h2>
+          <div class="setup-list">
+            <div class="setup-item">
+              <strong>{t('cafe.equipment.machine')}:</strong> {t('cafe.equipment.machineModel')}
+            </div>
+            <div class="setup-item">
+              <strong>{t('cafe.equipment.grinder')}:</strong> {t('cafe.equipment.grinderModel')}
+            </div>
+            <div class="setup-item">
+              <strong>{t('cafe.equipment.methods')}:</strong> {t('cafe.equipment.methodsList')}
+            </div>
+          </div>
+        </section>
 
-          {/* Quality Over Time */}
-          <article>
-            <h2>{t('cafe.sections.qualityOverTime')}</h2>
-            <QualityChart client:load data={qualityData} />
-          </article>
-        </div>
-
-        {/* Most Used Beans */}
-        {topBeans.length > 0 && (
-          <article class="mb">
-            <h2>{t('cafe.sections.topBeans')}</h2>
-            {topBeans.map((item) => (
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-                <div>
-                  <strong>{item.bean.bean_name}</strong>
-                  {item.bean.roaster && <small style="display: block;">{item.bean.roaster}</small>}
+        {/* 5. BREW METHOD DISTRIBUTION - Visual Bar Chart */}
+        <section class="brew-method-section">
+          <h2>{t('cafe.sections.brewMethods')}</h2>
+          <div class="brew-method-bars">
+            {brewMethodData.map((method) => {
+              const percentage = stats ? ((method.count / stats.totalLogs) * 100).toFixed(0) : '0';
+              return (
+                <div class="bar-container">
+                  <span class="method-name">{method.method}</span>
+                  <div class="bar-wrapper">
+                    <div
+                      class="bar"
+                      style={`width: ${percentage}%`}
+                      data-method={method.method.toLowerCase()}
+                    />
+                  </div>
+                  <span class="stats">
+                    {percentage}% ({method.count})
+                  </span>
                 </div>
-                <small>
-                  {item.count} {t('cafe.misc.brews')}
-                </small>
-              </div>
-            ))}
-          </article>
-        )}
+              );
+            })}
+          </div>
+        </section>
 
-        {/* Recent Logs Table */}
-        <article>
+        {/* 6. RECENT LOGS TABLE (Keep existing) */}
+        <article class="recent-logs-section">
           <h2>{t('cafe.sections.recentBrews')}</h2>
-          <div style="overflow-x: auto;">
+          <div class="table-scroll-container">
             <table>
               <thead>
                 <tr>
@@ -131,7 +234,6 @@ const recentLogs = logs.slice(0, 30); // Show last 30
                   <th>{t('cafe.table.ratio')}</th>
                   <th>{t('cafe.table.grind')}</th>
                   <th>{t('cafe.table.rating')}</th>
-                  <th>{t('cafe.table.notes')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -150,9 +252,6 @@ const recentLogs = logs.slice(0, 30); // Show last 30
                     </td>
                     <td>{log.grind_setting}</td>
                     <td>{log.quality_rating} / 5</td>
-                    <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis;">
-                      <small>{log.notes || '-'}</small>
-                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -165,14 +264,386 @@ const recentLogs = logs.slice(0, 30); // Show last 30
 </Layout>
 
 <style>
-  /* Responsive table */
+  /* 1. WHY I'M TRACKING THIS */
+  .coffee-why-section {
+    margin-bottom: 2rem;
+    text-align: center;
+    padding: 1rem 0;
+  }
+
+  .coffee-why-text {
+    color: var(--pico-muted-color);
+    line-height: 1.6;
+    margin: 0;
+    font-size: 0.9375rem;
+    max-width: 60ch;
+    margin-left: auto;
+    margin-right: auto;
+    font-style: italic;
+  }
+
   @media (max-width: 768px) {
+    .coffee-why-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .coffee-why-text {
+      font-size: 0.875rem;
+    }
+  }
+
+  /* 2. TODAY'S COFFEE HERO CARD */
+  .todays-coffee-section {
+    background: var(--pico-card-background-color);
+    border: 1px solid var(--pico-card-border-color);
+    border-radius: var(--pico-border-radius);
+    padding: var(--pico-spacing);
+    margin-bottom: 2rem;
+  }
+
+  .todays-coffee-heading {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: var(--pico-h2-color);
+    font-size: clamp(1.5rem, 4vw, 2rem);
+  }
+
+  .todays-coffee-list {
+    /* Container - no additional styling needed */
+  }
+
+  .todays-coffee-empty {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: var(--pico-muted-color);
+  }
+
+  .empty-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.6;
+    line-height: 1;
+  }
+
+  .coffee-entry {
+    padding: 0;
+  }
+
+  .coffee-divider {
+    border: none;
+    border-top: 1px dashed var(--pico-muted-border-color);
+    margin: 1.5rem 0;
+    opacity: 0.6;
+  }
+
+  .coffee-time {
+    font-size: 0.875rem;
+    color: var(--pico-muted-color);
+    margin-bottom: 0.75rem;
+    font-weight: 500;
+  }
+
+  .coffee-method-bean {
+    margin-bottom: 1rem;
+  }
+
+  .coffee-method {
+    font-size: clamp(1rem, 2.5vw, 1.125rem);
+    font-weight: 600;
+    color: var(--pico-color);
+    margin-bottom: 0.25rem;
+  }
+
+  .coffee-bean {
+    font-size: 0.9375rem;
+    color: var(--pico-muted-color);
+  }
+
+  .coffee-metrics {
+    font-family: monospace;
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+    line-height: 1.6;
+    color: var(--pico-color);
+  }
+
+  .coffee-metrics div {
+    margin-bottom: 0.25rem;
+  }
+
+  .coffee-metrics div:last-child {
+    margin-bottom: 0;
+  }
+
+  .coffee-rating {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0;
+  }
+
+  .stars {
+    font-size: 1rem;
+  }
+
+  .rating-text {
+    font-weight: 600;
+    color: var(--pico-color);
+    font-size: 0.9375rem;
+  }
+
+  .coffee-notes {
+    color: var(--pico-muted-color);
+    font-style: italic;
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+  }
+
+  @media (max-width: 768px) {
+    .todays-coffee-section {
+      margin-bottom: 1.5rem;
+    }
+  }
+
+  /* 3. HERO STATS CARDS */
+  .hero-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .hero-stat-card {
+    background: var(--pico-card-background-color);
+    border: 1px solid var(--pico-card-border-color);
+    border-radius: var(--pico-border-radius);
+    padding: 1.25rem 1rem;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  .hero-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  .hero-stat-card .stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--pico-color);
+    margin: 0.25rem 0;
+    line-height: 1;
+  }
+
+  .hero-stat-card small {
+    display: block;
+    color: var(--pico-muted-color);
+    font-weight: 500;
+    font-size: 0.8125rem;
+  }
+
+  @media (max-width: 768px) {
+    .hero-stats-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-stat-card {
+      padding: 0.875rem 0.5rem;
+    }
+
+    .hero-stat-card .stat-value {
+      font-size: 1.75rem;
+    }
+
+    .hero-stat-card small {
+      font-size: 0.75rem;
+    }
+  }
+
+  /* 4. MY SETUP */
+  .my-setup-section {
+    background: var(--pico-card-background-color);
+    border: 1px solid var(--pico-card-border-color);
+    border-radius: var(--pico-border-radius);
+    padding: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .my-setup-section h2 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+  }
+
+  .setup-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .setup-item {
+    color: var(--pico-color);
+  }
+
+  .setup-item strong {
+    color: var(--pico-color);
+    margin-right: 0.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .my-setup-section {
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+  }
+
+  /* 5. BREW METHOD DISTRIBUTION */
+  .brew-method-section {
+    background: var(--pico-card-background-color);
+    border: 1px solid var(--pico-card-border-color);
+    border-radius: var(--pico-border-radius);
+    padding: 2rem;
+    margin-bottom: 3rem;
+  }
+
+  .brew-method-section h2 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+  }
+
+  .brew-method-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .bar-container {
+    display: grid;
+    grid-template-columns: 120px 1fr auto;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .method-name {
+    font-weight: 600;
+    color: var(--pico-color);
+  }
+
+  .bar-wrapper {
+    background: var(--pico-background-color);
+    border-radius: 0.25rem;
+    height: 36px;
+    overflow: hidden;
+  }
+
+  .bar {
+    height: 100%;
+    border-radius: 0.25rem;
+    transition: width 0.3s ease;
+    min-width: 2%;
+  }
+
+  .bar[data-method='espresso'] {
+    background: #6f4e37;
+  }
+
+  .bar[data-method='aeropress'] {
+    background: #8b6f47;
+  }
+
+  .bar[data-method='french press'] {
+    background: #a0826d;
+  }
+
+  [data-theme='dark'] .bar[data-method='espresso'] {
+    background: #9d6f4f;
+  }
+
+  [data-theme='dark'] .bar[data-method='aeropress'] {
+    background: #b88d5f;
+  }
+
+  [data-theme='dark'] .bar[data-method='french press'] {
+    background: #c4a47f;
+  }
+
+  .bar-container .stats {
+    font-family: monospace;
+    font-size: 0.875rem;
+    color: var(--pico-muted-color);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 768px) {
+    .brew-method-section {
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .bar-container {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+
+    .bar-wrapper {
+      order: 2;
+    }
+
+    .stats {
+      order: 3;
+      text-align: right;
+    }
+  }
+
+  /* 6. RECENT LOGS TABLE */
+  .recent-logs-section {
+    margin-bottom: 3rem;
+  }
+
+  .recent-logs-section h2 {
+    margin-bottom: 1.5rem;
+  }
+
+  .table-scroll-container {
+    position: relative;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  @media (max-width: 768px) {
+    .recent-logs-section {
+      margin-bottom: 2rem;
+    }
+
     table {
       font-size: 0.875rem;
     }
+
     th,
     td {
       padding: 0.5rem 0.25rem;
+    }
+
+    .table-scroll-container::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 2rem;
+      background: linear-gradient(to left, var(--pico-background-color), transparent);
+      pointer-events: none;
+    }
+  }
+
+  /* General spacing adjustments */
+  @media (max-width: 768px) {
+    section {
+      margin-bottom: 2rem;
     }
   }
 </style>

@@ -59,10 +59,36 @@
       "heading": "No Coffee Logs Yet",
       "message": "The coffee tracking journey is just beginning. Check back soon for updates!"
     },
+    "why": {
+      "text": "Tracking my espresso journey with a Breville Bambino Plus - dialing in shots, logging beans, and building in public."
+    },
+    "todaysCoffee": {
+      "heading": "Today's Coffee",
+      "emptyIcon": "",
+      "emptyHeading": "No coffee logged today",
+      "emptyMessage": "Haven't brewed yet...",
+      "grind": "Grind",
+      "ratio": "ratio",
+      "dialedIn": "Dialed in!",
+      "greatShot": "Great shot",
+      "decent": "Decent",
+      "needsWork": "Needs work",
+      "notes": "Notes"
+    },
     "stats": {
       "totalLogs": "Total Logs",
       "thisWeek": "This Week",
-      "avgRating": "Avg Rating"
+      "avgRating": "Avg Rating",
+      "avgDose": "Avg Dose"
+    },
+    "equipment": {
+      "heading": "My Equipment",
+      "machine": "Machine",
+      "grinder": "Grinder",
+      "methods": "Methods",
+      "machineModel": "Breville Bambino Plus",
+      "grinderModel": "Baratza Encore ESP",
+      "methodsList": "Espresso, AeroPress, French Press"
     },
     "sections": {
       "brewMethods": "Brew Method Distribution",
@@ -80,8 +106,7 @@
       "method": "Method",
       "ratio": "Ratio",
       "grind": "Grind",
-      "rating": "Rating",
-      "notes": "Notes"
+      "rating": "Rating"
     }
   },
   "training": {

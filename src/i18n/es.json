@@ -59,10 +59,36 @@
       "heading": "Sin Logs de Café Aún",
       "message": "La jornada del log de café apenas comienza. ¡Vuelve pronto para actualizaciones!"
     },
+    "why": {
+      "text": "Documentando mi jornada de espresso con una Breville Bambino Plus - calibrando shots, registrando granos, y construyendo en público."
+    },
+    "todaysCoffee": {
+      "heading": "Café de Hoy",
+      "emptyIcon": "",
+      "emptyHeading": "No hay café registrado hoy",
+      "emptyMessage": "Aún no he preparado nada...",
+      "grind": "Molienda",
+      "ratio": "proporción",
+      "dialedIn": "¡Calibrado!",
+      "greatShot": "Excelente shot",
+      "decent": "Decente",
+      "needsWork": "Necesita trabajo",
+      "notes": "Notas"
+    },
     "stats": {
       "totalLogs": "Total de Logs",
       "thisWeek": "Esta Semana",
-      "avgRating": "Calificación Promedio"
+      "avgRating": "Calificación Promedio",
+      "avgDose": "Dosis Promedio"
+    },
+    "equipment": {
+      "heading": "Mi Equipo",
+      "machine": "Máquina",
+      "grinder": "Molino",
+      "methods": "Métodos",
+      "machineModel": "Breville Bambino Plus",
+      "grinderModel": "Baratza Encore ESP",
+      "methodsList": "Espresso, AeroPress, French Press"
     },
     "sections": {
       "brewMethods": "Distribución de Métodos de Preparación",
@@ -80,8 +106,7 @@
       "method": "Método",
       "ratio": "Proporción",
       "grind": "Molienda",
-      "rating": "Calificación",
-      "notes": "Notas"
+      "rating": "Calificación"
     }
   },
   "training": {
