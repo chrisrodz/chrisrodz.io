@@ -6,7 +6,7 @@ This is a personal website built with Astro v5 in SSR mode, featuring a bilingua
 
 ### Tech Stack
 
-- **Framework**: Astro v5.14+ (SSR mode with Vercel adapter)
+- **Framework**: Astro v5+ (SSR mode with Vercel adapter)
 - **Styling**: Pico CSS v2 with minimal custom overrides
 - **Database**: Supabase (PostgreSQL) with graceful degradation
 - **Auth**: Custom session-based authentication

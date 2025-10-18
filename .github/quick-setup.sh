@@ -1,4 +1,5 @@
 #!/bin/bash
+set -euo pipefail
 
 # Quick Setup Script for GitHub Copilot Agents
 # This script sets up the development environment quickly
@@ -18,6 +19,7 @@ if [ ! -f ".env.local" ]; then
     echo "⚙️  Creating development environment file..."
     cat > .env.local << EOF
 # Minimal config for development
+# WARNING: Change this password for production use!
 ADMIN_SECRET=test_admin_secret_for_development
 
 # Supabase (optional - will show setup instructions if not configured)

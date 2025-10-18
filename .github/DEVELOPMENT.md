@@ -38,7 +38,8 @@ yarn dev
   - Spanish: `http://localhost:4321/cafe`
   - English: `http://localhost:4321/en/cafe`
 - **Admin Panel**: `http://localhost:4321/admin`
-  - Login with password: `test_admin_secret_for_development`
+  - Login with password from `ADMIN_SECRET` in `.env.local`
+  - Default development password: `test_admin_secret_for_development`
 
 #### Build and Quality Checks
 
@@ -135,6 +136,7 @@ When working on this project, verify:
 **Required for full functionality:**
 
 ```bash
+# Change this password for production use!
 ADMIN_SECRET=test_admin_secret_for_development
 ```
 
