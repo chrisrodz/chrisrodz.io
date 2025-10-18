@@ -1,0 +1,27 @@
+{
+  "instructions": [
+    "This is an Astro v5 SSR application with bilingual support (Spanish/English)",
+    "Always use SSR patterns, never getStaticPaths() for dynamic routes",
+    "Use PicoCSS variables for styling, never hardcode colors",
+    "Validate all inputs with Zod schemas before database operations",
+    "Check 'if (!supabase)' before any database calls for graceful degradation",
+    "Use path aliases (@/lib/, @/components/) and maintain TypeScript safety",
+    "Test both Spanish (/) and English (/en/) routes for any changes",
+    "Follow the established i18n patterns using translation keys and helpers"
+  ],
+  "avoid": [
+    "getStaticPaths()",
+    "hardcoded colors in CSS",
+    "direct database calls without null checks",
+    "hardcoded user-facing strings (use translation system)",
+    "modifying core PicoCSS styles unnecessarily"
+  ],
+  "prefer": [
+    "SSR patterns with Astro.params",
+    "PicoCSS CSS variables (var(--pico-*))",
+    "Zod validation for all forms",
+    "Graceful degradation patterns",
+    "Type-safe translation functions",
+    "Session-based authentication"
+  ]
+}
