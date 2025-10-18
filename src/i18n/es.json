@@ -60,9 +60,7 @@
       "message": "La jornada del log de café apenas comienza. ¡Vuelve pronto para actualizaciones!"
     },
     "why": {
-      "paragraph1": "Me compré una Breville Bambino Plus y me di cuenta rápidamente que el espresso es una madriguera de conejo. Cada variable importa: dosis, rendimiento, tamaño de molienda, temperatura, presión...",
-      "paragraph2": "Esta app me ayuda a calibrar granos nuevos y recordar lo que funcionó. Además, es una buena excusa para construir algo y compartirlo públicamente.",
-      "paragraph3": "Actualmente optimizando para shots con notas de chocolate alrededor de 1:2-1:2.5 de proporción en ~25 segundos."
+      "text": "Documentando mi jornada de espresso con una Breville Bambino Plus - calibrando shots, registrando granos, y construyendo en público."
     },
     "todaysCoffee": {
       "heading": "Café de Hoy",

@@ -60,9 +60,7 @@
       "message": "The coffee tracking journey is just beginning. Check back soon for updates!"
     },
     "why": {
-      "paragraph1": "I got a Breville Bambino Plus and quickly realized espresso is a rabbit hole. Every variable matters: dose, yield, grind size, temperature, pressure...",
-      "paragraph2": "This app helps me dial in new beans and remember what worked. Plus, it's a fun excuse to build something and ship it publicly.",
-      "paragraph3": "Currently optimizing for chocolatey shots around 1:2-1:2.5 ratio in ~25 seconds."
+      "text": "Tracking my espresso journey with a Breville Bambino Plus - dialing in shots, logging beans, and building in public."
     },
     "todaysCoffee": {
       "heading": "Today's Coffee",

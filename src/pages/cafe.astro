@@ -94,11 +94,7 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
       <>
         {/* 1. WHY I'M TRACKING THIS */}
         <section class="coffee-why-section">
-          <div class="coffee-why-content">
-            <p>{t('cafe.why.paragraph1')}</p>
-            <p>{t('cafe.why.paragraph2')}</p>
-            <p>{t('cafe.why.paragraph3')}</p>
-          </div>
+          <p class="coffee-why-text">{t('cafe.why.text')}</p>
         </section>
 
         {/* 2. TODAY'S COFFEE HERO CARD */}
@@ -267,67 +263,55 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
 <style>
   /* 1. WHY I'M TRACKING THIS */
   .coffee-why-section {
-    background: #fdf8f3;
-    border-radius: var(--pico-border-radius);
-    padding: 2rem;
-    margin-bottom: 3rem;
-    max-width: 65ch;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+
+  .coffee-why-text {
+    color: var(--pico-muted-color);
+    line-height: 1.5;
+    margin: 0;
+    font-size: 0.9375rem;
+    max-width: 60ch;
     margin-left: auto;
     margin-right: auto;
   }
 
-  [data-theme='dark'] .coffee-why-section {
-    background: rgba(255, 248, 243, 0.05);
-    border: 1px solid rgba(255, 248, 243, 0.1);
-  }
-
-  .coffee-why-content p {
-    font-family: var(--pico-font-family-serif);
-    color: var(--pico-color);
-    line-height: 1.8;
-    margin-bottom: 1rem;
-  }
-
-  .coffee-why-content p:last-child {
-    margin-bottom: 0;
-  }
-
   @media (max-width: 768px) {
     .coffee-why-section {
-      padding: 1.5rem;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .coffee-why-text {
+      font-size: 0.875rem;
     }
   }
 
   /* 2. TODAY'S COFFEE HERO CARD */
   .todays-coffee-section {
-    background: var(--pico-card-background-color);
-    border: 1px solid var(--pico-card-border-color);
-    border-radius: var(--pico-border-radius);
-    padding: 2rem;
-    margin-bottom: 3rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    margin-bottom: 1.5rem;
   }
 
   .todays-coffee-heading {
     margin-top: 0;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     color: var(--pico-h2-color);
+    font-size: 1.5rem;
   }
 
   .todays-coffee-empty {
     text-align: center;
-    padding: 3rem 1rem;
+    padding: 2rem 1rem;
     color: var(--pico-muted-color);
   }
 
   .empty-icon {
-    font-size: 3rem;
-    margin-bottom: 1rem;
+    font-size: 2.5rem;
+    margin-bottom: 0.75rem;
   }
 
   .coffee-entry {
-    padding: 1.5rem 0;
+    padding: 0;
   }
 
   .coffee-divider {
@@ -337,32 +321,32 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
   }
 
   .coffee-time {
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
     color: var(--pico-muted-color);
-    margin-bottom: 0.75rem;
+    margin-bottom: 0.5rem;
     font-weight: 500;
   }
 
   .coffee-method-bean {
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem;
   }
 
   .coffee-method {
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     font-weight: 600;
     color: var(--pico-color);
   }
 
   .coffee-bean {
-    font-size: 1rem;
+    font-size: 0.9375rem;
     color: var(--pico-muted-color);
   }
 
   .coffee-metrics {
     font-family: monospace;
-    font-size: 0.9375rem;
-    margin-bottom: 1rem;
-    line-height: 1.6;
+    font-size: 0.875rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.5;
     color: var(--pico-color);
   }
 
@@ -377,58 +361,63 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
   .coffee-rating {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 0.75rem;
+    gap: 0.5rem;
+    margin-bottom: 0;
   }
 
   .stars {
-    font-size: 1.125rem;
+    font-size: 1rem;
   }
 
   .rating-text {
     font-weight: 600;
     color: var(--pico-color);
+    font-size: 0.9375rem;
   }
 
   .coffee-notes {
     color: var(--pico-muted-color);
     font-style: italic;
+    margin-top: 0.5rem;
   }
 
   @media (max-width: 768px) {
     .todays-coffee-section {
-      padding: 1.5rem;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
+    }
+
+    .todays-coffee-heading {
+      font-size: 1.375rem;
     }
   }
 
   /* 3. HERO STATS CARDS */
   .hero-stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: var(--pico-spacing);
-    margin-bottom: 3rem;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
   }
 
   .hero-stat-card {
     background: var(--pico-card-background-color);
     border: 1px solid var(--pico-card-border-color);
     border-radius: var(--pico-border-radius);
-    padding: 1.5rem;
+    padding: 1rem;
     text-align: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   }
 
   .stat-icon {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+    margin-bottom: 0.25rem;
   }
 
   .hero-stat-card .stat-value {
-    font-size: 2.5rem;
+    font-size: 2rem;
     font-weight: 700;
     color: var(--pico-color);
-    margin: 0.5rem 0;
+    margin: 0.25rem 0;
     line-height: 1;
   }
 
@@ -436,13 +425,30 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
     display: block;
     color: var(--pico-muted-color);
     font-weight: 500;
-    font-size: 0.875rem;
+    font-size: 0.8125rem;
   }
 
   @media (max-width: 768px) {
     .hero-stats-grid {
-      grid-template-columns: 1fr;
-      margin-bottom: 2rem;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-stat-card {
+      padding: 0.875rem 0.5rem;
+    }
+
+    .stat-icon {
+      font-size: 1.25rem;
+    }
+
+    .hero-stat-card .stat-value {
+      font-size: 1.75rem;
+    }
+
+    .hero-stat-card small {
+      font-size: 0.75rem;
     }
   }
 
