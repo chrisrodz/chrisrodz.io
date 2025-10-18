@@ -13,7 +13,7 @@ jobs:
     name: Deploy Database Migrations
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # Allow pushing type changes back to repo
+      contents: write # Allow pushing type changes back to repo
 
     steps:
       - name: Checkout code

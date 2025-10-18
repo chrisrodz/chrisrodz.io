@@ -245,18 +245,12 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
           {/* Draft Restore Notification */}
           {showDraftRestore && (
             <div className="notice-box" data-variant="info">
-              <p>
-                Se encontró un borrador guardado. ¿Quieres restaurarlo?
-              </p>
+              <p>Se encontró un borrador guardado. ¿Quieres restaurarlo?</p>
               <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
                 <button type="button" onClick={restoreDraft}>
                   Restaurar
                 </button>
-                <button
-                  type="button"
-                  onClick={dismissDraft}
-                  className="secondary"
-                >
+                <button type="button" onClick={dismissDraft} className="secondary">
                   Descartar
                 </button>
               </div>

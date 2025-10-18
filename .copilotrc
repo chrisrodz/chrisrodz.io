@@ -1,0 +1,41 @@
+{
+  "instructions": [
+    "This is an Astro v5 SSR application with bilingual support (Spanish/English)",
+    "Always use SSR patterns with Astro.params, never getStaticPaths() for dynamic routes",
+    "Use PicoCSS variables for styling (var(--pico-*)), never hardcode colors",
+    "Validate all inputs with Zod schemas before any database operations",
+    "Check 'if (!supabase)' before database calls for graceful degradation",
+    "Use path aliases (@/lib/, @/components/) and maintain strict TypeScript safety",
+    "Test both Spanish (/) and English (/en/) routes for any user-facing changes",
+    "Follow established i18n patterns with translation keys and helper functions",
+    "Return consistent error objects instead of throwing exceptions",
+    "Use session-based authentication with HttpOnly cookies for security"
+  ],
+  "avoid": [
+    "getStaticPaths() for dynamic routes (use SSR patterns instead)",
+    "Hardcoded colors, fonts, or spacing (use PicoCSS variables)",
+    "Direct database calls without null/error checks",
+    "Hardcoded user-facing strings (use translation system)",
+    "Modifying core PicoCSS styles (extend via CSS variables)",
+    "Exposing sensitive data in client-side code",
+    "Throwing exceptions in API routes (return error responses)",
+    "Using client:* directives unless absolutely necessary"
+  ],
+  "prefer": [
+    "SSR patterns: const { slug } = Astro.params",
+    "PicoCSS CSS variables: var(--pico-primary), var(--pico-background-color)",
+    "Zod validation: schema.safeParse() with error handling",
+    "Graceful degradation: if (!supabase) return fallback",
+    "Type-safe translations: const t = useTranslations(locale)",
+    "Consistent API responses: { data, error } pattern",
+    "Session-based auth: checkAuth(Astro.cookies)",
+    "Path aliases: @/lib/utils instead of ../../../lib/utils"
+  ],
+  "examples": {
+    "ssr_pattern": "const { slug } = Astro.params; // ✅ Good\nconst paths = await getStaticPaths(); // ❌ Bad for SSR",
+    "styling": "color: var(--pico-primary); // ✅ Good\ncolor: #007bff; // ❌ Bad",
+    "validation": "const result = schema.safeParse(data); if (!result.success) return error;",
+    "database": "if (!supabase) return { error: 'Database not configured' }; // ✅ Good",
+    "i18n": "const t = useTranslations(locale); return t('page.title'); // ✅ Good"
+  }
+}
