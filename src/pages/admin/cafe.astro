@@ -1,24 +1,15 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { checkAuth } from '../../lib/auth';
-import { supabase } from '../../lib/supabase';
+import { getServiceSupabase } from '../../lib/supabase';
 import { CoffeeLogSchema, CoffeeBeanSchema } from '../../lib/schemas/cafe';
 import CoffeeLogForm from '../../components/cafe/CoffeeLogForm';
-import type { CoffeeBeanRow, CoffeeLogWithBean } from '../../lib/schemas/cafe';
+import type { CoffeeBeanRow } from '../../lib/schemas/cafe';
 import type { BREW_METHODS } from '../../lib/schemas/cafe';
-import {
-  calculateStats,
-  getBrewMethodDistribution,
-  getQualityOverTime,
-  getMostUsedBeans,
-  formatBrewRatio,
-} from '../../lib/cafe-stats';
-import BrewMethodChart from '../../components/cafe/BrewMethodChart';
-import QualityChart from '../../components/cafe/QualityChart';
 import { getLocaleFromUrl, useTranslations } from '@/lib/i18n';
 
 const locale = getLocaleFromUrl(Astro.url);
-const { t, formatDate } = useTranslations(locale);
+const { t } = useTranslations(locale);
 
 export const prerender = false;
 
@@ -31,9 +22,12 @@ if (!isAuthed) {
 let message = '';
 let messageType: 'success' | 'error' | null = null;
 
+// Get service supabase client for admin operations
+const serviceSupabase = getServiceSupabase();
+
 // Handle form submission
 if (Astro.request.method === 'POST') {
-  if (!supabase) {
+  if (!serviceSupabase) {
     message = 'Error: Supabase is not configured';
     messageType = 'error';
   } else {
@@ -54,7 +48,7 @@ if (Astro.request.method === 'POST') {
         const validatedBeanData = CoffeeBeanSchema.parse(rawBeanData);
 
         // Insert into database
-        const { data: newBean, error } = await supabase
+        const { data: newBean, error } = await serviceSupabase
           .from('coffee_beans')
           .insert(validatedBeanData)
           .select()
@@ -91,7 +85,7 @@ if (Astro.request.method === 'POST') {
         const validatedData = CoffeeLogSchema.parse(rawData);
 
         // Insert into database
-        const { error } = await supabase.from('coffee_logs').insert({
+        const { error } = await serviceSupabase.from('coffee_logs').insert({
           brew_method: validatedData.brew_method,
           bean_id: validatedData.bean_id,
           dose_grams: validatedData.dose_grams,
@@ -104,8 +98,9 @@ if (Astro.request.method === 'POST') {
 
         if (error) throw error;
 
-        message = 'Coffee logged successfully!';
-        messageType = 'success';
+        // Redirect to cafe page to show the new entry
+        const cafeUrl = locale === 'en' ? '/en/cafe' : '/cafe';
+        return Astro.redirect(cafeUrl);
       }
     } catch (error) {
       console.error('Error logging coffee:', error);
@@ -121,9 +116,9 @@ if (Astro.request.method === 'POST') {
 
 // Fetch active beans for dropdown
 let activeBeans: CoffeeBeanRow[] = [];
-if (supabase) {
+if (serviceSupabase) {
   try {
-    const { data } = await supabase
+    const { data } = await serviceSupabase
       .from('coffee_beans')
       .select('*')
       .eq('is_active', true)
@@ -143,18 +138,20 @@ let smartDefaults: {
   grind_setting: number | null;
   dose_grams: number | null;
   yield_grams: number | null;
+  bean_id: string | null;
 } = {
   brew_method: null,
   grind_setting: null,
   dose_grams: null,
   yield_grams: null,
+  bean_id: null,
 };
 
-if (supabase) {
+if (serviceSupabase) {
   try {
-    const { data } = await supabase
+    const { data } = await serviceSupabase
       .from('coffee_logs')
-      .select('brew_method, grind_setting, dose_grams, yield_grams')
+      .select('brew_method, grind_setting, dose_grams, yield_grams, bean_id')
       .order('brew_time', { ascending: false })
       .limit(1)
       .single();
@@ -167,30 +164,6 @@ if (supabase) {
     console.warn('Could not fetch smart defaults:', error);
   }
 }
-
-// Fetch all coffee logs with bean details for display
-let logs: CoffeeLogWithBean[] = [];
-if (supabase) {
-  try {
-    const { data, error: fetchError } = await supabase
-      .from('coffee_logs')
-      .select('*, bean:coffee_beans(*)')
-      .order('brew_time', { ascending: false })
-      .limit(100);
-
-    if (fetchError) throw fetchError;
-    logs = (data || []) as CoffeeLogWithBean[];
-  } catch (e) {
-    console.error('Error fetching coffee logs:', e);
-  }
-}
-
-// Calculate statistics
-const stats = logs.length > 0 ? calculateStats(logs) : null;
-const brewMethodData = logs.length > 0 ? getBrewMethodDistribution(logs) : [];
-const qualityData = logs.length > 0 ? getQualityOverTime(logs) : [];
-const topBeans = logs.length > 0 ? getMostUsedBeans(logs) : [];
-const recentLogs = logs.slice(0, 30); // Show last 30
 ---
 
 <Layout title={t('cafe.title')}>
@@ -204,7 +177,7 @@ const recentLogs = logs.slice(0, 30); // Show last 30
   </header>
 
   {
-    !supabase ? (
+    !serviceSupabase ? (
       <section class="notice-box" data-variant="warning">
         <h2>{t('cafe.errors.heading')}</h2>
         <p>{t('cafe.errors.notConfigured')}</p>
@@ -223,105 +196,6 @@ const recentLogs = logs.slice(0, 30); // Show last 30
 
           <CoffeeLogForm client:load activeBeans={activeBeans} smartDefaults={smartDefaults} />
         </section>
-
-        {logs.length > 0 && (
-          <>
-            <hr style="margin: 3rem 0;" />
-
-            {/* Stats Cards */}
-            <div class="grid-3 mb">
-              <article class="stat-card">
-                <small>{t('cafe.stats.totalLogs')}</small>
-                <p class="stat-value">{stats?.totalLogs}</p>
-              </article>
-              <article class="stat-card">
-                <small>{t('cafe.stats.thisWeek')}</small>
-                <p class="stat-value">{stats?.logsThisWeek}</p>
-              </article>
-              <article class="stat-card">
-                <small>{t('cafe.stats.avgRating')}</small>
-                <p class="stat-value">{stats?.avgRating} / 5</p>
-              </article>
-            </div>
-
-            {/* Visualizations */}
-            <div class="grid-2 mb">
-              {/* Brew Method Distribution */}
-              <article>
-                <h2>{t('cafe.sections.brewMethods')}</h2>
-                <BrewMethodChart client:load data={brewMethodData} />
-              </article>
-
-              {/* Quality Over Time */}
-              <article>
-                <h2>{t('cafe.sections.qualityOverTime')}</h2>
-                <QualityChart client:load data={qualityData} />
-              </article>
-            </div>
-
-            {/* Most Used Beans */}
-            {topBeans.length > 0 && (
-              <article class="mb">
-                <h2>{t('cafe.sections.topBeans')}</h2>
-                {topBeans.map((item) => (
-                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
-                    <div>
-                      <strong>{item.bean.bean_name}</strong>
-                      {item.bean.roaster && (
-                        <small style="display: block;">{item.bean.roaster}</small>
-                      )}
-                    </div>
-                    <small>
-                      {item.count} {t('cafe.misc.brews')}
-                    </small>
-                  </div>
-                ))}
-              </article>
-            )}
-
-            {/* Recent Logs Table */}
-            <article>
-              <h2>{t('cafe.sections.recentBrews')}</h2>
-              <div style="overflow-x: auto;">
-                <table>
-                  <thead>
-                    <tr>
-                      <th>{t('cafe.table.date')}</th>
-                      <th>{t('cafe.table.bean')}</th>
-                      <th>{t('cafe.table.method')}</th>
-                      <th>{t('cafe.table.ratio')}</th>
-                      <th>{t('cafe.table.grind')}</th>
-                      <th>{t('cafe.table.rating')}</th>
-                      <th>{t('cafe.table.notes')}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {recentLogs.map((log) => (
-                      <tr>
-                        <td>
-                          {formatDate(new Date(log.brew_time), {
-                            month: 'short',
-                            day: 'numeric',
-                          })}
-                        </td>
-                        <td>{log.bean?.bean_name || <small>{t('cafe.misc.unknown')}</small>}</td>
-                        <td>{log.brew_method}</td>
-                        <td style="font-family: monospace;">
-                          {formatBrewRatio(log.dose_grams, log.yield_grams)}
-                        </td>
-                        <td>{log.grind_setting}</td>
-                        <td>{log.quality_rating} / 5</td>
-                        <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis;">
-                          <small>{log.notes || '-'}</small>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </article>
-          </>
-        )}
       </>
     )
   }
@@ -343,16 +217,3 @@ const recentLogs = logs.slice(0, 30); // Show last 30
 </script>
 
 <script id="beans-data" type="application/json" set:html={JSON.stringify(activeBeans)} />
-
-<style>
-  /* Responsive table */
-  @media (max-width: 768px) {
-    table {
-      font-size: 0.875rem;
-    }
-    th,
-    td {
-      padding: 0.5rem 0.25rem;
-    }
-  }
-</style>

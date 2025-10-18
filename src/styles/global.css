@@ -552,11 +552,21 @@ section a {
   color: var(--pico-color);
 }
 
-.notice-box[data-variant='info'],
-.notice-box[data-variant='success'] {
-  background: var(--pico-ins-color);
-  border: 1px solid var(--pico-primary);
+.notice-box[data-variant='info'] {
+  background: var(--pico-mark-background-color);
+  border: 1px solid var(--pico-mark-color);
   color: var(--pico-color);
+}
+
+.notice-box[data-variant='success'] {
+  background: rgba(22, 163, 74, 0.15);
+  border: 1px solid #16a34a;
+  color: var(--pico-color);
+}
+
+[data-theme='dark'] .notice-box[data-variant='success'] {
+  background: rgba(22, 163, 74, 0.2);
+  border: 1px solid #22c55e;
 }
 
 .notice-box h2,

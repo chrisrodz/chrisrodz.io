@@ -11,6 +11,7 @@ interface SmartDefaults {
   grind_setting: number | null;
   dose_grams: number | null;
   yield_grams: number | null;
+  bean_id: string | null;
 }
 
 interface CoffeeLogFormProps {
@@ -29,7 +30,7 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
   const [brewMethod, setBrewMethod] = useState<(typeof BREW_METHODS)[number]>(
     smartDefaults.brew_method || 'Espresso'
   );
-  const [beanId, setBeanId] = useState<string>('');
+  const [beanId, setBeanId] = useState<string>(smartDefaults.bean_id || '');
   const [showAddBeanForm, setShowAddBeanForm] = useState<boolean>(false);
   const [doseGrams, setDoseGrams] = useState<number>(smartDefaults.dose_grams || 18);
   const [yieldGrams, setYieldGrams] = useState<number>(smartDefaults.yield_grams || 0);
@@ -37,7 +38,6 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
   const [rating, setRating] = useState<number>(0);
   const [brewTime, setBrewTime] = useState<string>('');
   const [notes, setNotes] = useState<string>('');
-  const [notesExpanded, setNotesExpanded] = useState<boolean>(false);
 
   // UI state
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
@@ -96,6 +96,9 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
     if (smartDefaults.yield_grams) {
       sessionStorage.setItem('cafe_last_yield_grams', smartDefaults.yield_grams.toString());
     }
+    if (smartDefaults.bean_id) {
+      sessionStorage.setItem('cafe_last_bean_id', smartDefaults.bean_id);
+    }
   }, [smartDefaults]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -125,6 +128,12 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
         body: formData,
       });
 
+      // If server redirected us (e.g., to /cafe page), follow the redirect
+      if (response.redirected) {
+        window.location.href = response.url;
+        return;
+      }
+
       const html = await response.text();
 
       // Check if there's an error in the response
@@ -145,7 +154,6 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
       // Reset form but keep smart defaults
       setRating(0);
       setNotes('');
-      setNotesExpanded(false);
       // Update brew time to now
       const now = new Date();
       const formatted = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
@@ -205,13 +213,14 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
 
           {/* Bean Selection */}
           <label>
-            Grano de Café
+            Grano de Café *
             <select
               id="bean_id"
               value={showAddBeanForm ? NEW_BEAN_VALUE : beanId}
               onChange={handleBeanChange}
+              required
             >
-              <option value="">Ningún grano seleccionado</option>
+              <option value="">Selecciona un grano...</option>
               {beans.map((bean) => (
                 <option key={bean.id} value={bean.id}>
                   {bean.bean_name}
@@ -303,43 +312,23 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
             />
           </label>
 
-          {/* Notes (Collapsible) */}
-          <div>
-            <button
-              type="button"
-              onClick={() => setNotesExpanded(!notesExpanded)}
-              aria-expanded={notesExpanded}
-              aria-controls="notes-section"
-              className="secondary"
-              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
-            >
-              <span
-                style={{
-                  transform: notesExpanded ? 'rotate(90deg)' : 'none',
-                  transition: 'transform 0.2s',
-                }}
-              >
-                ▶
-              </span>
-              Notas (opcional)
-            </button>
-            {notesExpanded && (
-              <textarea
-                id="notes-section"
-                value={notes}
-                onChange={(e) => setNotes(e.target.value)}
-                rows={4}
-                maxLength={500}
-                placeholder="Agrega cualquier nota sobre esta preparación..."
-                aria-label="Notas de preparación"
-              />
-            )}
-          </div>
+          {/* Notes */}
+          <label>
+            Notas (opcional)
+            <textarea
+              id="notes"
+              value={notes}
+              onChange={(e) => setNotes(e.target.value)}
+              rows={4}
+              maxLength={500}
+              placeholder="Agrega cualquier nota sobre esta preparación..."
+            />
+          </label>
 
           {/* Submit Button */}
           <button
             type="submit"
-            disabled={isSubmitting || rating === 0}
+            disabled={isSubmitting || rating === 0 || !beanId}
             className="full-width"
             aria-busy={isSubmitting}
           >

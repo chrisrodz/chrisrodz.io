@@ -1,8 +1,8 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 
-// Use process.env for SSR compatibility (import.meta.env doesn't work reliably in SSR shared modules)
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
+// Use import.meta.env for Astro compatibility (works in SSR)
+const supabaseUrl = import.meta.env.SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.SUPABASE_ANON_KEY;
 
 // Check if Supabase is configured (validates URL format)
 const isValidUrl = (url: string | undefined): url is string => {
@@ -28,7 +28,7 @@ export const supabase: SupabaseClient | null = isSupabaseConfigured
 
 // Admin client for server-side operations
 export function getServiceSupabase(): SupabaseClient | null {
-  const serviceKey = process.env.SUPABASE_SERVICE_KEY;
+  const serviceKey = import.meta.env.SUPABASE_SERVICE_KEY;
 
   if (!isValidUrl(supabaseUrl) || !serviceKey) {
     return null;

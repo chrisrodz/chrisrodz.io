@@ -7,7 +7,7 @@
   "nav": {
     "home": "Inicio",
     "blog": "Blog",
-    "cafe": "Café",
+    "cafe": "Dosis de café",
     "training": "Entrenamiento"
   },
   "footer": {
@@ -44,22 +44,22 @@
     "rssTitle": "Christian Rodriguez - Blog (Español)"
   },
   "cafe": {
-    "title": "Registro de Café",
-    "metaDescription": "Mi jornada preparando café - registrando granos, métodos, y calidad",
-    "heading": "Registro de Café",
-    "subtitle": "Registrando mi jornada con el café, una taza a la vez",
+    "title": "Dosis de Café",
+    "metaDescription": "Un log del café que me preparo todos los días - registrando granos, métodos y calidad",
+    "heading": "Dosis de Café",
+    "subtitle": "Un log del café que me preparo todos los días, una taza a la vez",
     "errors": {
-      "heading": "Registro de Café No Disponible",
-      "notConfigured": "La base de datos aún no está configurada. ¡El registro de café estará disponible pronto!",
-      "failed": "Error al cargar registros de café",
+      "heading": "Data no disponible",
+      "notConfigured": "La base de datos aún no está configurada. ¡El log de café estará disponible pronto!",
+      "failed": "Error al cargar logs de café",
       "setupButton": "Configurar base de datos →"
     },
     "noLogsYet": {
-      "heading": "Sin Registros de Café Aún",
-      "message": "La jornada del registro de café apenas comienza. ¡Vuelve pronto para actualizaciones!"
+      "heading": "Sin Logs de Café Aún",
+      "message": "La jornada del log de café apenas comienza. ¡Vuelve pronto para actualizaciones!"
     },
     "stats": {
-      "totalLogs": "Total de Registros",
+      "totalLogs": "Total de Logs",
       "thisWeek": "Esta Semana",
       "avgRating": "Calificación Promedio"
     },
@@ -84,13 +84,13 @@
     }
   },
   "training": {
-    "title": "Registro de Entrenamiento",
-    "metaTitle": "Registro de Entrenamiento",
-    "heading": "Registro de Entrenamiento",
+    "title": "Logs de Entrenamiento",
+    "metaTitle": "Logs de Entrenamiento",
+    "heading": "Logs de Entrenamiento",
     "subtitle": "Actividades y métricas de entrenamiento de triatlón",
     "errors": {
-      "notConfigured": "El registro de entrenamiento aún no está disponible. Por favor configura tu base de datos de Supabase e integración con Strava.",
-      "setupButton": "Configurar registro de entrenamiento →"
+      "notConfigured": "El logs de entrenamiento aún no está disponible. Por favor configura tu base de datos de Supabase e integración con Strava.",
+      "setupButton": "Configurar logs de entrenamiento →"
     },
     "noActivities": {
       "message": "Sin actividades de entrenamiento aún. ¡Conecta tu cuenta de Strava para sincronizar tus entrenamientos!",
