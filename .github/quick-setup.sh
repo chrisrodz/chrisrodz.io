@@ -17,12 +17,15 @@ fi
 # Create environment file if it doesn't exist
 if [ ! -f ".env.local" ]; then
     echo "⚙️  Creating development environment file..."
+    echo "⚙️  Creating development environment file..."
     cat > .env.local << EOF
 # Minimal config for development
 # WARNING: Change this password for production use!
+# For production setup, see .github/SECRETS.md
 ADMIN_SECRET=test_admin_secret_for_development
 
 # Supabase (optional - will show setup instructions if not configured)
+# For setup instructions, see .github/SECRETS.md
 # SUPABASE_URL=your_project_url
 # SUPABASE_ANON_KEY=your_anon_key
 # SUPABASE_SERVICE_KEY=your_service_key

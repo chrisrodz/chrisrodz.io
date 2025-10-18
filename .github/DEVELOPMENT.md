@@ -184,7 +184,22 @@ yarn new-post "Post Title"
 # Test: http://localhost:4321/blog/slug and /en/blog/slug
 ```
 
-### 8. Environment Variables
+### 8. Environment Variables & GitHub Secrets
+
+**For local development:**
+
+```bash
+# Copy example and edit
+cp .env.example .env.local
+# Edit .env.local with your actual values
+```
+
+**For production and GitHub Copilot workflows:**
+
+- See [GitHub Secrets Setup Guide](.github/SECRETS.md) for complete configuration
+- Required: `ADMIN_SECRET` for authentication
+- Optional: Supabase keys for full functionality
+- Optional: Strava keys for training features
 
 **Required for full functionality:**
 
@@ -208,4 +223,4 @@ The application will work without the optional variables and show setup instruct
 
 ---
 
-**Note for Agents**: This project follows GitHub Copilot best practices with path-specific instructions, clear task patterns, and comprehensive acceptance criteria. The graceful degradation ensures you can test all core functionality without external service setup.
+**Note for Agents**: This project follows GitHub Copilot best practices with path-specific instructions, clear task patterns, and comprehensive acceptance criteria. The graceful degradation ensures you can test all core functionality without external service setup. For GitHub Actions integration, see [Secrets Setup Guide](.github/SECRETS.md).
