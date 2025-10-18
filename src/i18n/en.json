@@ -64,7 +64,7 @@
     },
     "todaysCoffee": {
       "heading": "Today's Coffee",
-      "emptyIcon": "📭",
+      "emptyIcon": "",
       "emptyHeading": "No coffee logged today",
       "emptyMessage": "Haven't brewed yet...",
       "grind": "Grind",

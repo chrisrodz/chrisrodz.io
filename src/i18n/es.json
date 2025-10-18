@@ -64,7 +64,7 @@
     },
     "todaysCoffee": {
       "heading": "Café de Hoy",
-      "emptyIcon": "📭",
+      "emptyIcon": "",
       "emptyHeading": "No hay café registrado hoy",
       "emptyMessage": "Aún no he preparado nada...",
       "grind": "Molienda",
