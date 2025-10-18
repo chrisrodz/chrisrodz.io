@@ -36,7 +36,6 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
   const [yieldGrams, setYieldGrams] = useState<number>(smartDefaults.yield_grams || 0);
   const [grindSetting, setGrindSetting] = useState<number>(smartDefaults.grind_setting || 10);
   const [rating, setRating] = useState<number>(0);
-  const [brewTime, setBrewTime] = useState<string>('');
   const [notes, setNotes] = useState<string>('');
 
   // UI state
@@ -45,16 +44,7 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
     type: 'success' | 'error' | null;
     message: string;
   }>({ type: null, message: '' });
-
-  // Initialize brew time to current time
-  useEffect(() => {
-    const now = new Date();
-    // Format as YYYY-MM-DDTHH:mm for datetime-local input
-    const formatted = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
-      .toISOString()
-      .slice(0, 16);
-    setBrewTime(formatted);
-  }, []);
+  const [showDraftRestore, setShowDraftRestore] = useState<boolean>(false);
 
   // Auto-select newly added bean
   useEffect(() => {
@@ -101,14 +91,84 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
     }
   }, [smartDefaults]);
 
+  // Check for saved draft on mount
+  useEffect(() => {
+    const draftStr = sessionStorage.getItem('cafe_draft');
+    if (draftStr) {
+      try {
+        const draft = JSON.parse(draftStr);
+        // Check if draft is less than 1 hour old
+        if (Date.now() - draft.timestamp < 60 * 60 * 1000) {
+          setShowDraftRestore(true);
+        } else {
+          // Remove stale draft
+          sessionStorage.removeItem('cafe_draft');
+        }
+      } catch (e) {
+        console.error('Failed to parse draft', e);
+        sessionStorage.removeItem('cafe_draft');
+      }
+    }
+  }, []);
+
+  // Auto-save form state every 2 seconds
+  useEffect(() => {
+    // Don't auto-save if form is empty or just initialized
+    if (rating === 0 && notes === '' && !beanId) {
+      return;
+    }
+
+    const interval = setInterval(() => {
+      const formState = {
+        brewMethod,
+        beanId,
+        doseGrams,
+        yieldGrams,
+        grindSetting,
+        rating,
+        notes,
+        timestamp: Date.now(),
+      };
+      sessionStorage.setItem('cafe_draft', JSON.stringify(formState));
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [brewMethod, beanId, doseGrams, yieldGrams, grindSetting, rating, notes]);
+
+  // Restore draft function
+  const restoreDraft = () => {
+    const draftStr = sessionStorage.getItem('cafe_draft');
+    if (draftStr) {
+      try {
+        const draft = JSON.parse(draftStr);
+        setBrewMethod(draft.brewMethod);
+        setBeanId(draft.beanId);
+        setDoseGrams(draft.doseGrams);
+        setYieldGrams(draft.yieldGrams);
+        setGrindSetting(draft.grindSetting);
+        setRating(draft.rating);
+        setNotes(draft.notes);
+        setShowDraftRestore(false);
+      } catch (e) {
+        console.error('Failed to restore draft', e);
+      }
+    }
+  };
+
+  // Dismiss draft
+  const dismissDraft = () => {
+    sessionStorage.removeItem('cafe_draft');
+    setShowDraftRestore(false);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus({ type: null, message: '' });
 
     try {
-      // Convert datetime-local to ISO string
-      const brewTimeISO = new Date(brewTime).toISOString();
+      // Use current time as brew time
+      const brewTimeISO = new Date().toISOString();
 
       const formData = new FormData();
       formData.append('action', 'log_coffee');
@@ -151,15 +211,12 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
         message: '¡Café registrado exitosamente!',
       });
 
+      // Clear draft on successful submission
+      sessionStorage.removeItem('cafe_draft');
+
       // Reset form but keep smart defaults
       setRating(0);
       setNotes('');
-      // Update brew time to now
-      const now = new Date();
-      const formatted = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
-        .toISOString()
-        .slice(0, 16);
-      setBrewTime(formatted);
     } catch (error) {
       setSubmitStatus({
         type: 'error',
@@ -185,6 +242,27 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
         </ins>
       ) : (
         <form onSubmit={handleSubmit} className="space-y">
+          {/* Draft Restore Notification */}
+          {showDraftRestore && (
+            <div className="notice-box" data-variant="info">
+              <p>
+                Se encontró un borrador guardado. ¿Quieres restaurarlo?
+              </p>
+              <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
+                <button type="button" onClick={restoreDraft}>
+                  Restaurar
+                </button>
+                <button
+                  type="button"
+                  onClick={dismissDraft}
+                  className="secondary"
+                >
+                  Descartar
+                </button>
+              </div>
+            </div>
+          )}
+
           {submitStatus.type === 'error' && (
             <div className="notice-box error-message" data-variant="error">
               <p>{submitStatus.message}</p>
@@ -233,53 +311,128 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
             {showAddBeanForm && <AddBeanForm onBeanAdded={handleBeanAdded} />}
           </label>
 
-          {/* Dose and Water/Yield */}
-          <div className="grid-2">
-            <label>
-              Dosis de Café (gramos) *
+          {/* Dose */}
+          <label>
+            Dosis de Café (gramos) *
+            <div className="number-input-wrapper">
               <input
                 type="number"
                 inputMode="decimal"
                 id="dose_grams"
                 value={doseGrams}
-                onChange={(e) => setDoseGrams(Number(e.target.value))}
+                onChange={(e) => setDoseGrams(Number(e.target.value) || 0)}
+                onFocus={(e) => e.target.select()}
                 min="1"
                 max="100"
                 step="1"
                 required
               />
-            </label>
+              <div className="number-btn-group">
+                <button
+                  type="button"
+                  className="number-btn"
+                  onClick={() => setDoseGrams(Math.max(1, doseGrams - 1))}
+                  aria-label="Decrease dose"
+                >
+                  −
+                </button>
+                <button
+                  type="button"
+                  className="number-btn"
+                  onClick={() => setDoseGrams(Math.min(100, doseGrams + 1))}
+                  aria-label="Increase dose"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+          </label>
 
-            <label>
-              {brewMethod === 'Espresso' ? 'Rendimiento (gramos)' : 'Agua (gramos)'}
+          {/* Water/Yield */}
+          <label>
+            {brewMethod === 'Espresso' ? 'Rendimiento (gramos)' : 'Agua (gramos)'}
+            <div className="number-input-wrapper">
               <input
                 type="number"
                 inputMode="decimal"
                 id="yield_grams"
                 value={yieldGrams}
-                onChange={(e) => setYieldGrams(Number(e.target.value))}
+                onChange={(e) => setYieldGrams(Number(e.target.value) || 0)}
+                onFocus={(e) => e.target.select()}
                 min="1"
                 max="200"
                 step="1"
                 placeholder={brewMethod === 'Espresso' ? 'Peso de salida' : 'Agua agregada'}
               />
-            </label>
-          </div>
+              <div className="number-btn-group">
+                <button
+                  type="button"
+                  className="number-btn"
+                  onClick={() => setYieldGrams(Math.max(0, yieldGrams - 1))}
+                  aria-label="Decrease yield"
+                >
+                  −
+                </button>
+                <button
+                  type="button"
+                  className="number-btn"
+                  onClick={() => setYieldGrams(Math.min(200, yieldGrams + 1))}
+                  aria-label="Increase yield"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+          </label>
 
           {/* Grind Setting */}
           <label>
             Molienda (1-40) *
-            <input
-              type="number"
-              inputMode="numeric"
-              id="grind_setting"
-              value={grindSetting}
-              onChange={(e) => setGrindSetting(Number(e.target.value))}
-              min="1"
-              max="40"
-              step="1"
-              required
-            />
+            <div className="number-input-wrapper">
+              <input
+                type="number"
+                inputMode="numeric"
+                id="grind_setting"
+                value={grindSetting}
+                onChange={(e) => setGrindSetting(Number(e.target.value) || 0)}
+                onFocus={(e) => e.target.select()}
+                min="1"
+                max="40"
+                step="1"
+                required
+              />
+              <div className="number-btn-group">
+                <button
+                  type="button"
+                  className="number-btn"
+                  onClick={() => setGrindSetting(Math.max(1, grindSetting - 1))}
+                  aria-label="Decrease grind setting"
+                >
+                  −
+                </button>
+                <button
+                  type="button"
+                  className="number-btn"
+                  onClick={() => setGrindSetting(Math.min(40, grindSetting + 1))}
+                  aria-label="Increase grind setting"
+                >
+                  +
+                </button>
+              </div>
+            </div>
+            <small
+              style={{
+                color: 'var(--pico-muted-color)',
+                display: 'block',
+                marginTop: '0.25rem',
+              }}
+            >
+              {grindSetting < 15
+                ? 'Molienda fina'
+                : grindSetting < 25
+                  ? 'Molienda media'
+                  : 'Molienda gruesa'}
+            </small>
           </label>
 
           {/* Quality Rating */}
@@ -299,18 +452,6 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
               </p>
             )}
           </div>
-
-          {/* Brew Time */}
-          <label>
-            Hora de Preparación *
-            <input
-              type="datetime-local"
-              id="brew_time"
-              value={brewTime}
-              onChange={(e) => setBrewTime(e.target.value)}
-              required
-            />
-          </label>
 
           {/* Notes */}
           <label>
