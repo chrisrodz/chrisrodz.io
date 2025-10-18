@@ -2,6 +2,16 @@
 
 This is a personal website built with Astro v5 in SSR mode, featuring a bilingual blog, coffee tracking, and training dashboard.
 
+## Quick Reference
+
+For **specific file types**, see path-specific instructions in `.github/instructions/`:
+
+- [Astro Components](instructions/astro-components.instructions.md) - Pages, layouts, components
+- [React Components](instructions/react-components.instructions.md) - Interactive UI components
+- [API Routes](instructions/api-routes.instructions.md) - Backend endpoints
+- [Library Code](instructions/library-code.instructions.md) - Utilities, stores, schemas
+- [Content Collections](instructions/content-collections.instructions.md) - Blog posts, content
+
 ## Project Overview
 
 ### Tech Stack
@@ -127,15 +137,57 @@ if (!supabase) {
 - Supabase vars optional (graceful degradation)
 - App functions without external services configured
 
-## When Working on This Project
+## Common Task Patterns
 
-1. **Always check the current locale** when working with i18n
-2. **Use SSR patterns** - never static generation for dynamic routes
-3. **Validate inputs** with Zod before any database operations
-4. **Check database availability** before Supabase calls
-5. **Use PicoCSS variables** for all styling
-6. **Test both languages** for any user-facing changes
-7. **Follow the established file structure** for content and components
-8. **Keep changes minimal** and focused on the specific task
-9. **Run `yarn check`** before committing changes
-10. **Test graceful degradation** when external services aren't configured
+### Adding New Features
+
+1. **Check if internationalization is needed** - Most user-facing features need both languages
+2. **Add Zod validation** for any form inputs or API endpoints
+3. **Implement graceful degradation** if using external services (Supabase, Strava)
+4. **Use PicoCSS variables** for consistent styling
+5. **Test both language versions** (Spanish `/` and English `/en/`)
+6. **Run `yarn check`** to ensure code quality
+
+### Bug Fixes
+
+1. **Reproduce the issue** in both language versions if applicable
+2. **Check for similar patterns** elsewhere in the codebase
+3. **Maintain existing behavior** for working features
+4. **Test edge cases** like missing data or offline state
+
+### UI Changes
+
+1. **Use PicoCSS classes and variables** - never hardcode styles
+2. **Test in both light and dark themes** - use theme toggle
+3. **Ensure accessibility** with proper ARIA labels and semantic HTML
+4. **Verify responsive behavior** on different screen sizes
+5. **Check both language versions** for layout consistency
+
+### Content Updates
+
+1. **Update both language versions** for blog posts and static content
+2. **Use proper frontmatter** with required fields (title, description, pubDate, slug, locale)
+3. **Follow folder structure** for content collections
+4. **Generate proper slugs** that are SEO-friendly
+
+### API Development
+
+1. **Always validate inputs** with Zod schemas
+2. **Handle database unavailability** gracefully (return 503)
+3. **Use proper HTTP status codes** (200, 201, 400, 401, 403, 500, 503)
+4. **Check authentication** for protected endpoints
+5. **Return consistent JSON structure**
+
+## Acceptance Criteria Checklist
+
+For any task, ensure:
+
+- [ ] Code follows TypeScript strict mode
+- [ ] All inputs are validated with Zod schemas
+- [ ] Database operations check for `supabase` availability
+- [ ] Styling uses PicoCSS variables (no hardcoded colors)
+- [ ] Both language versions work correctly (Spanish and English)
+- [ ] Build passes: `yarn check` (lint, format, type-check)
+- [ ] Graceful degradation works without external services
+- [ ] Authentication flows work with test credentials
+- [ ] No sensitive data exposed in client-side code

@@ -131,7 +131,60 @@ When working on this project, verify:
 - [ ] All forms validate inputs properly
 - [ ] Navigation works between all pages and languages
 
-### 7. Environment Variables
+### 7. Task-Specific Workflows
+
+#### Adding New Pages
+
+```bash
+# 1. Create Astro page files for both languages
+touch src/pages/new-page.astro
+touch src/pages/en/new-page.astro
+
+# 2. Add navigation links in Layout.astro
+# 3. Test both language versions
+yarn dev
+# Visit: http://localhost:4321/new-page and /en/new-page
+
+# 4. Validate changes
+yarn check
+```
+
+#### Adding New API Endpoints
+
+```bash
+# 1. Create API file with validation
+touch src/pages/api/new-endpoint.ts
+
+# 2. Test endpoint functionality
+curl http://localhost:4321/api/new-endpoint
+
+# 3. Check error handling (without auth, invalid input, etc.)
+# 4. Validate changes
+yarn check
+```
+
+#### Updating Styles
+
+```bash
+# 1. Only modify src/styles/global.css
+# 2. Use PicoCSS variables only
+# 3. Test in both light and dark themes (use theme toggle)
+# 4. Check both language versions for consistency
+yarn dev
+```
+
+#### Creating Blog Posts
+
+```bash
+# Create both language versions
+yarn new-post "Post Title"
+# This creates: src/content/blog/post-title/{en.md,es.md}
+
+# Edit both files with proper frontmatter
+# Test: http://localhost:4321/blog/slug and /en/blog/slug
+```
+
+### 8. Environment Variables
 
 **Required for full functionality:**
 
@@ -155,4 +208,4 @@ The application will work without the optional variables and show setup instruct
 
 ---
 
-**Note for Agents**: This project is designed to work out-of-the-box for development and testing. The graceful degradation ensures you can test all core functionality without external service setup.
+**Note for Agents**: This project follows GitHub Copilot best practices with path-specific instructions, clear task patterns, and comprehensive acceptance criteria. The graceful degradation ensures you can test all core functionality without external service setup.
