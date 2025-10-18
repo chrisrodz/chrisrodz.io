@@ -17,15 +17,12 @@
     "lint:fix": "eslint . --ext .js,.ts,.astro --fix",
     "check": "yarn validate:i18n && astro check && yarn lint && yarn format:check",
     "prepare": "husky",
-    "db:start": "supabase start",
-    "db:stop": "supabase stop",
-    "db:reset": "supabase db reset",
+    "db:setup": "node scripts/setup-dev-db.js",
+    "db:link": "supabase link --project-ref",
     "db:migration": "supabase migration new",
-    "db:types": "supabase gen types typescript --local > src/lib/database.types.ts",
-    "db:types:remote": "supabase gen types typescript --linked > src/lib/database.types.ts",
+    "db:types": "supabase gen types typescript --linked > src/lib/database.types.ts",
     "db:push": "supabase db push",
-    "db:pull": "supabase db pull",
-    "db:status": "supabase status"
+    "db:pull": "supabase db pull"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.4",

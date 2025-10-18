@@ -33,6 +33,48 @@ export type Database = {
   };
   public: {
     Tables: {
+      activities: {
+        Row: {
+          average_heartrate: number | null;
+          created_at: string;
+          distance: number | null;
+          duration: number | null;
+          elevation_gain: number | null;
+          id: string;
+          max_heartrate: number | null;
+          name: string | null;
+          start_date: string;
+          strava_id: number | null;
+          type: string;
+        };
+        Insert: {
+          average_heartrate?: number | null;
+          created_at?: string;
+          distance?: number | null;
+          duration?: number | null;
+          elevation_gain?: number | null;
+          id?: string;
+          max_heartrate?: number | null;
+          name?: string | null;
+          start_date: string;
+          strava_id?: number | null;
+          type: string;
+        };
+        Update: {
+          average_heartrate?: number | null;
+          created_at?: string;
+          distance?: number | null;
+          duration?: number | null;
+          elevation_gain?: number | null;
+          id?: string;
+          max_heartrate?: number | null;
+          name?: string | null;
+          start_date?: string;
+          strava_id?: number | null;
+          type?: string;
+        };
+        Relationships: [];
+      };
       coffee_beans: {
         Row: {
           bean_name: string;

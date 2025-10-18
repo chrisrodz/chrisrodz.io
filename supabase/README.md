@@ -4,60 +4,70 @@ This directory contains the Supabase configuration and database migrations for c
 
 ## Quick Start
 
-### Local Development
+### Development Environment Setup
+
+Development uses a cloud-based Supabase project for maximum portability (works anywhere: iPad, Chromebook, cloud IDEs, etc.). No Docker required!
 
 ```bash
-# Start local Supabase (requires Docker)
-yarn db:start
+# 1. Create a new Supabase project (if you haven't already)
+#    - Go to https://supabase.com/dashboard
+#    - Click "New Project"
+#    - Name: chrisrodz-dev
+#    - Region: us-east-2 (same as production)
 
-# Check status
-yarn db:status
+# 2. Link to your dev project and set up
+yarn db:setup <project-ref>
 
-# Stop local Supabase
-yarn db:stop
+# 3. Update .env.local with your dev credentials
+#    (The setup script will tell you where to get them)
+
+# 4. Start development server
+yarn dev
 ```
 
-Access local services:
-
-- Supabase Studio: http://127.0.0.1:54323
-- Database: postgresql://postgres:postgres@127.0.0.1:54322/postgres
-- API: http://127.0.0.1:54321
-
-### Remote Connection
+**One-time setup:**
 
 ```bash
-# Login to Supabase (one-time setup)
+# Login to Supabase (required once)
 supabase login
 
-# Link to your remote project
-supabase link --project-ref your-project-ref
+# Then run the setup
+yarn db:setup <project-ref>
+```
 
-# Pull latest schema from remote
+### Development Workflow
+
+Once linked to your dev project:
+
+```bash
+# Check project status
+supabase status
+
+# Pull latest schema from dev project
 yarn db:pull
 
-# Push local migrations to remote
+# Push migrations to dev project
 yarn db:push
+
+# Generate TypeScript types from dev database
+yarn db:types
 ```
 
 ## Available Scripts
 
+### Setup
+
+- `yarn db:setup <project-ref>` - Link to dev project, push migrations, generate types
+- `yarn db:link <project-ref>` - Manually link to a Supabase project
+
 ### Database Management
 
-- `yarn db:start` - Start local Supabase stack (Docker required)
-- `yarn db:stop` - Stop local Supabase stack
-- `yarn db:reset` - Reset local database and run all migrations
-- `yarn db:status` - Show status of all Supabase services
-
-### Migrations
-
-- `yarn db:migration <name>` - Create a new migration file
-- `yarn db:push` - Push migrations to remote database
-- `yarn db:pull` - Pull schema changes from remote database
+- `yarn db:pull` - Pull latest schema from dev project
+- `yarn db:push` - Push local migrations to dev project
 
 ### Type Generation
 
-- `yarn db:types` - Generate TypeScript types from local database
-- `yarn db:types:remote` - Generate TypeScript types from remote database
+- `yarn db:types` - Generate TypeScript types from linked database
 
 ## Directory Structure
 
@@ -102,39 +112,30 @@ CHECK (
 );
 ```
 
-### Testing Migrations Locally
+### Testing Migrations on Dev
 
 ```bash
-# Reset database with all migrations
-yarn db:reset
+# Push migrations to your dev project
+yarn db:push
 
-# Check migration status
-supabase migration list
+# Generate updated types
+yarn db:types
+
+# Test your feature in dev
+yarn dev
 ```
 
 ### Deploying to Production
 
-```bash
-# Make sure you're linked to the right project
-supabase link
-
-# Push migrations
-yarn db:push
-
-# Generate updated types
-yarn db:types:remote
-```
+See [../docs/DEPLOYMENT.md](../docs/DEPLOYMENT.md) for production deployment workflow.
 
 ## Type Generation
 
-The Supabase CLI can automatically generate TypeScript types from your database schema:
+The Supabase CLI automatically generates TypeScript types from your database schema:
 
 ```bash
-# From local database
+# Generate types from dev database (requires linking)
 yarn db:types
-
-# From remote database (requires linking)
-yarn db:types:remote
 ```
 
 This generates `src/lib/database.types.ts` with interfaces for all tables, views, and functions.
@@ -190,75 +191,60 @@ All tables have Row Level Security (RLS) enabled with public read access.
 
 ## Environment Setup
 
-### Local Development
+### Development Environment
 
-**Automatic Setup:**
-
-When you run `yarn db:start` for the first time, Supabase automatically generates stable API keys that persist across Docker restarts. These keys are stored in Docker volumes (not files).
-
-**Update .env.local:**
-
-Your `.env.local` should use the local Supabase credentials:
+Your `.env.local` file contains credentials for your dev Supabase project:
 
 ```bash
-# Get current local credentials
-yarn db:status
+# Get from: https://supabase.com/dashboard/project/<your-project-id>/settings/api
+SUPABASE_URL=https://your-dev-project-ref.supabase.co
+SUPABASE_ANON_KEY=your-anon-public-key
+SUPABASE_SERVICE_KEY=your-service-role-key
 
-# Or use the helper script
-./scripts/update-env-local.sh
-```
-
-Example `.env.local` for local development:
-
-```bash
-# Supabase - Local Development
-SUPABASE_URL=http://127.0.0.1:54321
-SUPABASE_ANON_KEY=sb_publishable_ACJWlzQHlZjBrEguHvfOxg_3BJgxAaH
-SUPABASE_SERVICE_KEY=sb_secret_N7UND0UgjKTVK-Uodkm0Hg_xSvEMPvz
-
-# Admin
+# Admin (generate a random string)
 ADMIN_SECRET=your_secret_here
 ```
 
-**Important:** These local credentials:
+**Update these after creating your dev project:**
 
-- ✅ **Persist across Docker restarts** (stored in `supabase_config_chrisrodz.io` volume)
-- ✅ **Are safe to commit to .env.local** (local development only)
-- ✅ **Only work when `yarn db:start` is running**
-- ❌ **Don't work in production** (use real Supabase credentials there)
+1. Create new Supabase project: https://supabase.com/dashboard
+2. Run: `yarn db:setup <project-ref>`
+3. The setup script will guide you through getting the credentials
 
-### Remote Connection
+### Production Connection
 
-Add to `.env`:
-
-```bash
-SUPABASE_URL=https://your-project-ref.supabase.co
-SUPABASE_ANON_KEY=your-anon-key
-SUPABASE_SERVICE_KEY=your-service-key
-```
+See [../docs/DEPLOYMENT.md](../docs/DEPLOYMENT.md) for production configuration.
 
 ## Troubleshooting
 
-### Docker Issues
+### Linking Issues
 
-If `yarn db:start` fails:
+If linking fails:
 
-- Make sure Docker is running
-- Check Docker has enough resources (4GB+ RAM recommended)
-- Try: `docker system prune` to free up space
+```bash
+# Make sure you're logged in
+supabase login
+
+# Verify the project reference is correct
+supabase projects list
+
+# Try linking again
+supabase link --project-ref your-project-ref
+```
 
 ### Migration Conflicts
 
-If migrations fail:
+If migrations fail when pushing:
 
 ```bash
 # Check current migration status
 supabase migration list
 
-# Reset local database
-yarn db:reset
+# Pull remote schema to see what's there
+yarn db:pull
 
-# If remote is broken, you may need to manually fix via SQL Editor
+# If needed, create a new migration to fix the divergence
+yarn db:migration fix_migration_conflict
 ```
 
 ### Type Generation Issues
@@ -266,15 +252,14 @@ yarn db:reset
 If type generation fails:
 
 ```bash
-# Make sure database is running
-yarn db:status
+# Make sure you're linked to a project
+supabase status
 
-# For local types
+# For dev types (requires linking)
 yarn db:types
 
-# For remote types (requires linking)
-supabase link --project-ref your-project-ref
-yarn db:types:remote
+# Check that your database has the tables you expect
+# Go to: https://supabase.com/dashboard/project/<your-project-id>/editor
 ```
 
 ## Best Practices

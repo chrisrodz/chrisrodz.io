@@ -20,16 +20,13 @@ yarn generate:i18n    # Generate TypeScript types from translation JSON
 yarn validate:i18n    # Validate translation completeness (both languages)
 yarn check            # Run all checks (validate + type check + lint + format)
 
-# Database (Supabase)
-yarn db:start         # Start local Supabase (Docker required)
-yarn db:stop          # Stop local Supabase
-yarn db:reset         # Reset local DB and run migrations
+# Database (Supabase - Cloud-based dev, no Docker required)
+yarn db:setup <ref>   # Link to dev project, push migrations, generate types
+yarn db:link <ref>    # Link to a Supabase project
 yarn db:migration <name>    # Create new migration file
-yarn db:types         # Generate TypeScript types from local DB
-yarn db:types:remote  # Generate types from remote DB (requires linking)
-yarn db:push          # Push migrations to remote DB
-yarn db:pull          # Pull schema from remote DB
-yarn db:status        # Show Supabase services status
+yarn db:types         # Generate TypeScript types from linked DB
+yarn db:push          # Push migrations to dev DB
+yarn db:pull          # Pull schema from dev DB
 ```
 
 ## Git Workflow
@@ -217,16 +214,19 @@ Features work standalone without Supabase:
 
 #### Database Migrations (Supabase CLI)
 
-Database schema is managed via **migrations** in `supabase/migrations/`:
+Database schema is managed via **migrations** in `supabase/migrations/`. Development uses a cloud-based Supabase project (no Docker required).
 
-**Local Development:**
+**Development Setup (one-time):**
 
 ```bash
-# Start local Supabase (requires Docker)
-yarn db:start
+# Create new Supabase project at https://supabase.com/dashboard
+# Then link and set up:
+yarn db:setup <project-ref>
 
-# Access Studio: http://127.0.0.1:54323
-# Database: postgresql://postgres:postgres@127.0.0.1:54322/postgres
+# The setup script will:
+# 1. Link to your dev project
+# 2. Push all migrations
+# 3. Generate TypeScript types
 ```
 
 **Creating Migrations:**
@@ -236,35 +236,33 @@ yarn db:start
 yarn db:migration add_feature_name
 
 # Edit: supabase/migrations/YYYYMMDDHHMMSS_add_feature_name.sql
-# Test: yarn db:reset
-# Push to remote: yarn db:push
+# Push to dev: yarn db:push
+# Generate types: yarn db:types
 ```
 
 **Type Generation:**
 
 ```bash
-# Generate TypeScript types from database schema
-yarn db:types              # From local database
-yarn db:types:remote       # From remote database (requires linking)
+# Generate TypeScript types from database schema (requires linked project)
+yarn db:types
 
 # Output: src/lib/database.types.ts
 ```
 
-**Remote Operations:**
+**Development Workflow:**
 
 ```bash
-# One-time setup
-supabase login
-supabase link --project-ref your-project-ref
+# Push migrations to dev project
+yarn db:push
 
-# Pull remote schema
+# Pull schema changes from dev project
 yarn db:pull
 
-# Push local migrations
-yarn db:push
+# View project status
+supabase status
 ```
 
-See `supabase/README.md` for detailed migration workflow and best practices.
+See `supabase/README.md` and `docs/DEPLOYMENT.md` for detailed workflow and best practices.
 
 ### Authentication
 
@@ -552,6 +550,19 @@ The language switcher in `Layout.astro` uses `getTranslatedPost()` to:
 - ❌ Don't disable ESLint rules without good reason
 - ❌ Don't skip pre-commit hooks (`--no-verify`) unless absolutely necessary
 
+## Documentation
+
+All project documentation is organized in the `/docs` directory:
+
+- `docs/README.md` - Documentation index and quick links
+- `docs/DEPLOYMENT.md` - Database migration and deployment strategy
+- `docs/NEXT_STEPS.md` - Feature roadmap and optimization opportunities
+- `docs/development/` - Development guides and migration plans
+
+**When creating planning or design documents, place them in `/docs` or `/docs/development/` instead of the root directory.** This keeps the root clean and all documentation centralized.
+
+See `docs/README.md` for a complete index of all available documentation.
+
 ## Notes for Future Development
 
 1. **Don't override PicoCSS colors** unless absolutely necessary. Use CSS variables.
@@ -567,4 +578,4 @@ The language switcher in `Layout.astro` uses `getTranslatedPost()` to:
 
 ---
 
-**Last updated**: 2025-10-14
+**Last updated**: 2025-10-17
