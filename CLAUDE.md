@@ -575,7 +575,8 @@ See `docs/README.md` for a complete index of all available documentation.
 8. **i18n translations**: Place translated blog posts in the same folder with locale-named files (`en.md`, `es.md`).
 9. **Translation system**: Use type-safe `t()` function for all user-facing text. Never hardcode strings. Pre-commit hooks validate translation completeness.
 10. **Spanish is default**: All non-prefixed URLs (`/about`, `/blog/slug`) serve Spanish content. English uses `/en/` prefix.
+11. **Content/Copy Review**: Whenever adding or updating user-facing text, **do a manual review in the browser before committing**. This includes homepage copy, headings, descriptions, and any translation content. Pre-commit hooks validate i18n completeness but not content accuracy or tone.
 
 ---
 
-**Last updated**: 2025-10-17
+**Last updated**: 2025-10-17 (Copy review reminder added)
