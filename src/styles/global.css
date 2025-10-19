@@ -139,7 +139,7 @@ nav.main-nav ul li {
 }
 
 nav.main-nav ul:first-child a {
-  font-family: var(--pico-font-family-serif);
+  font-family: var(--pico-font-family); /* Use Inter sans-serif instead of Crimson Text */
   font-size: 1.25rem;
   font-weight: 600;
 }
@@ -154,6 +154,9 @@ nav.main-nav a {
   padding: 0.5rem;
   min-height: 44px;
   line-height: 1.5;
+  font-feature-settings:
+    'liga' 1,
+    'clig' 1; /* Enable ligatures for better letter spacing */
 }
 
 nav.main-nav ul:first-child a:hover,
