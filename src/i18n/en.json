@@ -7,7 +7,7 @@
   "nav": {
     "home": "Home",
     "blog": "Blog",
-    "cafe": "Coffee",
+    "cafe": "Coffee Diary",
     "training": "Training"
   },
   "footer": {
@@ -45,28 +45,28 @@
     "rssTitle": "Christian Rodriguez - Blog (English)"
   },
   "cafe": {
-    "title": "Coffee Tracker",
-    "metaDescription": "My coffee brewing journey - tracking beans, methods, and quality",
-    "heading": "Coffee Tracker",
-    "subtitle": "Tracking my coffee brewing journey, one cup at a time",
+    "title": "Coffee Diary",
+    "metaDescription": "A diary of my morning coffee - tracking beans, methods, and quality",
+    "heading": "Coffee Diary",
+    "subtitle": "A diary of my morning coffee, one cup at a time",
     "errors": {
-      "heading": "Coffee Tracking Not Available",
-      "notConfigured": "The database is not configured yet. Coffee tracking will be available soon!",
-      "failed": "Failed to load coffee logs",
+      "heading": "Data Not Available",
+      "notConfigured": "The database is not configured yet. The coffee diary will be available soon!",
+      "failed": "Failed to load coffee diaries",
       "setupButton": "Configure Database →"
     },
     "noLogsYet": {
-      "heading": "No Coffee Logs Yet",
-      "message": "The coffee tracking journey is just beginning. Check back soon for updates!"
+      "heading": "The Coffee Diary is Empty",
+      "message": "The coffee diary journey is just beginning. Check back soon for updates!"
     },
     "why": {
-      "text": "Tracking my espresso journey with a Breville Bambino Plus - dialing in shots, logging beans, and building in public."
+      "text": "Documenting my coffee journey to have better data about the best preparation for each cup."
     },
     "todaysCoffee": {
       "heading": "Today's Coffee",
       "emptyIcon": "",
       "emptyHeading": "No coffee logged today",
-      "emptyMessage": "Haven't brewed yet...",
+      "emptyMessage": "Haven't brewed anything yet... (or taking a caffeine break)",
       "grind": "Grind",
       "ratio": "ratio",
       "dialedIn": "Dialed in!",
@@ -94,7 +94,7 @@
       "brewMethods": "Brew Method Distribution",
       "qualityOverTime": "Quality Over Time (Last 30 Days)",
       "topBeans": "Most Used Beans",
-      "recentBrews": "Recent Brews"
+      "recentBrews": "All Entries"
     },
     "misc": {
       "brews": "brews",
@@ -110,9 +110,9 @@
     }
   },
   "training": {
-    "title": "Training Log",
-    "metaTitle": "Training Log",
-    "heading": "Training Log",
+    "title": "Training Logs",
+    "metaTitle": "Training Logs",
+    "heading": "Training Logs",
     "subtitle": "Triathlon training activities and metrics",
     "errors": {
       "notConfigured": "Training tracking is not available yet. Please configure your Supabase database and Strava integration.",
