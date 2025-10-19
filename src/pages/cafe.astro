@@ -15,6 +15,13 @@ import { getLocaleFromUrl, useTranslations } from '@/lib/i18n';
 
 const locale = getLocaleFromUrl(Astro.url);
 const { t, formatDate } = useTranslations(locale);
+const localeWithRegion = locale === 'es' ? 'es-PR' : 'en-US';
+const puertoRicoTimeFormatter = new Intl.DateTimeFormat(localeWithRegion, {
+  hour: 'numeric',
+  minute: '2-digit',
+  hour12: true,
+  timeZone: 'America/Puerto_Rico',
+});
 
 // Fetch all coffee logs with bean details
 let logs: CoffeeLogWithBean[] = [];
@@ -58,13 +65,9 @@ const recentLogs = logs.slice(0, 30); // Show last 30
 const avgDose =
   logs.length > 0 ? logs.reduce((sum, log) => sum + (log.dose_grams || 0), 0) / logs.length : 0;
 
-// Helper function to format time
-function formatTime(date: Date): string {
-  return new Intl.DateTimeFormat('en-US', {
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true,
-  }).format(date);
+// Helper function to format Puerto Rico time
+function formatPuertoRicoTime(date: Date): string {
+  return puertoRicoTimeFormatter.format(date);
 }
 
 // Helper function to calculate brew ratio
@@ -107,60 +110,87 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
             </div>
           ) : (
             <div class="todays-coffee-list">
-              {todaysCoffee.map((log, index) => (
-                <>
-                  {index > 0 && <hr class="coffee-divider" />}
-                  <article class="coffee-entry">
-                    <header class="coffee-entry-header">
-                      <span class="coffee-time">{formatTime(new Date(log.brew_time))}</span>
-                      <div class="coffee-method-bean">
-                        <span class="coffee-method">{log.brew_method}</span>
-                        <span class="coffee-bean">{log.bean?.bean_name || t('cafe.misc.unknown')}</span>
-                      </div>
-                    </header>
+              {todaysCoffee.map((log, index) => {
+                const brewDate = new Date(log.brew_time);
+                const isoString = brewDate.toISOString();
 
-                    <div class="coffee-metrics">
-                      <div class="metric-block">
-                        <span class="metric-label">{t('cafe.todaysCoffee.ratio')}</span>
-                        <span class="metric-value">
-                          {log.dose_grams}g → {log.yield_grams}g · {calculateRatio(log.dose_grams, log.yield_grams)}
+                return (
+                  <>
+                    {index > 0 && <hr class="coffee-divider" />}
+                    <article class="coffee-entry">
+                      <header class="coffee-entry-header">
+                        <span class="time-compare time-compare--badge" data-local-time={isoString}>
+                          <span class="time-compare__zone">
+                            <span class="time-compare__value">
+                              {formatPuertoRicoTime(brewDate)}
+                            </span>
+                            <small class="time-compare__label">
+                              {t('cafe.timeComparison.puertoRico')}
+                            </small>
+                          </span>
+                          <span class="time-compare__zone time-compare__zone--local">
+                            <span class="time-compare__value" data-local-time-display>
+                              {t('common.loading')}
+                            </span>
+                            <small class="time-compare__label">
+                              {t('cafe.timeComparison.local')}
+                            </small>
+                          </span>
+                        </span>
+                        <div class="coffee-method-bean">
+                          <span class="coffee-method">{log.brew_method}</span>
+                          <span class="coffee-bean">
+                            {log.bean?.bean_name || t('cafe.misc.unknown')}
+                          </span>
+                        </div>
+                      </header>
+
+                      <div class="coffee-metrics">
+                        <div class="metric-block">
+                          <span class="metric-label">{t('cafe.todaysCoffee.ratio')}</span>
+                          <span class="metric-value">
+                            {log.dose_grams}g → {log.yield_grams}g ·{' '}
+                            {calculateRatio(log.dose_grams, log.yield_grams)}
+                          </span>
+                        </div>
+                        <div class="metric-block">
+                          <span class="metric-label">{t('cafe.todaysCoffee.grind')}</span>
+                          <span class="metric-value">{log.grind_setting}</span>
+                        </div>
+                      </div>
+
+                      <div
+                        class="coffee-rating"
+                        role="group"
+                        aria-label={`${t('cafe.table.rating')}: ${log.quality_rating} out of 5`}
+                      >
+                        <span class="rating-badge" aria-hidden="true">
+                          {log.quality_rating} / 5
+                        </span>
+                        <span class="rating-text">
+                          {log.quality_rating === 5
+                            ? t('cafe.todaysCoffee.dialedIn')
+                            : log.quality_rating >= 4
+                              ? t('cafe.todaysCoffee.greatShot')
+                              : log.quality_rating >= 3
+                                ? t('cafe.todaysCoffee.decent')
+                                : t('cafe.todaysCoffee.needsWork')}
                         </span>
                       </div>
-                      <div class="metric-block">
-                        <span class="metric-label">{t('cafe.todaysCoffee.grind')}</span>
-                        <span class="metric-value">{log.grind_setting}</span>
-                      </div>
-                    </div>
 
-                    <div
-                      class="coffee-rating"
-                      role="group"
-                      aria-label={`${t('cafe.table.rating')}: ${log.quality_rating} out of 5`}
-                    >
-                      <span class="rating-badge" aria-hidden="true">{log.quality_rating} / 5</span>
-                      <span class="rating-text">
-                        {log.quality_rating === 5
-                          ? t('cafe.todaysCoffee.dialedIn')
-                          : log.quality_rating >= 4
-                            ? t('cafe.todaysCoffee.greatShot')
-                            : log.quality_rating >= 3
-                              ? t('cafe.todaysCoffee.decent')
-                              : t('cafe.todaysCoffee.needsWork')}
-                      </span>
-                    </div>
-
-                    {log.notes && (
-                      <div class="coffee-notes">
-                        <span class="notes-label">{t('cafe.todaysCoffee.notes')}</span>
-                        <span class="notes-text">
-                          {log.notes.substring(0, 120)}
-                          {log.notes.length > 120 ? '…' : ''}
-                        </span>
-                      </div>
-                    )}
-                  </article>
-                </>
-              ))}
+                      {log.notes && (
+                        <div class="coffee-notes">
+                          <span class="notes-label">{t('cafe.todaysCoffee.notes')}</span>
+                          <span class="notes-text">
+                            {log.notes.substring(0, 120)}
+                            {log.notes.length > 120 ? '…' : ''}
+                          </span>
+                        </div>
+                      )}
+                    </article>
+                  </>
+                );
+              })}
             </div>
           )}
         </section>
@@ -209,44 +239,115 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
         <section class="recent-logs-section">
           <h2>{t('cafe.sections.recentBrews')}</h2>
           <div class="recent-logs-list">
-            {recentLogs.map((log) => (
-              <article class="recent-log-card">
-                <header class="recent-log-header">
-                  <span class="recent-log-date">
-                    {formatDate(new Date(log.brew_time), {
-                      month: 'short',
-                      day: 'numeric',
-                    })}
-                  </span>
-                  <span class="recent-log-method">{log.brew_method}</span>
-                </header>
+            {recentLogs.map((log) => {
+              const brewDate = new Date(log.brew_time);
+              const isoString = brewDate.toISOString();
 
-                <dl class="recent-log-details">
-                  <div class="detail-item">
-                    <dt>{t('cafe.table.bean')}</dt>
-                    <dd>{log.bean?.bean_name || t('cafe.misc.unknown')}</dd>
-                  </div>
-                  <div class="detail-item">
-                    <dt>{t('cafe.table.ratio')}</dt>
-                    <dd>{formatBrewRatio(log.dose_grams, log.yield_grams)}</dd>
-                  </div>
-                  <div class="detail-item">
-                    <dt>{t('cafe.table.grind')}</dt>
-                    <dd>{log.grind_setting}</dd>
-                  </div>
-                  <div class="detail-item">
-                    <dt>{t('cafe.table.rating')}</dt>
-                    <dd>{log.quality_rating} / 5</dd>
-                  </div>
-                </dl>
-              </article>
-            ))}
+              return (
+                <article class="recent-log-card">
+                  <header class="recent-log-header">
+                    <div class="recent-log-meta">
+                      <span class="recent-log-date">
+                        {formatDate(brewDate, {
+                          month: 'short',
+                          day: 'numeric',
+                        })}
+                      </span>
+                      <span class="time-compare time-compare--subtle" data-local-time={isoString}>
+                        <span class="time-compare__zone">
+                          <span class="time-compare__value">{formatPuertoRicoTime(brewDate)}</span>
+                          <small class="time-compare__label">
+                            {t('cafe.timeComparison.puertoRico')}
+                          </small>
+                        </span>
+                        <span class="time-compare__zone time-compare__zone--local">
+                          <span class="time-compare__value" data-local-time-display>
+                            {t('common.loading')}
+                          </span>
+                          <small class="time-compare__label">
+                            {t('cafe.timeComparison.local')}
+                          </small>
+                        </span>
+                      </span>
+                    </div>
+                    <span class="recent-log-method">{log.brew_method}</span>
+                  </header>
+
+                  <dl class="recent-log-details">
+                    <div class="detail-item">
+                      <dt>{t('cafe.table.bean')}</dt>
+                      <dd>{log.bean?.bean_name || t('cafe.misc.unknown')}</dd>
+                    </div>
+                    <div class="detail-item">
+                      <dt>{t('cafe.table.ratio')}</dt>
+                      <dd>{formatBrewRatio(log.dose_grams, log.yield_grams)}</dd>
+                    </div>
+                    <div class="detail-item">
+                      <dt>{t('cafe.table.grind')}</dt>
+                      <dd>{log.grind_setting}</dd>
+                    </div>
+                    <div class="detail-item">
+                      <dt>{t('cafe.table.rating')}</dt>
+                      <dd>{log.quality_rating} / 5</dd>
+                    </div>
+                  </dl>
+                </article>
+              );
+            })}
           </div>
         </section>
       </>
     )
   }
 </Layout>
+
+<script is:inline>
+  (() => {
+    const updateLocalTimes = () => {
+      const localFormatter = new Intl.DateTimeFormat(undefined, {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+      });
+
+      const prFormatter = new Intl.DateTimeFormat(undefined, {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+        timeZone: 'America/Puerto_Rico',
+      });
+
+      document.querySelectorAll('[data-local-time]').forEach((element) => {
+        const iso = element.getAttribute('data-local-time');
+        if (!iso) return;
+
+        const date = new Date(iso);
+        if (Number.isNaN(date.getTime())) return;
+
+        const localTime = localFormatter.format(date);
+        const prTime = prFormatter.format(date);
+
+        // Update local time display
+        element.querySelectorAll('[data-local-time-display]').forEach((target) => {
+          target.textContent = localTime;
+        });
+
+        // Hide local time zone if it matches Puerto Rico time
+        if (localTime === prTime) {
+          element.querySelectorAll('.time-compare__zone--local').forEach((zone) => {
+            zone.style.display = 'none';
+          });
+        }
+      });
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', updateLocalTimes, { once: true });
+    } else {
+      updateLocalTimes();
+    }
+  })();
+</script>
 
 <style>
   /* 1. WHY I'M TRACKING THIS */
@@ -279,7 +380,8 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
   /* 2. TODAY'S COFFEE HERO CARD */
   .todays-coffee-section {
     position: relative;
-    background: linear-gradient(135deg, rgba(111, 78, 55, 0.12), transparent 55%),
+    background:
+      linear-gradient(135deg, rgba(111, 78, 55, 0.12), transparent 55%),
       var(--pico-card-background-color);
     border: 1px solid var(--pico-card-border-color);
     border-radius: calc(var(--pico-border-radius) * 1.25);
@@ -343,23 +445,75 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
     gap: 0.75rem 1.5rem;
   }
 
-  .coffee-time {
+  .time-compare {
     display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.35rem 0.75rem;
-    border-radius: 999px;
-    background: rgba(111, 78, 55, 0.12);
-    color: #5c3b25;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    font-size: clamp(0.75rem, 1.6vw, 0.85rem);
+    align-items: stretch;
+    gap: 0.85rem;
+    flex-wrap: wrap;
   }
 
-  [data-theme='dark'] .coffee-time {
-    background: rgba(157, 111, 79, 0.2);
-    color: rgba(255, 235, 219, 0.92);
+  .time-compare--badge {
+    padding: 0.5rem 0.9rem;
+    border-radius: var(--pico-border-radius);
+    background: #6f4e37;
+    color: #fff7f0;
+  }
+
+  [data-theme='dark'] .time-compare--badge {
+    background: #b88d5f;
+    color: #1c1108;
+  }
+
+  .time-compare__zone {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: fit-content;
+  }
+
+  .time-compare__value {
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    font-size: clamp(0.8rem, 2vw, 0.95rem);
+    text-transform: uppercase;
+  }
+
+  .time-compare__label {
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 600;
+    font-size: 0.65rem;
+    opacity: 0.7;
+  }
+
+  .time-compare--badge .time-compare__value {
+    font-size: clamp(0.85rem, 1.6vw, 0.95rem);
+  }
+
+  .time-compare--badge .time-compare__zone--local .time-compare__value {
+    opacity: 0.85;
+  }
+
+  .time-compare--subtle {
+    color: var(--pico-muted-color);
+    gap: 0.75rem;
+  }
+
+  .time-compare--subtle .time-compare__value {
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+  }
+
+  .time-compare--subtle .time-compare__label {
+    font-size: 0.6rem;
+    opacity: 0.6;
+  }
+
+  @media (max-width: 480px) {
+    .time-compare {
+      gap: 0.65rem;
+    }
   }
 
   .coffee-method-bean {
@@ -405,7 +559,8 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
   }
 
   .metric-value {
-    font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Monaco, Consolas,
+    font-family:
+      'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Monaco, Consolas,
       'Liberation Mono', 'Courier New', monospace;
     font-size: clamp(0.95rem, 2.4vw, 1.05rem);
     color: var(--pico-color);
@@ -660,6 +815,12 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
     flex-wrap: wrap;
   }
 
+  .recent-log-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
   .recent-log-date {
     font-weight: 700;
     font-size: 1rem;
@@ -670,9 +831,9 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
 
   .recent-log-method {
     padding: 0.35rem 0.75rem;
-    border-radius: 999px;
-    background: rgba(111, 78, 55, 0.12);
-    color: #5c3b25;
+    border-radius: var(--pico-border-radius);
+    background: #6f4e37;
+    color: #fff7f0;
     font-weight: 600;
     font-size: 0.85rem;
     letter-spacing: 0.08em;
@@ -680,8 +841,8 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
   }
 
   [data-theme='dark'] .recent-log-method {
-    background: rgba(157, 111, 79, 0.2);
-    color: rgba(255, 235, 219, 0.92);
+    background: #b88d5f;
+    color: #1c1108;
   }
 
   .recent-log-details {

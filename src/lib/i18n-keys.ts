@@ -71,6 +71,8 @@ export type TranslationKey =
   | 'cafe.sections.qualityOverTime'
   | 'cafe.sections.topBeans'
   | 'cafe.sections.recentBrews'
+  | 'cafe.timeComparison.puertoRico'
+  | 'cafe.timeComparison.local'
   | 'cafe.misc.brews'
   | 'cafe.misc.unknown'
   | 'cafe.table.date'

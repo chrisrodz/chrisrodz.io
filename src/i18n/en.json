@@ -97,6 +97,10 @@
       "topBeans": "Most Used Beans",
       "recentBrews": "All Entries"
     },
+    "timeComparison": {
+      "puertoRico": "Puerto Rico",
+      "local": "Your time"
+    },
     "misc": {
       "brews": "brews",
       "unknown": "Unknown"

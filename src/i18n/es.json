@@ -97,6 +97,10 @@
       "topBeans": "Granos Más Usados",
       "recentBrews": "Todas las entradas"
     },
+    "timeComparison": {
+      "puertoRico": "Puerto Rico",
+      "local": "Tu hora local"
+    },
     "misc": {
       "brews": "preparaciones",
       "unknown": "Desconocido"
