@@ -831,9 +831,9 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
 
   .recent-log-method {
     padding: 0.35rem 0.75rem;
-    border-radius: 999px;
-    background: rgba(111, 78, 55, 0.12);
-    color: #5c3b25;
+    border-radius: var(--pico-border-radius);
+    background: #6f4e37;
+    color: #fff7f0;
     font-weight: 600;
     font-size: 0.85rem;
     letter-spacing: 0.08em;
@@ -841,8 +841,8 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
   }
 
   [data-theme='dark'] .recent-log-method {
-    background: rgba(157, 111, 79, 0.2);
-    color: rgba(255, 235, 219, 0.92);
+    background: #b88d5f;
+    color: #1c1108;
   }
 
   .recent-log-details {
