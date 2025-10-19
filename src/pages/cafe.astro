@@ -102,7 +102,6 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
           <h2 class="todays-coffee-heading">{t('cafe.todaysCoffee.heading')}</h2>
           {todaysCoffee.length === 0 ? (
             <div class="todays-coffee-empty">
-              <div class="empty-icon">{t('cafe.todaysCoffee.emptyIcon')}</div>
               <p>{t('cafe.todaysCoffee.emptyHeading')}</p>
               <small>{t('cafe.todaysCoffee.emptyMessage')}</small>
             </div>
@@ -112,32 +111,33 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
                 <>
                   {index > 0 && <hr class="coffee-divider" />}
                   <article class="coffee-entry">
-                    <div class="coffee-time">{formatTime(new Date(log.brew_time))}</div>
-
-                    <div class="coffee-method-bean">
-                      <div class="coffee-method">{log.brew_method}</div>
-                      <div class="coffee-bean">{log.bean?.bean_name || t('cafe.misc.unknown')}</div>
-                    </div>
+                    <header class="coffee-entry-header">
+                      <span class="coffee-time">{formatTime(new Date(log.brew_time))}</span>
+                      <div class="coffee-method-bean">
+                        <span class="coffee-method">{log.brew_method}</span>
+                        <span class="coffee-bean">{log.bean?.bean_name || t('cafe.misc.unknown')}</span>
+                      </div>
+                    </header>
 
                     <div class="coffee-metrics">
-                      <div>
-                        {log.dose_grams}g → {log.yield_grams}g (
-                        {calculateRatio(log.dose_grams, log.yield_grams)}{' '}
-                        {t('cafe.todaysCoffee.ratio')})
+                      <div class="metric-block">
+                        <span class="metric-label">{t('cafe.todaysCoffee.ratio')}</span>
+                        <span class="metric-value">
+                          {log.dose_grams}g → {log.yield_grams}g · {calculateRatio(log.dose_grams, log.yield_grams)}
+                        </span>
                       </div>
-                      <div>
-                        {t('cafe.todaysCoffee.grind')}: {log.grind_setting}
+                      <div class="metric-block">
+                        <span class="metric-label">{t('cafe.todaysCoffee.grind')}</span>
+                        <span class="metric-value">{log.grind_setting}</span>
                       </div>
                     </div>
 
                     <div
                       class="coffee-rating"
                       role="group"
-                      aria-label={`${t('cafe.table.rating')}: ${log.quality_rating} out of 5 stars`}
+                      aria-label={`${t('cafe.table.rating')}: ${log.quality_rating} out of 5`}
                     >
-                      <span class="stars" aria-hidden="true">
-                        {'⭐'.repeat(log.quality_rating || 0)}
-                      </span>
+                      <span class="rating-badge" aria-hidden="true">{log.quality_rating} / 5</span>
                       <span class="rating-text">
                         {log.quality_rating === 5
                           ? t('cafe.todaysCoffee.dialedIn')
@@ -151,10 +151,11 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
 
                     {log.notes && (
                       <div class="coffee-notes">
-                        <small>
-                          {t('cafe.todaysCoffee.notes')}: {log.notes.substring(0, 50)}
-                          {log.notes.length > 50 ? '...' : ''}
-                        </small>
+                        <span class="notes-label">{t('cafe.todaysCoffee.notes')}</span>
+                        <span class="notes-text">
+                          {log.notes.substring(0, 120)}
+                          {log.notes.length > 120 ? '…' : ''}
+                        </span>
                       </div>
                     )}
                   </article>
@@ -179,24 +180,7 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
             <small>{t('cafe.stats.avgDose')}</small>
           </article>
         </div>
-
-        {/* 4. MY SETUP */}
-        <section class="my-setup-section">
-          <h2>{t('cafe.equipment.heading')}</h2>
-          <div class="setup-list">
-            <div class="setup-item">
-              <strong>{t('cafe.equipment.machine')}:</strong> {t('cafe.equipment.machineModel')}
-            </div>
-            <div class="setup-item">
-              <strong>{t('cafe.equipment.grinder')}:</strong> {t('cafe.equipment.grinderModel')}
-            </div>
-            <div class="setup-item">
-              <strong>{t('cafe.equipment.methods')}:</strong> {t('cafe.equipment.methodsList')}
-            </div>
-          </div>
-        </section>
-
-        {/* 5. BREW METHOD DISTRIBUTION - Visual Bar Chart */}
+        {/* 4. BREW METHOD DISTRIBUTION - Visual Bar Chart */}
         <section class="brew-method-section">
           <h2>{t('cafe.sections.brewMethods')}</h2>
           <div class="brew-method-bars">
@@ -221,43 +205,44 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
           </div>
         </section>
 
-        {/* 6. RECENT LOGS TABLE (Keep existing) */}
-        <article class="recent-logs-section">
+        {/* 5. RECENT LOGS */}
+        <section class="recent-logs-section">
           <h2>{t('cafe.sections.recentBrews')}</h2>
-          <div class="table-scroll-container">
-            <table>
-              <thead>
-                <tr>
-                  <th>{t('cafe.table.date')}</th>
-                  <th>{t('cafe.table.bean')}</th>
-                  <th>{t('cafe.table.method')}</th>
-                  <th>{t('cafe.table.ratio')}</th>
-                  <th>{t('cafe.table.grind')}</th>
-                  <th>{t('cafe.table.rating')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {recentLogs.map((log) => (
-                  <tr>
-                    <td>
-                      {formatDate(new Date(log.brew_time), {
-                        month: 'short',
-                        day: 'numeric',
-                      })}
-                    </td>
-                    <td>{log.bean?.bean_name || <small>{t('cafe.misc.unknown')}</small>}</td>
-                    <td>{log.brew_method}</td>
-                    <td style="font-family: monospace;">
-                      {formatBrewRatio(log.dose_grams, log.yield_grams)}
-                    </td>
-                    <td>{log.grind_setting}</td>
-                    <td>{log.quality_rating} / 5</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div class="recent-logs-list">
+            {recentLogs.map((log) => (
+              <article class="recent-log-card">
+                <header class="recent-log-header">
+                  <span class="recent-log-date">
+                    {formatDate(new Date(log.brew_time), {
+                      month: 'short',
+                      day: 'numeric',
+                    })}
+                  </span>
+                  <span class="recent-log-method">{log.brew_method}</span>
+                </header>
+
+                <dl class="recent-log-details">
+                  <div class="detail-item">
+                    <dt>{t('cafe.table.bean')}</dt>
+                    <dd>{log.bean?.bean_name || t('cafe.misc.unknown')}</dd>
+                  </div>
+                  <div class="detail-item">
+                    <dt>{t('cafe.table.ratio')}</dt>
+                    <dd>{formatBrewRatio(log.dose_grams, log.yield_grams)}</dd>
+                  </div>
+                  <div class="detail-item">
+                    <dt>{t('cafe.table.grind')}</dt>
+                    <dd>{log.grind_setting}</dd>
+                  </div>
+                  <div class="detail-item">
+                    <dt>{t('cafe.table.rating')}</dt>
+                    <dd>{log.quality_rating} / 5</dd>
+                  </div>
+                </dl>
+              </article>
+            ))}
           </div>
-        </article>
+        </section>
       </>
     )
   }
@@ -294,22 +279,42 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
 
   /* 2. TODAY'S COFFEE HERO CARD */
   .todays-coffee-section {
-    background: var(--pico-card-background-color);
+    position: relative;
+    background: linear-gradient(135deg, rgba(111, 78, 55, 0.12), transparent 55%),
+      var(--pico-card-background-color);
     border: 1px solid var(--pico-card-border-color);
-    border-radius: var(--pico-border-radius);
-    padding: var(--pico-spacing);
-    margin-bottom: 2rem;
+    border-radius: calc(var(--pico-border-radius) * 1.25);
+    padding: clamp(1.5rem, 5vw, 2.75rem);
+    margin-bottom: 2.5rem;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+    overflow: hidden;
+  }
+
+  .todays-coffee-section::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.25), transparent 60%);
+    opacity: 0.7;
   }
 
   .todays-coffee-heading {
+    position: relative;
+    z-index: 1;
     margin-top: 0;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
     color: var(--pico-h2-color);
-    font-size: clamp(1.5rem, 4vw, 2rem);
+    font-size: clamp(1.6rem, 5vw, 2.4rem);
+    letter-spacing: -0.01em;
   }
 
   .todays-coffee-list {
-    /* Container - no additional styling needed */
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
   }
 
   .todays-coffee-empty {
@@ -318,85 +323,146 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
     color: var(--pico-muted-color);
   }
 
-  .empty-icon {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    opacity: 0.6;
-    line-height: 1;
-  }
-
-  .coffee-entry {
-    padding: 0;
-  }
-
   .coffee-divider {
     border: none;
     border-top: 1px dashed var(--pico-muted-border-color);
-    margin: 1.5rem 0;
-    opacity: 0.6;
+    margin: 0;
+    opacity: 0.35;
+    align-self: stretch;
+  }
+
+  .coffee-entry {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .coffee-entry-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
   }
 
   .coffee-time {
-    font-size: 0.875rem;
-    color: var(--pico-muted-color);
-    margin-bottom: 0.75rem;
-    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    background: rgba(111, 78, 55, 0.12);
+    color: #5c3b25;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-size: clamp(0.75rem, 1.6vw, 0.85rem);
+  }
+
+  [data-theme='dark'] .coffee-time {
+    background: rgba(157, 111, 79, 0.2);
+    color: rgba(255, 235, 219, 0.92);
   }
 
   .coffee-method-bean {
-    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
   }
 
   .coffee-method {
-    font-size: clamp(1rem, 2.5vw, 1.125rem);
-    font-weight: 600;
+    font-size: clamp(1.125rem, 3vw, 1.5rem);
+    font-weight: 700;
     color: var(--pico-color);
-    margin-bottom: 0.25rem;
+    letter-spacing: -0.01em;
   }
 
   .coffee-bean {
-    font-size: 0.9375rem;
+    font-size: clamp(0.95rem, 2vw, 1.05rem);
     color: var(--pico-muted-color);
   }
 
   .coffee-metrics {
-    font-family: monospace;
-    font-size: 0.875rem;
-    margin-bottom: 1rem;
-    line-height: 1.6;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+
+  .metric-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 0.9rem 1rem;
+    border-radius: 0.9rem;
+    background: var(--pico-background-color);
+    border: 1px solid var(--pico-muted-border-color);
+    min-height: 82px;
+  }
+
+  .metric-label {
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    color: var(--pico-muted-color);
+  }
+
+  .metric-value {
+    font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Monaco, Consolas,
+      'Liberation Mono', 'Courier New', monospace;
+    font-size: clamp(0.95rem, 2.4vw, 1.05rem);
     color: var(--pico-color);
-  }
-
-  .coffee-metrics div {
-    margin-bottom: 0.25rem;
-  }
-
-  .coffee-metrics div:last-child {
-    margin-bottom: 0;
   }
 
   .coffee-rating {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 0.75rem;
-    margin-bottom: 0;
   }
 
-  .stars {
-    font-size: 1rem;
+  .rating-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.4rem 0.85rem;
+    border-radius: 999px;
+    background: #6f4e37;
+    color: #fff7f0;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    font-size: 0.85rem;
+  }
+
+  [data-theme='dark'] .rating-badge {
+    background: #b88d5f;
+    color: #1c1108;
   }
 
   .rating-text {
     font-weight: 600;
     color: var(--pico-color);
-    font-size: 0.9375rem;
+    font-size: clamp(0.95rem, 2vw, 1.05rem);
   }
 
   .coffee-notes {
+    display: grid;
+    gap: 0.35rem;
+    padding: 1rem 1.25rem;
+    border-radius: 0.9rem;
+    border: 1px dashed var(--pico-muted-border-color);
+    background: var(--pico-card-background-color);
+  }
+
+  .notes-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
     color: var(--pico-muted-color);
-    font-style: italic;
-    margin-top: 0.75rem;
-    font-size: 0.875rem;
+  }
+
+  .notes-text {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--pico-muted-color);
   }
 
   @media (max-width: 768px) {
@@ -465,43 +531,7 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
     }
   }
 
-  /* 4. MY SETUP */
-  .my-setup-section {
-    background: var(--pico-card-background-color);
-    border: 1px solid var(--pico-card-border-color);
-    border-radius: var(--pico-border-radius);
-    padding: 2rem;
-    margin-bottom: 3rem;
-  }
-
-  .my-setup-section h2 {
-    margin-top: 0;
-    margin-bottom: 1.5rem;
-  }
-
-  .setup-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .setup-item {
-    color: var(--pico-color);
-  }
-
-  .setup-item strong {
-    color: var(--pico-color);
-    margin-right: 0.5rem;
-  }
-
-  @media (max-width: 768px) {
-    .my-setup-section {
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-    }
-  }
-
-  /* 5. BREW METHOD DISTRIBUTION */
+  /* 4. BREW METHOD DISTRIBUTION */
   .brew-method-section {
     background: var(--pico-card-background-color);
     border: 1px solid var(--pico-card-border-color);
@@ -599,44 +629,104 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
     }
   }
 
-  /* 6. RECENT LOGS TABLE */
+  /* 5. RECENT LOGS */
   .recent-logs-section {
     margin-bottom: 3rem;
   }
 
   .recent-logs-section h2 {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.75rem;
   }
 
-  .table-scroll-container {
-    position: relative;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
+  .recent-logs-list {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .recent-log-card {
+    display: grid;
+    gap: 1.25rem;
+    padding: 1.5rem;
+    border-radius: var(--pico-border-radius);
+    border: 1px solid var(--pico-card-border-color);
+    background: var(--pico-card-background-color);
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+  }
+
+  .recent-log-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .recent-log-date {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--pico-color);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .recent-log-method {
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    background: rgba(111, 78, 55, 0.12);
+    color: #5c3b25;
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  [data-theme='dark'] .recent-log-method {
+    background: rgba(157, 111, 79, 0.2);
+    color: rgba(255, 235, 219, 0.92);
+  }
+
+  .recent-log-details {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .detail-item {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .detail-item dt {
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--pico-muted-color);
+  }
+
+  .detail-item dd {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--pico-color);
+    font-weight: 500;
+  }
+
+  @media (min-width: 768px) {
+    .recent-logs-list {
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    }
+
+    .recent-log-details {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.25rem 1.5rem;
+    }
   }
 
   @media (max-width: 768px) {
     .recent-logs-section {
-      margin-bottom: 2rem;
+      margin-bottom: 2.25rem;
     }
 
-    table {
-      font-size: 0.875rem;
-    }
-
-    th,
-    td {
-      padding: 0.5rem 0.25rem;
-    }
-
-    .table-scroll-container::after {
-      content: '';
-      position: absolute;
-      right: 0;
-      top: 0;
-      bottom: 0;
-      width: 2rem;
-      background: linear-gradient(to left, var(--pico-background-color), transparent);
-      pointer-events: none;
+    .recent-log-card {
+      padding: 1.25rem;
     }
   }
 
