@@ -1,0 +1,13 @@
+---
+import { deleteSession, clearAuthCookie } from '../../lib/auth';
+
+export const prerender = false;
+
+const cookies = Astro.cookies;
+const sessionId = cookies.get('session_id')?.value ?? undefined;
+
+deleteSession(sessionId);
+clearAuthCookie(cookies);
+
+return Astro.redirect('/admin?logout=success');
+---

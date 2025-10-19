@@ -7,6 +7,9 @@ export const prerender = false;
 const cookies = Astro.cookies;
 const isAuthed = checkAuth(cookies);
 let loginError = '';
+const logoutNotice = Astro.url.searchParams.get('logout') === 'success'
+  ? 'You have been logged out successfully.'
+  : '';
 
 // Handle login form submission
 if (Astro.request.method === 'POST') {
@@ -28,6 +31,11 @@ if (Astro.request.method === 'POST') {
     !isAuthed ? (
       <section>
         <h1>Admin Login</h1>
+        {logoutNotice && (
+          <div style="padding: 1rem; margin: 1rem 0; background: #efe; border-radius: 4px; color: #060;">
+            {logoutNotice}
+          </div>
+        )}
         {loginError && (
           <div style="padding: 1rem; margin: 1rem 0; background: #fee; border-radius: 4px; color: #c00;">
             {loginError}
