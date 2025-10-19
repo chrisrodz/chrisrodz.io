@@ -58,20 +58,26 @@ function setRetryAfterHeader(retryAfterMs?: number) {
 }
 
 function formatCooldownMessage(retryAfterMs?: number) {
-  if (!retryAfterMs) return 'Too many login attempts. Please try again later.';
+  const refreshHint = ' Refresh the page once the cooldown expires to try again.';
+  if (!retryAfterMs) return `Too many login attempts. Please try again later.${refreshHint}`;
   const seconds = Math.max(1, Math.ceil(retryAfterMs / 1000));
   if (seconds < 60) {
-    return `Too many login attempts. Please try again in ${seconds} seconds.`;
+    return `Too many login attempts. Please try again in ${seconds} seconds.${refreshHint}`;
   }
   const minutes = Math.ceil(seconds / 60);
-  return `Too many login attempts. Please try again in ${minutes} minute${minutes === 1 ? '' : 's'}.`;
+  return `Too many login attempts. Please try again in ${minutes} minute${minutes === 1 ? '' : 's'}.${refreshHint}`;
 }
 
 const rateLimitKey = getClientIdentifier();
+let rateLimitState = getRateLimitState(rateLimitKey, RATE_LIMIT_OPTIONS);
+
+if (!rateLimitState.allowed) {
+  setRetryAfterHeader(rateLimitState.retryAfter);
+  loginError = formatCooldownMessage(rateLimitState.retryAfter);
+}
 
 // Handle login form submission
 if (Astro.request.method === 'POST') {
-  const rateLimitState = getRateLimitState(rateLimitKey, RATE_LIMIT_OPTIONS);
   if (!rateLimitState.allowed) {
     Astro.response.status = 429;
     setRetryAfterHeader(rateLimitState.retryAfter);
@@ -95,18 +101,18 @@ if (Astro.request.method === 'POST') {
       setAuthCookie(cookies, sessionId);
       return Astro.redirect('/admin/cafe');
     } else {
-      const updatedState = recordFailedAttempt(rateLimitKey, RATE_LIMIT_OPTIONS);
-      if (!updatedState.allowed) {
+      rateLimitState = recordFailedAttempt(rateLimitKey, RATE_LIMIT_OPTIONS);
+      if (!rateLimitState.allowed) {
         Astro.response.status = 429;
-        setRetryAfterHeader(updatedState.retryAfter);
-        loginError = formatCooldownMessage(updatedState.retryAfter);
+        setRetryAfterHeader(rateLimitState.retryAfter);
+        loginError = formatCooldownMessage(rateLimitState.retryAfter);
         console.warn(
           JSON.stringify({
             event: 'admin_login_blocked',
             reason: 'rate_limit_exceeded',
             identifier: rateLimitKey,
-            blockedUntil: updatedState.blockedUntil ?? null,
-            retryAfterMs: updatedState.retryAfter ?? null,
+            blockedUntil: rateLimitState.blockedUntil ?? null,
+            retryAfterMs: rateLimitState.retryAfter ?? null,
           }),
         );
       } else {
@@ -115,6 +121,8 @@ if (Astro.request.method === 'POST') {
     }
   }
 }
+
+const isRateLimited = !rateLimitState.allowed;
 ---
 
 <Layout title="Admin Dashboard">
@@ -128,7 +136,7 @@ if (Astro.request.method === 'POST') {
           </div>
         )}
         <form method="POST">
-          <fieldset>
+          <fieldset disabled={isRateLimited}>
             <label for="password">Admin Password</label>
             <input
               type="password"
