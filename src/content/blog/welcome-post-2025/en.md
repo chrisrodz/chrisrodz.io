@@ -1,17 +1,15 @@
 ---
-title: 'Hello World'
-description: 'Welcome to my website where I will be writing some thoughts out loud'
-slug: 'welcome-to-my-site'
-pubDate: 2025-10-09
+title: 'Welcome to My Corner of the Internet'
+description: 'Meet me, learn why I built this site, and follow along as I build with AI'
+slug: 'welcome'
+pubDate: 2025-10-18
 locale: en
 ---
 
-If you've made it here and we haven't met, it's a pleasure to see you here. I'm Christian Rodríguez, from Bayamón, Puerto Rico. I'm a software engineer, amateur triathlete, and recent dad of the most beautiful girl in the world.
+If you made it this far and don't know me, pleasure to meet you. I'm Christian Rodríguez, from Bayamón, Puerto Rico. I'm a software engineer, amateur triathlete, and recently became dad to the most beautiful little girl in the world.
 
-Not sure if it has to do with becoming a father, or the advent of AI coding tools, that have given me fresh inspiration to create stuff, to deploy code to production for myself. Thinking about some basic things that folks in my industry have I thought I should definitely have my own website. I mean, I've owned my own domain for a few years now. I've only been using it for my [e-mail](mailto:hey@chrisrodz.io). Shipping my personal website seems like the perfect testing ground for any new ideas I have in the short-term.
+I'm not sure if it has to do with being a new father, or if it's the emergence of all these AI tools, but I've gotten this fresh inspiration to create stuff and write code for personal projects. The first thing that came to mind is that I should have my own website. I mean, I've owned my own [domain](https://chrisrodz.io) for several years now, though I was only using it for my [email](mailto:hey@chrisrodz.io). Getting the website up and running seemed like an excellent testing ground for whatever personal project type ideas I come up with. Plus it serves as home for this blog, where I'll be sharing my adventure building with AI.
 
-But, what can I put on my website **today**? I'm a bit shy to have a website that's just a landing page with my face on it. What occurs to me right now is just my words. In the middle of a bunch of text (and code) written by my AI coding helper, I think it's a cool idea to have my own words written (typed) by me with sweat and tears.
+The plan is to build, and write about what I learn along the way. For now the website has my [Coffee Diary](https://chrisrodz.io/en/cafe), a tool I made to better track my daily coffee brewing. I get different beans every month from [Cuela](https://cuela.coffee/), and when I get repeat beans I have to find that perfect configuration all over again. With this tool I can capture that data for my personal use, and create something that fits into my daily routine.
 
-Thus, I created a new Github repo and chrisrodz.io was breathed into life. The plan is to add a few personal features I'm interested in and have somewhere to deploy them. The other plan is to write some content in this blog. I've been reflecting a lot on the digital footprint we leave behind. I want to leave a stronger footprint that is more my own, so that Alina can discover it when she grows up.
-
-This is the part where I invite you to subscribe to my RSS feed or buy me a coffee, but I haven't had time to set any of that up. God bless and see you next time friend.
+Next up, I'll be writing more about the process of creating this website and the coffee diary, the things AI helped me with and the things I had to do draw on my professional experience for. Subscribe to my [RSS feed](https://chrisrodz.io/rss.xml) if you'd like to keep up with that content. God bless and see you next time buddy.

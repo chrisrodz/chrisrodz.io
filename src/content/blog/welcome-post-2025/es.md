@@ -1,17 +1,15 @@
 ---
-title: 'Hola Mundo'
-description: 'Presentando mi nuevo website personal donde voy a estar escribiendo de vez en cuando.'
-slug: 'bienvenido-a-mi-sitio'
-pubDate: 2025-10-09
+title: 'Bienvenido a Mi Esquinita del Internet'
+description: 'Presentando quien soy, porque este website, y lo que viene por ahí'
+slug: 'bienvenido'
+pubDate: 2025-10-18
 locale: es
 ---
 
 Si llegaste hasta aquí y no me conoces, un placer. Soy Christian Rodríguez, de Bayamón, Puerto Rico. Soy ingeniero de software, triatleta aficionado, y recientemente papa de la nena más linda del mundo.
 
-No se si tiene que ver con ser padre nuevo, o si es el surgir de todas las herramientas de IA, que me ha dado una inspiración nueva de crear cosas, de poner código a correr en producción para mi uso personal. Pensando en las cosas básicas que una persona de mi industria debe tener, pensé que debo tener mi propio website. Digo, ya yo soy dueño de mi dominio hace varios años. Solamente le estaba dando uso para mi [e-mail](mailto:hey@chrisrodz.io). Poner el website a correr me parece un excelente testing ground para lo que sea que quiera montar a corto plazo.
+No se si tiene que ver con ser padre nuevo, o si es el surgir de todas las herramientas de IA, que me ha dado una inspiración nueva de crear cosas y poner código a correr para proyectos personales. Lo primero que se me ocurrió es que debo tener mi propio website. Digo, ya yo soy dueño de mi [domain](https://chrisrodz.io) hace varios años aunque solamente le estaba dando uso para mi [email](mailto:hey@chrisrodz.io). Poner el website a correr me parece un excelente testing ground para las ideas que tenga de uso personal. Aparte de que sirve como el hogar para este blog, donde estaré compartiendo mi aventura codeando con AI.
 
-Pero, qué tener en el website **hoy**? Yo soy tímido como para tener algo que sea solamente un landing page con mi cara. Lo que se me ocurre de pronto son mis palabras. Entre medio de mucho texto (y código) escrito por la IA que me ayuda, pienso que esta chevere poner mis propias palabras escritas (typeadas) por mi a pulmón.
+El plan es construir, ya sea aquí u otros proyectos fuera del site, y escribir sobre lo que vaya aprendiendo en el camino. Por ahora el website cuenta con mi [Diario de Café](https://chrisrodz.io/cafe), una herramienta que hice para tener mejor tracking de mi preparación de café diaria. Yo recibo café distinto todos los meses de [Cuela](https://cuela.coffee/), y cuando me repiten un grano tengo que volver a encontrar esa configuración perfecta. Con esta herramienta logro capturar esa data para mi uso personal, y crear algo que se inserta en mi rutina diaria.
 
-Así es como decidí entonces hacer un repo nuevo en Github y crear chrisrodz.io como Dios manda. El plan es añadir un par de features personales que me interesan al website. Y el otro plan es escribir un poco de contenido en este blog. Pienso mucho en la huella digital que todos dejamos de cara al futuro. Y quiero dejar una huella más fuerte y más mia para que Alina la pueda descubrir cuando crezca.
-
-Ya aquí se supone que te invite a que te suscribas a mi RSS feed o me compres un café, pero no he tenido break de montar nada de eso. Que Dios te bendiga y nos vemos en la próxima amigo.
+Más adelante estaré escribiendo más sobre el proceso de crear este website y el diario de café, las cosas que el AI me ayudó y las cosas que tuve que hacer y contar con mi experiencia profesional. Te invite a que te suscribas a mi [RSS feed](https://chrisrodz.io/rss.xml) si quisieras enterarte sobre ese contenido. Que Dios te bendiga y nos vemos en la próxima amigo.
