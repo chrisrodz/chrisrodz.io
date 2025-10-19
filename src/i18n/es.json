@@ -7,7 +7,7 @@
   "nav": {
     "home": "Inicio",
     "blog": "Blog",
-    "cafe": "Dosis de café",
+    "cafe": "Diario de Café",
     "training": "Entrenamiento"
   },
   "footer": {
@@ -29,7 +29,7 @@
     "greeting": "¡Qué es la que hay!",
     "intro": {
       "paragraph1": "Soy Christian, ingeniero de software apasionado por construir cosas que faciliten la vida de los demás. Cuando no estoy sentado trabajando, estoy sentado en la bicicleta o pasando tiempo en familia.",
-      "paragraph2": "Escribo sobre software engineering, lecciones aprendidas de la vida, y lo que sea que valga la pena compartir. Aquí puedes ver lo más reciente:"
+      "paragraph2": "Estaré escribiendo sobre software engineering, lecciones aprendidas de la vida, y lo que sea que valga la pena compartir. Aquí puedes ver lo más reciente:"
     }
   },
   "blog": {
@@ -45,28 +45,28 @@
     "rssTitle": "Christian Rodriguez - Blog (Español)"
   },
   "cafe": {
-    "title": "Dosis de Café",
-    "metaDescription": "Un log del café que me preparo todos los días - registrando granos, métodos y calidad",
-    "heading": "Dosis de Café",
-    "subtitle": "Un log del café que me preparo todos los días, una taza a la vez",
+    "title": "Diario de Café",
+    "metaDescription": "Un diario de mi café matutino - registrando granos, métodos y calidad",
+    "heading": "Diario de Café",
+    "subtitle": "Un diario de mi café matutino, una taza a la vez",
     "errors": {
       "heading": "Data no disponible",
-      "notConfigured": "La base de datos aún no está configurada. ¡El log de café estará disponible pronto!",
-      "failed": "Error al cargar logs de café",
+      "notConfigured": "La base de datos aún no está configurada. ¡El diario de café estará disponible pronto!",
+      "failed": "Error al cargar diarios de café",
       "setupButton": "Configurar base de datos →"
     },
     "noLogsYet": {
-      "heading": "Sin Logs de Café Aún",
-      "message": "La jornada del log de café apenas comienza. ¡Vuelve pronto para actualizaciones!"
+      "heading": "El diario de café está vacío",
+      "message": "La jornada del diario de café apenas comienza. ¡Vuelve pronto para actualizaciones!"
     },
     "why": {
-      "text": "Documentando mi jornada de espresso con una Breville Bambino Plus - calibrando shots, registrando granos, y construyendo en público."
+      "text": "Documentando mi jornada de café para tener mejor data sobre la mejor preparación para cada taza."
     },
     "todaysCoffee": {
       "heading": "Café de Hoy",
       "emptyIcon": "",
       "emptyHeading": "No hay café registrado hoy",
-      "emptyMessage": "Aún no he preparado nada...",
+      "emptyMessage": "Aún no he preparado nada... (o me estoy tomando un break de cafeína)",
       "grind": "Molienda",
       "ratio": "proporción",
       "dialedIn": "¡Calibrado!",
@@ -76,7 +76,7 @@
       "notes": "Notas"
     },
     "stats": {
-      "totalLogs": "Total de Logs",
+      "totalLogs": "Entradas en el diario",
       "thisWeek": "Esta Semana",
       "avgRating": "Calificación Promedio",
       "avgDose": "Dosis Promedio"
@@ -94,7 +94,7 @@
       "brewMethods": "Distribución de Métodos de Preparación",
       "qualityOverTime": "Calidad en el Tiempo (Últimos 30 Días)",
       "topBeans": "Granos Más Usados",
-      "recentBrews": "Preparaciones Recientes"
+      "recentBrews": "Todas las entradas"
     },
     "misc": {
       "brews": "preparaciones",
