@@ -15,7 +15,8 @@
     "rss": "RSS",
     "email": "Email",
     "github": "GitHub",
-    "x": "X"
+    "x": "X",
+    "logout": "Logout"
   },
   "common": {
     "backToHome": "Back to home",

@@ -28,7 +28,8 @@ export function validateSession(sessionId: string | undefined): boolean {
   return true;
 }
 
-export function deleteSession(sessionId: string): void {
+export function deleteSession(sessionId: string | undefined): void {
+  if (!sessionId) return;
   sessions.delete(sessionId);
 }
 

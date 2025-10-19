@@ -14,6 +14,7 @@ export type TranslationKey =
   | 'footer.email'
   | 'footer.github'
   | 'footer.x'
+  | 'footer.logout'
   | 'common.backToHome'
   | 'common.loading'
   | 'common.error'
