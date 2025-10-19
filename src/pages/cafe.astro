@@ -121,17 +121,27 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
                       <header class="coffee-entry-header">
                         <span class="time-compare time-compare--badge" data-local-time={isoString}>
                           <span class="time-compare__zone">
-                            <span class="time-compare__value">{formatPuertoRicoTime(brewDate)}</span>
-                            <small class="time-compare__label">{t('cafe.timeComparison.puertoRico')}</small>
+                            <span class="time-compare__value">
+                              {formatPuertoRicoTime(brewDate)}
+                            </span>
+                            <small class="time-compare__label">
+                              {t('cafe.timeComparison.puertoRico')}
+                            </small>
                           </span>
                           <span class="time-compare__zone time-compare__zone--local">
-                            <span class="time-compare__value" data-local-time-display>{t('common.loading')}</span>
-                            <small class="time-compare__label">{t('cafe.timeComparison.local')}</small>
+                            <span class="time-compare__value" data-local-time-display>
+                              {t('common.loading')}
+                            </span>
+                            <small class="time-compare__label">
+                              {t('cafe.timeComparison.local')}
+                            </small>
                           </span>
                         </span>
                         <div class="coffee-method-bean">
                           <span class="coffee-method">{log.brew_method}</span>
-                          <span class="coffee-bean">{log.bean?.bean_name || t('cafe.misc.unknown')}</span>
+                          <span class="coffee-bean">
+                            {log.bean?.bean_name || t('cafe.misc.unknown')}
+                          </span>
                         </div>
                       </header>
 
@@ -139,7 +149,8 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
                         <div class="metric-block">
                           <span class="metric-label">{t('cafe.todaysCoffee.ratio')}</span>
                           <span class="metric-value">
-                            {log.dose_grams}g → {log.yield_grams}g · {calculateRatio(log.dose_grams, log.yield_grams)}
+                            {log.dose_grams}g → {log.yield_grams}g ·{' '}
+                            {calculateRatio(log.dose_grams, log.yield_grams)}
                           </span>
                         </div>
                         <div class="metric-block">
@@ -153,7 +164,9 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
                         role="group"
                         aria-label={`${t('cafe.table.rating')}: ${log.quality_rating} out of 5`}
                       >
-                        <span class="rating-badge" aria-hidden="true">{log.quality_rating} / 5</span>
+                        <span class="rating-badge" aria-hidden="true">
+                          {log.quality_rating} / 5
+                        </span>
                         <span class="rating-text">
                           {log.quality_rating === 5
                             ? t('cafe.todaysCoffee.dialedIn')
@@ -243,11 +256,17 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
                       <span class="time-compare time-compare--subtle" data-local-time={isoString}>
                         <span class="time-compare__zone">
                           <span class="time-compare__value">{formatPuertoRicoTime(brewDate)}</span>
-                          <small class="time-compare__label">{t('cafe.timeComparison.puertoRico')}</small>
+                          <small class="time-compare__label">
+                            {t('cafe.timeComparison.puertoRico')}
+                          </small>
                         </span>
                         <span class="time-compare__zone time-compare__zone--local">
-                          <span class="time-compare__value" data-local-time-display>{t('common.loading')}</span>
-                          <small class="time-compare__label">{t('cafe.timeComparison.local')}</small>
+                          <span class="time-compare__value" data-local-time-display>
+                            {t('common.loading')}
+                          </span>
+                          <small class="time-compare__label">
+                            {t('cafe.timeComparison.local')}
+                          </small>
                         </span>
                       </span>
                     </div>
@@ -285,10 +304,17 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
 <script is:inline>
   (() => {
     const updateLocalTimes = () => {
-      const formatter = new Intl.DateTimeFormat(undefined, {
+      const localFormatter = new Intl.DateTimeFormat(undefined, {
         hour: 'numeric',
         minute: '2-digit',
         hour12: true,
+      });
+
+      const prFormatter = new Intl.DateTimeFormat(undefined, {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+        timeZone: 'America/Puerto_Rico',
       });
 
       document.querySelectorAll('[data-local-time]').forEach((element) => {
@@ -298,9 +324,20 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
         const date = new Date(iso);
         if (Number.isNaN(date.getTime())) return;
 
+        const localTime = localFormatter.format(date);
+        const prTime = prFormatter.format(date);
+
+        // Update local time display
         element.querySelectorAll('[data-local-time-display]').forEach((target) => {
-          target.textContent = formatter.format(date);
+          target.textContent = localTime;
         });
+
+        // Hide local time zone if it matches Puerto Rico time
+        if (localTime === prTime) {
+          element.querySelectorAll('.time-compare__zone--local').forEach((zone) => {
+            zone.style.display = 'none';
+          });
+        }
       });
     };
 
@@ -343,7 +380,8 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
   /* 2. TODAY'S COFFEE HERO CARD */
   .todays-coffee-section {
     position: relative;
-    background: linear-gradient(135deg, rgba(111, 78, 55, 0.12), transparent 55%),
+    background:
+      linear-gradient(135deg, rgba(111, 78, 55, 0.12), transparent 55%),
       var(--pico-card-background-color);
     border: 1px solid var(--pico-card-border-color);
     border-radius: calc(var(--pico-border-radius) * 1.25);
@@ -521,7 +559,8 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
   }
 
   .metric-value {
-    font-family: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Monaco, Consolas,
+    font-family:
+      'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Monaco, Consolas,
       'Liberation Mono', 'Courier New', monospace;
     font-size: clamp(0.95rem, 2.4vw, 1.05rem);
     color: var(--pico-color);
