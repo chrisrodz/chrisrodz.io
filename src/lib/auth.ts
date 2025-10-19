@@ -1,5 +1,6 @@
 import { nanoid } from 'nanoid';
 import type { AstroCookies } from 'astro';
+import { scryptSync, timingSafeEqual } from 'node:crypto';
 
 // In-memory session store (in production, use Redis or database)
 const sessions = new Map<string, { createdAt: number }>();
@@ -52,10 +53,29 @@ export function checkAuth(cookies: AstroCookies): boolean {
 }
 
 export function verifyAdminSecret(password: string): boolean {
-  const adminSecret = import.meta.env.ADMIN_SECRET;
-  if (!adminSecret) {
-    console.error('ADMIN_SECRET not configured');
+  const storedHashHex = import.meta.env.ADMIN_SECRET_HASH;
+  const salt = import.meta.env.ADMIN_SECRET_SALT;
+
+  if (!storedHashHex || !salt) {
+    console.warn(
+      'Admin secret hash or salt not configured; rejecting authentication attempt',
+    );
     return false;
   }
-  return password === adminSecret;
+
+  try {
+    const storedHash = Buffer.from(storedHashHex, 'hex');
+
+    if (storedHash.length === 0) {
+      console.warn('Configured admin secret hash is invalid; rejecting authentication attempt');
+      return false;
+    }
+
+    const computedHash = scryptSync(password, salt, storedHash.length);
+
+    return timingSafeEqual(computedHash, storedHash);
+  } catch (error) {
+    console.warn('Failed to verify admin secret; rejecting authentication attempt', error);
+    return false;
+  }
 }
