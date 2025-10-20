@@ -39,6 +39,13 @@
   --pico-form-element-border-color: #c5cbd5;
 }
 
+/* Establish predictable sizing and prevent layout overflow */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 /* Ensure proper horizontal spacing on all screen sizes */
 .container,
 main.container,
@@ -76,12 +83,44 @@ nav.container {
 /* Custom base styles */
 html {
   scroll-behavior: smooth;
+  width: 100%;
+  overflow-x: hidden;
 }
 
 body {
   font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  overflow-x: hidden;
+}
+
+main {
+  width: 100%;
+  min-width: 0;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+iframe {
+  max-width: 100%;
+}
+
+section,
+article,
+.container,
+nav.container {
+  min-width: 0;
 }
 
 /* Better focus states */
@@ -122,6 +161,9 @@ nav.main-nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 1rem;
+  width: 100%;
+  overflow-x: clip;
 }
 
 nav.main-nav ul {
@@ -130,6 +172,7 @@ nav.main-nav ul {
   align-items: center;
   margin: 0;
   padding: 0;
+  min-width: 0;
 }
 
 nav.main-nav ul li {
@@ -142,6 +185,25 @@ nav.main-nav ul:first-child a {
   font-family: var(--pico-font-family); /* Use Inter sans-serif instead of Crimson Text */
   font-size: 1.25rem;
   font-weight: 600;
+}
+
+nav.main-nav > ul:first-child {
+  flex: 1 1 0;
+  min-width: 0;
+  gap: 1rem;
+}
+
+nav.main-nav .nav-links {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+nav.main-nav .nav-actions {
+  display: flex;
+  align-items: center;
 }
 
 nav.main-nav a {
@@ -157,6 +219,7 @@ nav.main-nav a {
   font-feature-settings:
     'liga' 1,
     'clig' 1; /* Enable ligatures for better letter spacing */
+  min-width: 0;
 }
 
 nav.main-nav ul:first-child a:hover,
@@ -206,11 +269,30 @@ nav.main-nav .icon-button {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    row-gap: 0.75rem;
+    column-gap: 0.5rem;
+  }
+
+  nav.main-nav > ul {
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 0.75rem;
+    flex: 1 1 100%;
+  }
+
+  nav.main-nav > ul:first-child {
+    justify-content: flex-start;
+    column-gap: 0.75rem;
   }
 
   nav.main-nav .nav-links {
     display: flex;
     gap: 0.75rem;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    width: 100%;
+    min-width: 0;
   }
 
   /* Hide the mobile menu toggle */
@@ -241,6 +323,8 @@ footer {
   text-align: center;
   color: var(--pico-muted-color);
   font-size: 0.875rem;
+  width: 100%;
+  overflow-x: clip;
 }
 
 .footer-content {
@@ -249,6 +333,7 @@ footer {
   align-items: center;
   flex-wrap: wrap;
   gap: 1rem;
+  width: 100%;
 }
 
 /* Mobile: links above copyright */
@@ -275,6 +360,14 @@ footer a {
 
 footer a:hover {
   color: var(--pico-primary);
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+  width: 100%;
+  justify-content: center;
 }
 
 /* Language toggle */
@@ -328,6 +421,11 @@ main a {
   align-items: center;
   padding: 0.5rem 0.25rem;
   line-height: 1.5;
+  gap: 0.25rem;
+  max-width: 100%;
+  flex-wrap: wrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 /* Ensure CTA-style links have proper touch targets */
@@ -338,11 +436,17 @@ section a {
   display: inline-flex;
   align-items: center;
   padding: 0.75rem 0.5rem;
+  gap: 0.25rem;
+  max-width: 100%;
+  flex-wrap: wrap;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 /* Markdown/prose content styling */
 .prose {
   max-width: none;
+  overflow-wrap: anywhere;
 }
 
 .prose h1,
