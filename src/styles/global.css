@@ -204,29 +204,57 @@ nav.main-nav .icon-button {
 /* Mobile: keep nav items visible, no hamburger menu needed */
 @media (max-width: 767px) {
   nav.main-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    row-gap: 0.75rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
   }
 
   nav.main-nav > ul {
-    flex-wrap: wrap;
     width: 100%;
     gap: 0.75rem;
+    flex-wrap: wrap;
   }
 
   nav.main-nav > ul:first-child {
     justify-content: space-between;
+    column-gap: 1rem;
+  }
+
+  nav.main-nav > ul:first-child li {
+    flex: 1 1 45%;
+    min-width: 0;
+  }
+
+  nav.main-nav > ul:first-child a {
+    width: auto;
+    text-align: center;
+    white-space: nowrap;
   }
 
   nav.main-nav .nav-links {
-    display: flex;
-    gap: 0.75rem;
-    justify-content: flex-end;
-    flex-wrap: wrap;
+    justify-content: center;
     width: 100%;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  nav.main-nav .nav-links li {
+    flex: 0 1 auto;
+  }
+
+  nav.main-nav .nav-links .nav-actions {
+    display: flex;
+  }
+
+  nav.main-nav .nav-links .nav-actions > * {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  nav.main-nav .nav-links button,
+  nav.main-nav .nav-links a {
+    width: 100%;
+    justify-content: center;
   }
 
   /* Hide the mobile menu toggle */
@@ -294,6 +322,7 @@ footer a:hover {
 }
 
 /* Language toggle */
+nav.main-nav a.lang-toggle,
 .lang-toggle {
   display: inline-flex;
   align-items: center;
