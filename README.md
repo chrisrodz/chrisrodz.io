@@ -28,8 +28,9 @@ SUPABASE_URL=your_project_url
 SUPABASE_ANON_KEY=your_anon_key
 SUPABASE_SERVICE_KEY=your_service_key
 
-# Admin (generate a random string for authentication)
-ADMIN_SECRET=your_secure_random_string
+# Admin (store hashed secret values only)
+ADMIN_SECRET_SALT=hex_encoded_salt
+ADMIN_SECRET_HASH=hex_encoded_hash
 
 # Strava (optional, for training sync)
 STRAVA_CLIENT_ID=your_strava_client_id
@@ -44,6 +45,32 @@ yarn dev
 ```
 
 Visit http://localhost:4321 to see your site!
+
+#### Generate the admin secret hash
+
+The admin panel now verifies a hash instead of the raw secret. Generate these values offline and add them to `.env.local`:
+
+1. Pick a long, random admin password and keep it private.
+2. Generate a random salt (16 bytes shown below):
+
+   ```bash
+   node -e "console.log(require('crypto').randomBytes(16).toString('hex'))"
+   ```
+
+3. Derive the hash using Node's `scrypt` implementation (64-byte output):
+
+   ```bash
+   node -e "const crypto = require('crypto'); const [secret, salt] = process.argv.slice(1); const hash = crypto.scryptSync(secret, salt, 64); console.log(hash.toString('hex'));" "your-admin-password" "hex_encoded_salt"
+   ```
+
+4. Store only the salt and hash in `.env.local`:
+
+   ```bash
+   ADMIN_SECRET_SALT=hex_encoded_salt
+   ADMIN_SECRET_HASH=hex_encoded_hash
+   ```
+
+The plain-text password should never be committed or stored alongside the environment file.
 
 ### 4. Set up Supabase (optional but recommended)
 
