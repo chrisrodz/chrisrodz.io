@@ -163,7 +163,7 @@ nav.main-nav {
   align-items: center;
   gap: 1rem;
   width: 100%;
-  overflow-x: clip;
+  overflow: visible;
 }
 
 nav.main-nav ul {
