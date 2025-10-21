@@ -157,3 +157,23 @@ export interface CoffeeLogRow {
 export interface CoffeeLogWithBean extends CoffeeLogRow {
   bean?: CoffeeBeanRow | null;
 }
+
+/**
+ * API Response Types
+ */
+export type ApiErrorType = 'validation' | 'network' | 'auth' | 'server' | 'unknown';
+
+export interface ApiErrorResponse {
+  error: string;
+  errorType?: ApiErrorType;
+  field?: string;
+  details?: Record<string, unknown>;
+}
+
+export interface ApiSuccessResponse<T = unknown> {
+  success: true;
+  data?: T;
+  message?: string;
+}
+
+export type ApiResponse<T = unknown> = ApiSuccessResponse<T> | ApiErrorResponse;
