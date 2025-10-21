@@ -5,6 +5,16 @@ import { z } from 'zod';
  */
 export const BREW_METHODS = ['Espresso', 'AeroPress', 'French Press'] as const;
 
+export type BrewMethod = (typeof BREW_METHODS)[number];
+
+/**
+ * Brew methods that might be stored in historical data.
+ * Supabase currently enforces the title-cased variants above, but some
+ * seed/test data and legacy imports may include lowercase or additional
+ * strings like `v60`.
+ */
+export type BrewMethodLike = BrewMethod | Lowercase<BrewMethod> | 'V60' | 'v60';
+
 /**
  * Schema for adding/editing coffee beans
  */
@@ -131,7 +141,7 @@ export interface CoffeeBeanRow {
 export interface CoffeeLogRow {
   id: string;
   created_at: string;
-  brew_method: (typeof BREW_METHODS)[number];
+  brew_method: BrewMethodLike;
   bean_id: string | null;
   dose_grams: number;
   yield_grams: number | null;
