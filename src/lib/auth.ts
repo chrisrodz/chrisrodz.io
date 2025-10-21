@@ -1,6 +1,7 @@
 import { nanoid } from 'nanoid';
 import type { AstroCookies } from 'astro';
 import { scryptSync, timingSafeEqual } from 'node:crypto';
+import { config } from './config';
 
 // In-memory session store (in production, use Redis or database)
 const sessions = new Map<string, { createdAt: number }>();
@@ -37,7 +38,7 @@ export function deleteSession(sessionId: string | undefined): void {
 export function setAuthCookie(cookies: AstroCookies, sessionId: string): void {
   cookies.set('session_id', sessionId, {
     httpOnly: true,
-    secure: import.meta.env.PROD,
+    secure: config.env.isProd,
     sameSite: 'lax',
     maxAge: SESSION_DURATION / 1000, // Convert to seconds
     path: '/',
@@ -54,15 +55,13 @@ export function checkAuth(cookies: AstroCookies): boolean {
 }
 
 export function verifyAdminSecret(password: string): boolean {
-  const storedHashHex = import.meta.env.ADMIN_SECRET_HASH;
-  const salt = import.meta.env.ADMIN_SECRET_SALT;
-
-  if (!storedHashHex || !salt) {
-    console.warn(
-      'Admin secret hash or salt not configured; rejecting authentication attempt',
-    );
+  if (!config.auth.isConfigured()) {
+    console.warn('Admin secret hash or salt not configured; rejecting authentication attempt');
     return false;
   }
+
+  const storedHashHex = config.auth.adminSecretHash!;
+  const salt = config.auth.adminSecretSalt!;
 
   try {
     const storedHash = Buffer.from(storedHashHex, 'hex');
