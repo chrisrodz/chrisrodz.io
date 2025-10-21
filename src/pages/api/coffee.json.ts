@@ -119,7 +119,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         return successResponse(newBean, 'Bean added successfully', 201);
       } catch (error) {
         if (error instanceof ZodError) {
-          const firstError = error.errors[0];
+          const firstError = error.issues[0];
           return errorResponse(
             firstError.message,
             400,
@@ -161,7 +161,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
         return successResponse(newLog, 'Coffee logged successfully', 201);
       } catch (error) {
         if (error instanceof ZodError) {
-          const firstError = error.errors[0];
+          const firstError = error.issues[0];
           return errorResponse(
             firstError.message,
             400,
