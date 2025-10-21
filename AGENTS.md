@@ -45,7 +45,16 @@ yarn db:pull          # Pull schema from dev DB
 
 2. **Make changes** on the feature branch
    - Test locally with `yarn dev`
-   - Build to verify: `yarn build`
+   - **CRITICAL**: Run full verification before committing:
+     ```bash
+     yarn build
+     ```
+     This runs:
+     - `yarn generate:i18n` - Generate i18n types
+     - `astro check` - TypeScript type checking
+     - `astro build` - Production build
+   - Fix any TypeScript errors or build failures before committing
+   - The build must pass completely with zero errors
 
 3. **Commit AND push together** (never commit without pushing):
 
@@ -577,6 +586,52 @@ See `docs/README.md` for a complete index of all available documentation.
 10. **Spanish is default**: All non-prefixed URLs (`/about`, `/blog/slug`) serve Spanish content. English uses `/en/` prefix.
 11. **Content/Copy Review**: Whenever adding or updating user-facing text, **do a manual review in the browser before committing**. This includes homepage copy, headings, descriptions, and any translation content. Pre-commit hooks validate i18n completeness but not content accuracy or tone.
 
+## Common TypeScript Errors & Solutions
+
+### Zod Error Handling (Zod v4)
+
+**Problem**: In Zod v4, the property name changed from `errors` to `issues`.
+
+```typescript
+// ❌ Wrong (Zod v3 API)
+if (error instanceof ZodError) {
+  const firstError = error.errors[0];  // TypeScript error!
+}
+
+// ✅ Correct (Zod v4 API)
+if (error instanceof ZodError) {
+  const firstError = error.issues[0];  // Works correctly
+}
+```
+
+**Always use `error.issues` for Zod v4.x** when accessing validation errors.
+
+### Verification Checklist Before Committing
+
+To prevent deployment failures, **ALWAYS** run these checks:
+
+1. **Type Check**: `yarn build` (includes `astro check`)
+   - Catches TypeScript errors that would fail in production
+   - Verifies all imports and type definitions are correct
+   - Must pass with zero errors
+
+2. **Lint Check**: `yarn lint` (optional but recommended)
+   - Catches code quality issues
+   - Identifies unused variables and imports
+
+3. **Format Check**: `yarn format:check`
+   - Ensures code is properly formatted
+   - Pre-commit hooks handle this automatically
+
+**Golden Rule**: If `yarn build` fails locally, it will fail on Vercel. Fix all errors before committing.
+
+### Common Build Failures
+
+1. **Property does not exist on type**: Usually indicates incorrect API usage (like `errors` vs `issues`)
+2. **Cannot find module**: Missing imports or incorrect import paths
+3. **Type 'X' is not assignable to type 'Y'**: Type mismatch, often from incorrect function signatures
+4. **Unused variables/imports**: While not fatal, clean these up to pass strict checks
+
 ---
 
-**Last updated**: 2025-10-17 (Copy review reminder added)
+**Last updated**: 2025-10-21 (Added verification and TypeScript error sections)

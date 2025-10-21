@@ -183,32 +183,40 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
       formData.append('brew_time', brewTimeISO);
       if (notes.trim()) formData.append('notes', notes.trim());
 
-      const response = await fetch(window.location.pathname, {
+      const response = await fetch('/api/coffee.json', {
         method: 'POST',
         body: formData,
+        credentials: 'same-origin',
       });
 
-      // If server redirected us (e.g., to /cafe page), follow the redirect
-      if (response.redirected) {
-        window.location.href = response.url;
-        return;
+      // Parse JSON response
+      let jsonData;
+      try {
+        jsonData = await response.json();
+      } catch {
+        throw new Error('Error de red: No se pudo procesar la respuesta del servidor');
       }
 
-      const html = await response.text();
+      // Check for errors in the response
+      if (!response.ok || 'error' in jsonData) {
+        const errorMessage = jsonData.error || 'Error desconocido al guardar el registro';
 
-      // Check if there's an error in the response
-      if (html.includes('error-message') || !response.ok) {
-        // Extract error message from HTML if possible
-        const errorMatch = html.match(/<div[^>]*error-message[^>]*>(.*?)<\/div>/s);
-        const errorMessage = errorMatch
-          ? errorMatch[1].replace(/<[^>]*>/g, '').trim()
-          : 'Failed to save coffee log';
-        throw new Error(errorMessage);
+        // Categorize errors for better user feedback
+        if (response.status === 401) {
+          throw new Error('No autorizado. Por favor, inicia sesión nuevamente.');
+        } else if (response.status === 400 && jsonData.errorType === 'validation') {
+          const fieldName = jsonData.field || 'un campo';
+          throw new Error(`Error de validación en ${fieldName}: ${errorMessage}`);
+        } else if (response.status >= 500) {
+          throw new Error('Error del servidor. Por favor, intenta de nuevo más tarde.');
+        } else {
+          throw new Error(errorMessage);
+        }
       }
 
       setSubmitStatus({
         type: 'success',
-        message: '¡Café registrado exitosamente!',
+        message: jsonData.message || '¡Café registrado exitosamente!',
       });
 
       // Clear draft on successful submission
@@ -218,10 +226,20 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
       setRating(0);
       setNotes('');
     } catch (error) {
-      setSubmitStatus({
-        type: 'error',
-        message: error instanceof Error ? error.message : 'Ocurrió un error',
-      });
+      console.error('Error submitting coffee log:', error);
+
+      // Handle network errors
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        setSubmitStatus({
+          type: 'error',
+          message: 'Error de red: No se pudo conectar con el servidor. Verifica tu conexión.',
+        });
+      } else {
+        setSubmitStatus({
+          type: 'error',
+          message: error instanceof Error ? error.message : 'Ocurrió un error inesperado',
+        });
+      }
     } finally {
       setIsSubmitting(false);
     }
