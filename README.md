@@ -1,7 +1,6 @@
 # Personal Site - Christian Rodriguez
 
 [![Vercel Production Deployment](https://vercelbadge.vercel.app/api/chrisrodz/chrisrodz.io)](https://chrisrodz.io)
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/chrisrodz/chrisrodz.io)
 
 A modern personal website built with Astro, featuring a blog, coffee tracking, and training logs.
 
