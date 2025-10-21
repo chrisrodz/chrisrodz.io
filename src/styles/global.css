@@ -173,6 +173,7 @@ nav.main-nav ul {
   margin: 0;
   padding: 0;
   min-width: 0;
+  flex-wrap: wrap;
 }
 
 nav.main-nav ul li {
@@ -191,6 +192,7 @@ nav.main-nav > ul:first-child {
   flex: 1 1 0;
   min-width: 0;
   gap: 1rem;
+  justify-content: flex-start;
 }
 
 nav.main-nav .nav-links {
@@ -198,6 +200,7 @@ nav.main-nav .nav-links {
   gap: 1rem;
   justify-content: flex-end;
   flex: 0 1 auto;
+  margin-left: auto;
   min-width: 0;
 }
 
@@ -266,33 +269,20 @@ nav.main-nav .icon-button {
 /* Mobile: keep nav items visible, no hamburger menu needed */
 @media (max-width: 767px) {
   nav.main-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     flex-wrap: wrap;
     row-gap: 0.75rem;
     column-gap: 0.5rem;
   }
 
-  nav.main-nav > ul {
-    flex-wrap: wrap;
-    width: 100%;
-    gap: 0.75rem;
-    flex: 1 1 100%;
-  }
-
   nav.main-nav > ul:first-child {
-    justify-content: flex-start;
+    flex: 1 1 auto;
     column-gap: 0.75rem;
   }
 
   nav.main-nav .nav-links {
-    display: flex;
+    flex: 0 0 auto;
     gap: 0.75rem;
-    justify-content: flex-start;
-    flex-wrap: wrap;
-    width: 100%;
-    min-width: 0;
+    justify-content: flex-end;
   }
 
   /* Hide the mobile menu toggle */
