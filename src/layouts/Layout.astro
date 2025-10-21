@@ -1,5 +1,7 @@
 ---
 import '../styles/global.css';
+import Analytics from '@vercel/analytics/astro';
+import SpeedInsights from '@vercel/speed-insights/astro';
 import { getLocaleFromUrl, t, getAlternateUrl, type Locale } from '@/lib/i18n';
 import { checkAuth } from '@/lib/auth';
 
@@ -258,5 +260,8 @@ const currentYear = new Date().getFullYear().toString();
         document.cookie = `preferred-lang=${targetLang}; path=/; expires=${expires.toUTCString()}; SameSite=Lax`;
       });
     </script>
+
+    <Analytics />
+    <SpeedInsights />
   </body>
 </html>
