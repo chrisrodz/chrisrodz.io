@@ -39,12 +39,12 @@ describe('calculateStats', () => {
       {
         id: '1',
         brew_time: new Date().toISOString(),
-        brew_method: 'espresso',
+        brew_method: 'Espresso',
         quality_rating: 4,
         dose_grams: 18,
         yield_grams: 36,
+        grind_setting: 20,
         bean_id: '1',
-        user_id: 'test-user',
         created_at: new Date().toISOString(),
         notes: null,
         bean: null,
@@ -52,12 +52,12 @@ describe('calculateStats', () => {
       {
         id: '2',
         brew_time: new Date().toISOString(),
-        brew_method: 'v60',
+        brew_method: 'AeroPress',
         quality_rating: 5,
         dose_grams: 15,
         yield_grams: 250,
+        grind_setting: 25,
         bean_id: '1',
-        user_id: 'test-user',
         created_at: new Date().toISOString(),
         notes: null,
         bean: null,
@@ -78,12 +78,12 @@ describe('calculateStats', () => {
       {
         id: '1',
         brew_time: today.toISOString(),
-        brew_method: 'espresso',
+        brew_method: 'Espresso',
         quality_rating: 4,
         dose_grams: 18,
         yield_grams: 36,
+        grind_setting: 20,
         bean_id: '1',
-        user_id: 'test-user',
         created_at: new Date().toISOString(),
         notes: null,
         bean: null,
@@ -91,12 +91,12 @@ describe('calculateStats', () => {
       {
         id: '2',
         brew_time: tenDaysAgo.toISOString(),
-        brew_method: 'v60',
+        brew_method: 'AeroPress',
         quality_rating: 5,
         dose_grams: 15,
         yield_grams: 250,
+        grind_setting: 25,
         bean_id: '1',
-        user_id: 'test-user',
         created_at: new Date().toISOString(),
         notes: null,
         bean: null,
@@ -120,12 +120,12 @@ describe('getBrewMethodDistribution', () => {
       {
         id: '1',
         brew_time: new Date().toISOString(),
-        brew_method: 'espresso',
+        brew_method: 'Espresso',
         quality_rating: 4,
         dose_grams: 18,
         yield_grams: 36,
+        grind_setting: 20,
         bean_id: '1',
-        user_id: 'test-user',
         created_at: new Date().toISOString(),
         notes: null,
         bean: null,
@@ -133,12 +133,12 @@ describe('getBrewMethodDistribution', () => {
       {
         id: '2',
         brew_time: new Date().toISOString(),
-        brew_method: 'espresso',
+        brew_method: 'Espresso',
         quality_rating: 5,
         dose_grams: 18,
         yield_grams: 36,
+        grind_setting: 20,
         bean_id: '1',
-        user_id: 'test-user',
         created_at: new Date().toISOString(),
         notes: null,
         bean: null,
@@ -146,12 +146,12 @@ describe('getBrewMethodDistribution', () => {
       {
         id: '3',
         brew_time: new Date().toISOString(),
-        brew_method: 'v60',
+        brew_method: 'AeroPress',
         quality_rating: 4,
         dose_grams: 15,
         yield_grams: 250,
+        grind_setting: 25,
         bean_id: '1',
-        user_id: 'test-user',
         created_at: new Date().toISOString(),
         notes: null,
         bean: null,
@@ -161,12 +161,12 @@ describe('getBrewMethodDistribution', () => {
     const result = getBrewMethodDistribution(mockLogs);
     expect(result).toHaveLength(2);
     expect(result[0]).toEqual({
-      method: 'espresso',
+      method: 'Espresso',
       count: 2,
       percentage: 67, // 2/3 = 66.67, rounded to 67
     });
     expect(result[1]).toEqual({
-      method: 'v60',
+      method: 'AeroPress',
       count: 1,
       percentage: 33, // 1/3 = 33.33, rounded to 33
     });
@@ -177,12 +177,12 @@ describe('getBrewMethodDistribution', () => {
       {
         id: '1',
         brew_time: new Date().toISOString(),
-        brew_method: 'v60',
+        brew_method: 'AeroPress',
         quality_rating: 4,
         dose_grams: 15,
         yield_grams: 250,
+        grind_setting: 25,
         bean_id: '1',
-        user_id: 'test-user',
         created_at: new Date().toISOString(),
         notes: null,
         bean: null,
@@ -190,12 +190,12 @@ describe('getBrewMethodDistribution', () => {
       {
         id: '2',
         brew_time: new Date().toISOString(),
-        brew_method: 'espresso',
+        brew_method: 'Espresso',
         quality_rating: 5,
         dose_grams: 18,
         yield_grams: 36,
+        grind_setting: 20,
         bean_id: '1',
-        user_id: 'test-user',
         created_at: new Date().toISOString(),
         notes: null,
         bean: null,
@@ -203,12 +203,12 @@ describe('getBrewMethodDistribution', () => {
       {
         id: '3',
         brew_time: new Date().toISOString(),
-        brew_method: 'espresso',
+        brew_method: 'Espresso',
         quality_rating: 4,
         dose_grams: 18,
         yield_grams: 36,
+        grind_setting: 20,
         bean_id: '1',
-        user_id: 'test-user',
         created_at: new Date().toISOString(),
         notes: null,
         bean: null,
@@ -216,12 +216,12 @@ describe('getBrewMethodDistribution', () => {
       {
         id: '4',
         brew_time: new Date().toISOString(),
-        brew_method: 'espresso',
+        brew_method: 'Espresso',
         quality_rating: 5,
         dose_grams: 18,
         yield_grams: 36,
+        grind_setting: 20,
         bean_id: '1',
-        user_id: 'test-user',
         created_at: new Date().toISOString(),
         notes: null,
         bean: null,
@@ -229,7 +229,7 @@ describe('getBrewMethodDistribution', () => {
     ];
 
     const result = getBrewMethodDistribution(mockLogs);
-    expect(result[0].method).toBe('espresso'); // Most frequent first
+    expect(result[0].method).toBe('Espresso'); // Most frequent first
     expect(result[0].count).toBe(3);
   });
 });

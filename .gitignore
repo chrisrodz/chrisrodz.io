@@ -196,4 +196,4 @@ tramp
 # - yarn.lock (Yarn)
 # - package-lock.json (npm)
 # - pnpm-lock.yaml (pnpm)
-# - bun.lockb (Bun)
+# - bun.lockb (Bun)coverage/
