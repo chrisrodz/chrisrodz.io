@@ -28,44 +28,31 @@ export default function AddBeanForm({ onBeanAdded }: AddBeanFormProps) {
       if (roastDate) formData.append('roast_date', roastDate);
       if (notes.trim()) formData.append('notes', notes.trim());
 
-      const response = await fetch('/api/coffee.json', {
+      const response = await fetch(window.location.pathname, {
         method: 'POST',
+        headers: {
+          Accept: 'application/json',
+        },
         body: formData,
-        credentials: 'same-origin',
       });
 
-      // Parse JSON response
-      let jsonData;
-      try {
-        jsonData = await response.json();
-      } catch {
-        throw new Error('Error de red: No se pudo procesar la respuesta del servidor');
+      if (!response.ok) {
+        throw new Error('Failed to add bean');
       }
 
-      // Check for errors in the response
-      if (!response.ok || 'error' in jsonData) {
-        const errorMessage = jsonData.error || 'Error desconocido al agregar el grano';
+      const data = await response.json();
 
-        // Categorize errors for better user feedback
-        if (response.status === 401) {
-          throw new Error('No autorizado. Por favor, inicia sesión nuevamente.');
-        } else if (response.status === 400 && jsonData.errorType === 'validation') {
-          const fieldName = jsonData.field || 'un campo';
-          throw new Error(`Error de validación en ${fieldName}: ${errorMessage}`);
-        } else if (response.status >= 500) {
-          throw new Error('Error del servidor. Por favor, intenta de nuevo más tarde.');
-        } else {
-          throw new Error(errorMessage);
-        }
+      if (data.error) {
+        throw new Error(data.error);
       }
 
-      if (jsonData.data) {
+      if (data.bean) {
         // Add to store
-        addBean(jsonData.data as CoffeeBeanRow);
+        addBean(data.bean as CoffeeBeanRow);
 
         // Notify parent component
         if (onBeanAdded) {
-          onBeanAdded(jsonData.data.id);
+          onBeanAdded(data.bean.id);
         }
 
         // Reset form
@@ -76,13 +63,7 @@ export default function AddBeanForm({ onBeanAdded }: AddBeanFormProps) {
       }
     } catch (err) {
       console.error('[AddBeanForm] Error:', err);
-
-      // Handle network errors
-      if (err instanceof TypeError && err.message.includes('fetch')) {
-        setError('Error de red: No se pudo conectar con el servidor. Verifica tu conexión.');
-      } else {
-        setError(err instanceof Error ? err.message : 'No se pudo agregar el grano');
-      }
+      setError(err instanceof Error ? err.message : 'Failed to add bean');
     } finally {
       setIsSubmitting(false);
     }
