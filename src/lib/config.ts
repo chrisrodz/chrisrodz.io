@@ -1,16 +1,25 @@
 import { z } from 'zod';
 
 /**
- * Validates that a string is properly hex-encoded
+ * Validates that a string is properly hex-encoded, or allows empty/undefined (for optional configs)
+ * Empty strings are treated as undefined to allow graceful degradation
  */
-const hexEncodedString = z
+const optionalHexString = z
   .string()
-  .refine((val) => /^[0-9a-fA-F]+$/.test(val), {
-    message: 'Must be a valid hex-encoded string (only 0-9, a-f, A-F)',
-  })
-  .refine((val) => val.length > 0, {
-    message: 'Cannot be empty',
-  });
+  .optional()
+  .or(z.literal(''))
+  .transform((val) => (val === '' ? undefined : val))
+  .refine(
+    (val) => {
+      // Allow undefined (not configured)
+      if (val === undefined) return true;
+      // Validate non-empty strings are hex
+      return /^[0-9a-fA-F]+$/.test(val);
+    },
+    {
+      message: 'Must be a valid hex-encoded string (only 0-9, a-f, A-F) or empty to disable',
+    }
+  );
 
 /**
  * Environment variable schema with validation
@@ -20,8 +29,12 @@ const envSchema = z.object({
   PROD: z.boolean().default(false),
 
   // Authentication
-  ADMIN_SECRET_HASH: hexEncodedString.optional(),
-  ADMIN_SECRET_SALT: z.string().optional(),
+  ADMIN_SECRET_HASH: optionalHexString,
+  ADMIN_SECRET_SALT: z
+    .string()
+    .optional()
+    .or(z.literal(''))
+    .transform((val) => (val === '' ? undefined : val)),
 
   // Supabase (optional - enables database features)
   SUPABASE_URL: z.string().url().optional().or(z.literal('')),
