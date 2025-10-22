@@ -17,11 +17,16 @@ interface SmartDefaults {
 interface CoffeeLogFormProps {
   activeBeans: CoffeeBeanRow[];
   smartDefaults: SmartDefaults;
+  redirectPath?: string;
 }
 
 const NEW_BEAN_VALUE = '__new_bean__';
 
-export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogFormProps) {
+export default function CoffeeLogForm({
+  activeBeans,
+  smartDefaults,
+  redirectPath = '/cafe',
+}: CoffeeLogFormProps) {
   // Use Nano Store for beans (will update when AddBeanForm adds a new bean)
   const beansFromStore = useStore(beansStore);
   const beans = beansFromStore.length > 0 ? beansFromStore : activeBeans;
@@ -218,6 +223,9 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
         type: 'success',
         message: jsonData.message || '¡Café registrado exitosamente!',
       });
+
+      // Redirect to the public cafe page after successful submission
+      window.location.assign(redirectPath);
 
       // Clear draft on successful submission
       sessionStorage.removeItem('cafe_draft');

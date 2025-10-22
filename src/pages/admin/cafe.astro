@@ -194,7 +194,12 @@ if (serviceSupabase) {
             </div>
           )}
 
-          <CoffeeLogForm client:load activeBeans={activeBeans} smartDefaults={smartDefaults} />
+          <CoffeeLogForm
+            client:load
+            activeBeans={activeBeans}
+            smartDefaults={smartDefaults}
+            redirectPath={locale === 'en' ? '/en/cafe' : '/cafe'}
+          />
         </section>
       </>
     )
