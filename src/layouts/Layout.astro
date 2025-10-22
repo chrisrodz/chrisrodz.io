@@ -21,7 +21,7 @@ const {
 } = Astro.props;
 
 // Check if user is authenticated (Easter egg: show admin quick links)
-const isAdmin = checkAuth(Astro.cookies);
+const isAdmin = await checkAuth(Astro.cookies);
 const currentPath = Astro.url.pathname;
 const canonicalURL = new URL(currentPath, Astro.site || 'https://chrisrodz.io');
 const ogImage = new URL(image, Astro.site || 'https://chrisrodz.io');
@@ -201,23 +201,30 @@ const currentYear = new Date().getFullYear().toString();
           >
             {t(locale, 'footer.x')}
           </a>
-          {isAdmin && (
-            <a
-              href="/admin/cafe"
-              style="font-size: 1.25rem; text-decoration: none; opacity: 0.6; transition: opacity 0.2s, transform 0.2s;"
-              onmouseover="this.style.opacity='1'; this.style.transform='scale(1.2)'"
-              onmouseout="this.style.opacity='0.6'; this.style.transform='scale(1)'"
-              title="Quick coffee log"
-              aria-label="Quick access to coffee logger"
-            >
-              ☕
-            </a>
-          )}
-          {isAdmin && (
-            <a href="/admin/logout" style="color: var(--pico-muted-color); text-decoration: none;">
-              {t(locale, 'footer.logout')}
-            </a>
-          )}
+          {
+            isAdmin && (
+              <a
+                href="/admin/cafe"
+                style="font-size: 1.25rem; text-decoration: none; opacity: 0.6; transition: opacity 0.2s, transform 0.2s;"
+                onmouseover="this.style.opacity='1'; this.style.transform='scale(1.2)'"
+                onmouseout="this.style.opacity='0.6'; this.style.transform='scale(1)'"
+                title="Quick coffee log"
+                aria-label="Quick access to coffee logger"
+              >
+                ☕
+              </a>
+            )
+          }
+          {
+            isAdmin && (
+              <a
+                href="/admin/logout"
+                style="color: var(--pico-muted-color); text-decoration: none;"
+              >
+                {t(locale, 'footer.logout')}
+              </a>
+            )
+          }
         </div>
       </div>
     </footer>
