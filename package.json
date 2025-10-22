@@ -9,6 +9,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "new-post": "node scripts/new-post.js",
+    "generate:admin-secret": "node scripts/generate-admin-secret.js",
     "generate:i18n": "node scripts/generate-i18n-types.js",
     "validate:i18n": "node scripts/validate-translations.js",
     "format": "prettier --write .",

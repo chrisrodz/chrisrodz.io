@@ -1,25 +1,11 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
+import { config } from './config';
 
-// Use import.meta.env for Astro compatibility (works in SSR)
-const supabaseUrl = import.meta.env.SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.SUPABASE_ANON_KEY;
-
-// Check if Supabase is configured (validates URL format)
-const isValidUrl = (url: string | undefined): url is string => {
-  if (!url) return false;
-  try {
-    new URL(url);
-    return true;
-  } catch {
-    return false;
-  }
-};
-
-export const isSupabaseConfigured = isValidUrl(supabaseUrl) && !!supabaseAnonKey;
+export const isSupabaseConfigured = config.database.isConfigured();
 
 // Only create client if properly configured
 export const supabase: SupabaseClient | null = isSupabaseConfigured
-  ? createClient(supabaseUrl!, supabaseAnonKey!, {
+  ? createClient(config.database.url!, config.database.anonKey!, {
       auth: {
         flowType: 'pkce', // Recommended for SSR
       },
@@ -28,11 +14,9 @@ export const supabase: SupabaseClient | null = isSupabaseConfigured
 
 // Admin client for server-side operations
 export function getServiceSupabase(): SupabaseClient | null {
-  const serviceKey = import.meta.env.SUPABASE_SERVICE_KEY;
-
-  if (!isValidUrl(supabaseUrl) || !serviceKey) {
+  if (!config.database.isConfigured() || !config.database.hasServiceKey()) {
     return null;
   }
 
-  return createClient(supabaseUrl!, serviceKey);
+  return createClient(config.database.url!, config.database.serviceKey!);
 }
