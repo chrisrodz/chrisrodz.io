@@ -550,6 +550,231 @@ The language switcher in `Layout.astro` uses `getTranslatedPost()` to:
 - ❌ Don't disable ESLint rules without good reason
 - ❌ Don't skip pre-commit hooks (`--no-verify`) unless absolutely necessary
 
+## Testing
+
+Tests use **Vitest** + **Testing Library** (React) with coverage reporting via v8.
+
+### Running Tests
+
+```bash
+yarn test              # Run all tests
+yarn test:coverage     # Run with coverage report
+yarn test:watch        # Watch mode for development
+```
+
+### Test Files Location
+
+- Component tests: `src/components/**/*.test.tsx`
+- Utility tests: `src/lib/**/*.test.ts`
+- API tests: `src/pages/api/**/*.test.ts`
+- Config: `vitest.config.ts`, `vitest.setup.ts`
+
+### High-Value Tests (Write These)
+
+Tests that **catch real bugs** and **document critical behavior**:
+
+✅ **Core user journeys**
+
+- Form submission (success, failure, redirect flows)
+- Error message display to users
+- Critical feature workflows (e.g., draft restore, bean selection)
+
+✅ **Business logic validation**
+
+- Required field enforcement
+- Numeric bounds (e.g., dose 1-100g, rating 1-5)
+- Schema validation edge cases (invalid UUIDs, malformed data)
+- Custom validation rules unique to your domain
+
+✅ **Important contracts**
+
+- Callback functions fire with correct arguments
+- Store/state updates propagate correctly
+- Network error handling and retry logic
+- Database failure graceful degradation
+
+✅ **Critical integrations**
+
+- API endpoints return correct status codes and shape
+- Third-party service mocking (when behavior is critical)
+
+### Low-Value Tests (Avoid These)
+
+Tests that **don't catch bugs** or **test framework/library behavior**:
+
+❌ **Framework behavior**
+
+- Testing that `useState` updates state
+- Testing that Zod's `.trim()` or `.transform()` works
+- Testing that HTML `required` attribute validates
+
+❌ **Implementation details**
+
+- UI structure (button counts, specific HTML tags)
+- CSS classes or styling
+- Internal variable names
+- Private function implementations
+
+❌ **Redundant tests**
+
+- Testing both min AND max when browser handles validation
+- Multiple tests for same validation rule
+- Testing "accepts valid data" when you already test "rejects invalid data"
+
+❌ **Trivial tests**
+
+- Testing that a component renders (unless complex conditional logic)
+- Testing that form fields update on change (React behavior)
+- Testing HTML attributes (maxLength, type, placeholder)
+
+### When to Add Tests
+
+**Always test:**
+
+1. New features with complex business logic
+2. Bug fixes (regression tests)
+3. Critical user paths (authentication, payments, data loss scenarios)
+4. Edge cases that caused production issues
+
+**Consider testing:**
+
+1. Complex validation logic
+2. Data transformations
+3. State management patterns
+
+**Skip testing:**
+
+1. Simple presentational components
+2. Configuration files
+3. Types-only files
+4. Trivial getters/setters
+
+### Test Quality Guidelines
+
+**Good tests are:**
+
+- **Fast**: Run in milliseconds
+- **Isolated**: No shared state between tests
+- **Deterministic**: Same input = same output, always
+- **Readable**: Test name describes the scenario clearly
+- **Focused**: One assertion per logical concept
+
+**Test behavior, not implementation:**
+
+```typescript
+// ❌ Bad: Tests implementation
+it('should call setState with new value', () => {
+  const setState = vi.fn();
+  // ...
+  expect(setState).toHaveBeenCalledWith(newValue);
+});
+
+// ✅ Good: Tests user-visible behavior
+it('should show error message when email is invalid', () => {
+  render(<Form />);
+  fireEvent.change(emailInput, { target: { value: 'invalid' } });
+  fireEvent.click(submitButton);
+
+  expect(screen.getByText('Please enter a valid email')).toBeInTheDocument();
+});
+```
+
+### Coverage Goals
+
+Aim for **>80% coverage on critical paths**, but remember:
+
+- **100% coverage ≠ good tests**
+- **High coverage with low-value tests = false security**
+- **Focus on signal-to-noise ratio over raw percentage**
+
+Current coverage for cafe components:
+
+- `AddBeanForm.tsx`: 100%
+- `CoffeeLogForm.tsx`: 93.5%
+- `cafe.ts` (schemas): 100%
+
+### Test Organization
+
+```typescript
+describe('ComponentName', () => {
+  // Setup/teardown
+  beforeEach(() => {
+    /* reset mocks, clear state */
+  });
+  afterEach(() => {
+    /* cleanup */
+  });
+
+  describe('Validation', () => {
+    it('should disable submit when required field is empty', () => {});
+    it('should show error for invalid input', () => {});
+  });
+
+  describe('Submission', () => {
+    it('should submit with correct data on success', () => {});
+    it('should show error message on failure', () => {});
+  });
+
+  describe('Error Handling', () => {
+    it('should handle network errors gracefully', () => {});
+  });
+});
+```
+
+### Common Patterns
+
+**Mocking fetch:**
+
+```typescript
+const mockFetch = vi.fn();
+global.fetch = mockFetch;
+
+mockFetch.mockResolvedValueOnce({
+  ok: true,
+  json: async () => ({ data: mockData }),
+});
+```
+
+**Testing async operations:**
+
+```typescript
+import { waitFor } from '@testing-library/react';
+
+await waitFor(() => {
+  expect(screen.getByText('Success!')).toBeInTheDocument();
+});
+```
+
+**Testing form submission:**
+
+```typescript
+fireEvent.change(input, { target: { value: 'test' } });
+fireEvent.click(submitButton);
+
+await waitFor(() => {
+  expect(mockFetch).toHaveBeenCalledWith(
+    '/api/endpoint',
+    expect.objectContaining({ method: 'POST' })
+  );
+});
+```
+
+### Maintenance Strategy
+
+**When tests break:**
+
+1. **Feature change?** Update tests to reflect new behavior
+2. **Refactoring?** If tests break, they were testing implementation (bad tests)
+3. **False positive?** Remove or rewrite the test
+
+**Removing tests:**
+
+- Periodically review test value (signal vs noise)
+- Remove tests that haven't caught bugs in 6+ months
+- Consolidate redundant tests
+
+**Remember:** Fewer high-value tests > many low-value tests
+
 ## Documentation
 
 All project documentation is organized in the `/docs` directory:
