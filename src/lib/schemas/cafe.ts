@@ -43,7 +43,9 @@ export const CoffeeBeanSchema = z.object({
 
   roast_date: z
     .string()
-    .regex(/^\d{4}-\d{2}-\d{2}$/, 'Invalid date format (use YYYY-MM-DD)')
+    .refine((val) => !val || /^\d{4}-\d{2}-\d{2}$/.test(val), {
+      message: 'Invalid date format (use YYYY-MM-DD)',
+    })
     .optional()
     .nullable()
     .transform((val) => val || null),
