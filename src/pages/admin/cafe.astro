@@ -14,7 +14,7 @@ const { t } = useTranslations(locale);
 export const prerender = false;
 
 // Check authentication
-const isAuthed = checkAuth(Astro.cookies);
+const isAuthed = await checkAuth(Astro.cookies);
 if (!isAuthed) {
   return Astro.redirect('/admin');
 }
