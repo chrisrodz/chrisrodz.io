@@ -33,6 +33,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      'astro:middleware': path.resolve(__dirname, './src/test-utils/astro-middleware.ts'),
     },
   },
 });
