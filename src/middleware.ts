@@ -6,8 +6,6 @@ export const onRequest = defineMiddleware(async (context, next) => {
   const { request, redirect, cookies, url } = context;
   const securityHeaderOptions = { supabaseUrl: config.database.url };
 
-  applySecurityHeaders(context.response.headers, securityHeaderOptions);
-
   const proceed = async () => {
     const response = await next();
     applySecurityHeaders(response.headers, securityHeaderOptions);

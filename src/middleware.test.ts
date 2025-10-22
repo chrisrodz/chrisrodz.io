@@ -68,9 +68,6 @@ describe('middleware security headers', () => {
             Location: location,
           },
         }),
-      response: {
-        headers: new Headers(),
-      },
     };
 
     const response = await onRequest(context, next);
@@ -104,9 +101,6 @@ describe('middleware security headers', () => {
             Location: location,
           },
         }),
-      response: {
-        headers: new Headers(),
-      },
     };
 
     const response = await onRequest(context, vi.fn());
@@ -141,9 +135,6 @@ describe('middleware security headers', () => {
             Location: location,
           },
         }),
-      response: {
-        headers: new Headers(),
-      },
     };
 
     const response = await onRequest(context, vi.fn());
