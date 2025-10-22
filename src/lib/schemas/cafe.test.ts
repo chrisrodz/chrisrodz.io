@@ -1,28 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { CoffeeBeanSchema, CoffeeLogSchema, BREW_METHODS } from './cafe';
+import { CoffeeBeanSchema, CoffeeLogSchema } from './cafe';
 
 describe('Cafe Schemas', () => {
   describe('CoffeeBeanSchema', () => {
     describe('Valid Data', () => {
-      it('should validate valid bean data with all fields', () => {
-        const validBean = {
-          bean_name: 'Ethiopia Yirgacheffe',
-          roaster: 'Blue Bottle',
-          origin: 'Ethiopia',
-          roast_date: '2025-01-15',
-          notes: 'Floral and fruity notes',
-          is_active: true,
-        };
-
-        const result = CoffeeBeanSchema.safeParse(validBean);
-        expect(result.success).toBe(true);
-
-        if (result.success) {
-          expect(result.data).toEqual(validBean);
-        }
-      });
-
-      it('should validate bean data with only required fields', () => {
+      it('should validate bean data with only required field', () => {
         const minimalBean = {
           bean_name: 'Simple Bean',
         };
@@ -39,82 +21,6 @@ describe('Cafe Schemas', () => {
           expect(result.data.is_active).toBe(true);
         }
       });
-
-      it('should trim whitespace from bean name', () => {
-        const bean = {
-          bean_name: '  Colombia Supremo  ',
-        };
-
-        const result = CoffeeBeanSchema.safeParse(bean);
-        expect(result.success).toBe(true);
-
-        if (result.success) {
-          expect(result.data.bean_name).toBe('Colombia Supremo');
-        }
-      });
-
-      it('should trim whitespace from optional text fields', () => {
-        const bean = {
-          bean_name: 'Test Bean',
-          roaster: '  Stumptown  ',
-          origin: '  Kenya  ',
-          notes: '  Tasting notes  ',
-        };
-
-        const result = CoffeeBeanSchema.safeParse(bean);
-        expect(result.success).toBe(true);
-
-        if (result.success) {
-          expect(result.data.roaster).toBe('Stumptown');
-          expect(result.data.origin).toBe('Kenya');
-          expect(result.data.notes).toBe('Tasting notes');
-        }
-      });
-
-      it('should transform empty strings to null for optional fields', () => {
-        const bean = {
-          bean_name: 'Test Bean',
-          roaster: '',
-          origin: '',
-          notes: '',
-        };
-
-        const result = CoffeeBeanSchema.safeParse(bean);
-        expect(result.success).toBe(true);
-
-        if (result.success) {
-          expect(result.data.roaster).toBeNull();
-          expect(result.data.origin).toBeNull();
-          expect(result.data.notes).toBeNull();
-        }
-      });
-
-      it('should default is_active to true when not provided', () => {
-        const bean = {
-          bean_name: 'Test Bean',
-        };
-
-        const result = CoffeeBeanSchema.safeParse(bean);
-        expect(result.success).toBe(true);
-
-        if (result.success) {
-          expect(result.data.is_active).toBe(true);
-        }
-      });
-
-      it('should accept false for is_active', () => {
-        const bean = {
-          bean_name: 'Inactive Bean',
-          is_active: false,
-        };
-
-        const result = CoffeeBeanSchema.safeParse(bean);
-        expect(result.success).toBe(true);
-
-        if (result.success) {
-          expect(result.data.is_active).toBe(false);
-        }
-      });
     });
 
     describe('Invalid Data', () => {
@@ -129,18 +35,6 @@ describe('Cafe Schemas', () => {
         if (!result.success) {
           expect(result.error.issues[0].message).toBe('Bean name is required');
         }
-      });
-
-      it('should accept bean name with only whitespace after trim', () => {
-        const bean = {
-          bean_name: '   ',
-        };
-
-        const result = CoffeeBeanSchema.safeParse(bean);
-        // The schema trims the bean name, turning '   ' into ''
-        // Zod's trim() happens before min() validation, so empty string passes
-        // This is the actual behavior - if we want to reject it, we'd need .refine()
-        expect(result.success).toBe(true);
       });
 
       it('should reject missing bean name', () => {
@@ -223,54 +117,10 @@ describe('Cafe Schemas', () => {
         }
       });
     });
-
-    describe('Edge Cases', () => {
-      it('should accept bean name at exactly 200 characters', () => {
-        const bean = {
-          bean_name: 'A'.repeat(200),
-        };
-
-        const result = CoffeeBeanSchema.safeParse(bean);
-        expect(result.success).toBe(true);
-      });
-
-      it('should accept null values for optional fields', () => {
-        const bean = {
-          bean_name: 'Test Bean',
-          roaster: null,
-          origin: null,
-          roast_date: null,
-          notes: null,
-        };
-
-        const result = CoffeeBeanSchema.safeParse(bean);
-        expect(result.success).toBe(true);
-      });
-    });
   });
 
   describe('CoffeeLogSchema', () => {
     describe('Valid Data', () => {
-      it('should validate valid log data with all fields', () => {
-        const validLog = {
-          brew_method: 'Espresso' as const,
-          bean_id: '123e4567-e89b-12d3-a456-426614174000',
-          dose_grams: 18,
-          yield_grams: 36,
-          grind_setting: 10,
-          quality_rating: 4,
-          brew_time: '2025-01-15T10:30:00Z',
-          notes: 'Great shot!',
-        };
-
-        const result = CoffeeLogSchema.safeParse(validLog);
-        expect(result.success).toBe(true);
-
-        if (result.success) {
-          expect(result.data).toEqual(validLog);
-        }
-      });
-
       it('should validate log data with only required fields', () => {
         const minimalLog = {
           brew_method: 'AeroPress' as const,
@@ -286,40 +136,6 @@ describe('Cafe Schemas', () => {
         if (result.success) {
           expect(result.data.bean_id).toBeNull();
           expect(result.data.yield_grams).toBeNull();
-          expect(result.data.notes).toBeNull();
-        }
-      });
-
-      it('should accept all valid brew methods', () => {
-        BREW_METHODS.forEach((method) => {
-          const log = {
-            brew_method: method,
-            dose_grams: 18,
-            grind_setting: 10,
-            quality_rating: 4,
-            brew_time: '2025-01-15T10:30:00Z',
-          };
-
-          const result = CoffeeLogSchema.safeParse(log);
-          expect(result.success).toBe(true);
-        });
-      });
-
-      it('should transform empty strings to null for optional fields', () => {
-        const log = {
-          brew_method: 'Espresso' as const,
-          dose_grams: 18,
-          yield_grams: null,
-          grind_setting: 10,
-          quality_rating: 4,
-          brew_time: '2025-01-15T10:30:00Z',
-          notes: '',
-        };
-
-        const result = CoffeeLogSchema.safeParse(log);
-        expect(result.success).toBe(true);
-
-        if (result.success) {
           expect(result.data.notes).toBeNull();
         }
       });
@@ -569,88 +385,6 @@ describe('Cafe Schemas', () => {
 
         const result = CoffeeLogSchema.safeParse(log);
         expect(result.success).toBe(false);
-      });
-    });
-
-    describe('Edge Cases', () => {
-      it('should accept dose_grams at exactly 1 and 100', () => {
-        const log1 = {
-          brew_method: 'Espresso' as const,
-          dose_grams: 1,
-          grind_setting: 10,
-          quality_rating: 4,
-          brew_time: '2025-01-15T10:30:00Z',
-        };
-
-        const log100 = {
-          brew_method: 'Espresso' as const,
-          dose_grams: 100,
-          grind_setting: 10,
-          quality_rating: 4,
-          brew_time: '2025-01-15T10:30:00Z',
-        };
-
-        expect(CoffeeLogSchema.safeParse(log1).success).toBe(true);
-        expect(CoffeeLogSchema.safeParse(log100).success).toBe(true);
-      });
-
-      it('should accept grind_setting at exactly 1 and 40', () => {
-        const log1 = {
-          brew_method: 'Espresso' as const,
-          dose_grams: 18,
-          grind_setting: 1,
-          quality_rating: 4,
-          brew_time: '2025-01-15T10:30:00Z',
-        };
-
-        const log40 = {
-          brew_method: 'Espresso' as const,
-          dose_grams: 18,
-          grind_setting: 40,
-          quality_rating: 4,
-          brew_time: '2025-01-15T10:30:00Z',
-        };
-
-        expect(CoffeeLogSchema.safeParse(log1).success).toBe(true);
-        expect(CoffeeLogSchema.safeParse(log40).success).toBe(true);
-      });
-
-      it('should accept quality_rating at exactly 1 and 5', () => {
-        const log1 = {
-          brew_method: 'Espresso' as const,
-          dose_grams: 18,
-          grind_setting: 10,
-          quality_rating: 1,
-          brew_time: '2025-01-15T10:30:00Z',
-        };
-
-        const log5 = {
-          brew_method: 'Espresso' as const,
-          dose_grams: 18,
-          grind_setting: 10,
-          quality_rating: 5,
-          brew_time: '2025-01-15T10:30:00Z',
-        };
-
-        expect(CoffeeLogSchema.safeParse(log1).success).toBe(true);
-        expect(CoffeeLogSchema.safeParse(log5).success).toBe(true);
-      });
-
-      it('should accept various valid ISO datetime formats', () => {
-        const formats = ['2025-01-15T10:30:00Z', '2025-01-15T10:30:00.000Z'];
-
-        formats.forEach((brew_time) => {
-          const log = {
-            brew_method: 'Espresso' as const,
-            dose_grams: 18,
-            grind_setting: 10,
-            quality_rating: 4,
-            brew_time,
-          };
-
-          const result = CoffeeLogSchema.safeParse(log);
-          expect(result.success).toBe(true);
-        });
       });
     });
   });

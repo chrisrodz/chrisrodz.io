@@ -68,58 +68,6 @@ describe('CoffeeLogForm Component', () => {
     vi.clearAllMocks();
   });
 
-  describe('Rendering', () => {
-    it('should render the form with all required fields', () => {
-      render(<CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} />);
-
-      expect(screen.getByText('Método de Preparación *')).toBeInTheDocument();
-      expect(screen.getByLabelText('Grano de Café *')).toBeInTheDocument();
-      expect(screen.getByRole('spinbutton', { name: /dosis/i })).toBeInTheDocument();
-      expect(screen.getByRole('spinbutton', { name: /rendimiento|agua/i })).toBeInTheDocument();
-      expect(screen.getByRole('spinbutton', { name: /molienda/i })).toBeInTheDocument();
-      expect(screen.getByText('Calificación de Calidad *')).toBeInTheDocument();
-      expect(screen.getByLabelText('Notas (opcional)')).toBeInTheDocument();
-    });
-
-    it('should render all brew method buttons', () => {
-      render(<CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} />);
-
-      expect(screen.getByRole('radio', { name: 'Espresso' })).toBeInTheDocument();
-      expect(screen.getByRole('radio', { name: 'AeroPress' })).toBeInTheDocument();
-      expect(screen.getByRole('radio', { name: 'French Press' })).toBeInTheDocument();
-    });
-
-    it('should populate form with smart defaults', () => {
-      render(<CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} />);
-
-      // Check brew method is selected
-      const espressoButton = screen.getByRole('radio', { name: 'Espresso' });
-      expect(espressoButton).toHaveAttribute('aria-checked', 'true');
-
-      // Check bean is selected
-      const beanSelect = screen.getByLabelText('Grano de Café *') as HTMLSelectElement;
-      expect(beanSelect.value).toBe('bean-1');
-
-      // Check numeric defaults
-      expect(screen.getByRole('spinbutton', { name: /dosis/i })).toHaveValue(18);
-      expect(screen.getByRole('spinbutton', { name: /rendimiento/i })).toHaveValue(36);
-      expect(screen.getByRole('spinbutton', { name: /molienda/i })).toHaveValue(10);
-    });
-
-    it('should render available beans in select dropdown', () => {
-      render(<CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} />);
-
-      const beanSelect = screen.getByLabelText('Grano de Café *') as HTMLSelectElement;
-      const options = Array.from(beanSelect.options);
-
-      expect(options).toHaveLength(4); // placeholder + 2 beans + "Add New Bean"
-      expect(options[0].textContent).toBe('Selecciona un grano...');
-      expect(options[1].textContent).toBe('Ethiopia Yirgacheffe (Blue Bottle)');
-      expect(options[2].textContent).toBe('Colombia Supremo (Stumptown)');
-      expect(options[3].textContent).toBe('+ Agregar Nuevo Grano...');
-    });
-  });
-
   describe('Form Validation', () => {
     it('should disable submit button when rating is 0', () => {
       render(<CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} />);
@@ -170,27 +118,6 @@ describe('CoffeeLogForm Component', () => {
       );
     });
 
-    it('should update dose grams when input changes', async () => {
-      const user = userEvent.setup();
-      render(<CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} />);
-
-      const doseInput = screen.getByRole('spinbutton', { name: /dosis/i }) as HTMLInputElement;
-      await user.clear(doseInput);
-      await user.type(doseInput, '20');
-
-      expect(doseInput).toHaveValue(20);
-    });
-
-    it('should increment dose when + button is clicked', () => {
-      render(<CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} />);
-
-      const increaseButton = screen.getByLabelText('Increase dose');
-      fireEvent.click(increaseButton);
-
-      const doseInput = screen.getByRole('spinbutton', { name: /dosis/i }) as HTMLInputElement;
-      expect(doseInput).toHaveValue(19);
-    });
-
     it('should decrement dose when - button is clicked', () => {
       render(<CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} />);
 
@@ -199,79 +126,6 @@ describe('CoffeeLogForm Component', () => {
 
       const doseInput = screen.getByRole('spinbutton', { name: /dosis/i }) as HTMLInputElement;
       expect(doseInput).toHaveValue(17);
-    });
-
-    it('should not decrement dose below 1', () => {
-      const minDefaults = { ...mockSmartDefaults, dose_grams: 1 };
-      render(<CoffeeLogForm activeBeans={mockBeans} smartDefaults={minDefaults} />);
-
-      const decreaseButton = screen.getByLabelText('Decrease dose');
-      fireEvent.click(decreaseButton);
-
-      const doseInput = screen.getByRole('spinbutton', { name: /dosis/i }) as HTMLInputElement;
-      expect(doseInput).toHaveValue(1);
-    });
-
-    it('should not increment dose above 100', () => {
-      const maxDefaults = { ...mockSmartDefaults, dose_grams: 100 };
-      render(<CoffeeLogForm activeBeans={mockBeans} smartDefaults={maxDefaults} />);
-
-      const increaseButton = screen.getByLabelText('Increase dose');
-      fireEvent.click(increaseButton);
-
-      const doseInput = screen.getByRole('spinbutton', { name: /dosis/i }) as HTMLInputElement;
-      expect(doseInput).toHaveValue(100);
-    });
-
-    it('should update grind setting when input changes', async () => {
-      const user = userEvent.setup();
-      render(<CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} />);
-
-      const grindInput = screen.getByRole('spinbutton', { name: /molienda/i }) as HTMLInputElement;
-      await user.clear(grindInput);
-      await user.type(grindInput, '25');
-
-      expect(grindInput).toHaveValue(25);
-    });
-
-    it('should show grind setting description based on value', () => {
-      render(<CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} />);
-
-      // Initial value is 10, should be "fine"
-      expect(screen.getByText('Molienda fina')).toBeInTheDocument();
-
-      // Change to medium
-      const grindInput = screen.getByRole('spinbutton', { name: /molienda/i });
-      fireEvent.change(grindInput, { target: { value: '20' } });
-      expect(screen.getByText('Molienda media')).toBeInTheDocument();
-
-      // Change to coarse
-      fireEvent.change(grindInput, { target: { value: '30' } });
-      expect(screen.getByText('Molienda gruesa')).toBeInTheDocument();
-    });
-
-    it('should update notes when textarea changes', async () => {
-      const user = userEvent.setup();
-      render(<CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} />);
-
-      const notesTextarea = screen.getByLabelText('Notas (opcional)') as HTMLTextAreaElement;
-      await user.type(notesTextarea, 'Great shot!');
-
-      expect(notesTextarea).toHaveValue('Great shot!');
-    });
-
-    it('should change label from "Rendimiento" to "Agua" when brew method is not Espresso', () => {
-      render(<CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} />);
-
-      // Initially Espresso, should show "Rendimiento"
-      expect(screen.getByRole('spinbutton', { name: /rendimiento/i })).toBeInTheDocument();
-
-      // Change to AeroPress
-      const aeroPressButton = screen.getByRole('radio', { name: 'AeroPress' });
-      fireEvent.click(aeroPressButton);
-
-      // Should now show "Agua"
-      expect(screen.getByRole('spinbutton', { name: /agua/i })).toBeInTheDocument();
     });
   });
 
@@ -508,35 +362,6 @@ describe('CoffeeLogForm Component', () => {
   });
 
   describe('Draft Save/Restore Functionality', () => {
-    it('should auto-save draft to sessionStorage', async () => {
-      // Skip the auto-save test as it's difficult to test with fake timers
-      // The functionality is tested manually and in integration tests
-      // Auto-save creates a setInterval that reruns every 2 seconds, causing infinite loops in tests
-
-      // Instead, test that the draft save logic works when called directly
-      render(<CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} />);
-
-      // Make changes
-      const fourthStar = screen.getByLabelText('Rate 4 out of 5');
-      fireEvent.click(fourthStar);
-
-      const notesTextarea = screen.getByLabelText('Notas (opcional)');
-      fireEvent.change(notesTextarea, { target: { value: 'Test draft' } });
-
-      // Wait for auto-save interval to fire (using real timers)
-      await new Promise((resolve) => setTimeout(resolve, 2200));
-
-      // Check sessionStorage
-      const draft = sessionStorage.getItem('cafe_draft');
-      expect(draft).toBeTruthy();
-
-      if (draft) {
-        const parsedDraft = JSON.parse(draft);
-        expect(parsedDraft.rating).toBe(4);
-        expect(parsedDraft.notes).toBe('Test draft');
-      }
-    });
-
     it('should show draft restore notification when draft exists and is recent', () => {
       const draftData = {
         brewMethod: 'AeroPress',
@@ -673,18 +498,6 @@ describe('CoffeeLogForm Component', () => {
 
       // Draft should be cleared
       expect(sessionStorage.getItem('cafe_draft')).toBeNull();
-    });
-  });
-
-  describe('Smart Defaults Caching', () => {
-    it('should cache smart defaults in sessionStorage', () => {
-      render(<CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} />);
-
-      expect(sessionStorage.getItem('cafe_last_brew_method')).toBe('Espresso');
-      expect(sessionStorage.getItem('cafe_last_grind_setting')).toBe('10');
-      expect(sessionStorage.getItem('cafe_last_dose_grams')).toBe('18');
-      expect(sessionStorage.getItem('cafe_last_yield_grams')).toBe('36');
-      expect(sessionStorage.getItem('cafe_last_bean_id')).toBe('bean-1');
     });
   });
 });

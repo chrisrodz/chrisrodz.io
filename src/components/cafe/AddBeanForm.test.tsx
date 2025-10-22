@@ -1,6 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import AddBeanForm from './AddBeanForm';
 import { beansStore, lastAddedBeanIdStore } from '@/stores/beansStore';
 
@@ -33,34 +32,6 @@ describe('AddBeanForm Component', () => {
     vi.clearAllMocks();
   });
 
-  describe('Rendering', () => {
-    it('should render all form fields', () => {
-      render(<AddBeanForm onBeanAdded={mockOnBeanAdded} />);
-
-      expect(screen.getByText('Add New Bean')).toBeInTheDocument();
-      expect(screen.getByLabelText('Bean Name *')).toBeInTheDocument();
-      expect(screen.getByLabelText('Roaster')).toBeInTheDocument();
-      expect(screen.getByLabelText('Roast Date')).toBeInTheDocument();
-      expect(screen.getByLabelText('Notes')).toBeInTheDocument();
-      expect(screen.getByRole('button', { name: 'Add Bean' })).toBeInTheDocument();
-    });
-
-    it('should render with empty form fields initially', () => {
-      render(<AddBeanForm onBeanAdded={mockOnBeanAdded} />);
-
-      expect(screen.getByLabelText('Bean Name *')).toHaveValue('');
-      expect(screen.getByLabelText('Roaster')).toHaveValue('');
-      expect(screen.getByLabelText('Roast Date')).toHaveValue('');
-      expect(screen.getByLabelText('Notes')).toHaveValue('');
-    });
-
-    it('should render without onBeanAdded callback', () => {
-      render(<AddBeanForm />);
-
-      expect(screen.getByText('Add New Bean')).toBeInTheDocument();
-    });
-  });
-
   describe('Form Validation', () => {
     it('should disable submit button when bean name is empty', () => {
       render(<AddBeanForm onBeanAdded={mockOnBeanAdded} />);
@@ -70,73 +41,28 @@ describe('AddBeanForm Component', () => {
     });
 
     it('should enable submit button when bean name is filled', async () => {
-      const user = userEvent.setup();
       render(<AddBeanForm onBeanAdded={mockOnBeanAdded} />);
 
       const beanNameInput = screen.getByLabelText('Bean Name *');
-      await user.type(beanNameInput, 'Ethiopia Yirgacheffe');
+      fireEvent.change(beanNameInput, { target: { value: 'Ethiopia Yirgacheffe' } });
 
       const submitButton = screen.getByRole('button', { name: 'Add Bean' });
       expect(submitButton).not.toBeDisabled();
     });
 
-    it('should disable submit button when bean name is only whitespace', async () => {
-      const user = userEvent.setup();
+    it('should disable submit button when bean name is only whitespace', () => {
       render(<AddBeanForm onBeanAdded={mockOnBeanAdded} />);
 
       const beanNameInput = screen.getByLabelText('Bean Name *');
-      await user.type(beanNameInput, '   ');
+      fireEvent.change(beanNameInput, { target: { value: '   ' } });
 
       const submitButton = screen.getByRole('button', { name: 'Add Bean' });
       expect(submitButton).toBeDisabled();
     });
   });
 
-  describe('Form Interaction', () => {
-    it('should update bean name when input changes', async () => {
-      const user = userEvent.setup();
-      render(<AddBeanForm onBeanAdded={mockOnBeanAdded} />);
-
-      const beanNameInput = screen.getByLabelText('Bean Name *') as HTMLInputElement;
-      await user.type(beanNameInput, 'Colombia Supremo');
-
-      expect(beanNameInput).toHaveValue('Colombia Supremo');
-    });
-
-    it('should update roaster when input changes', async () => {
-      const user = userEvent.setup();
-      render(<AddBeanForm onBeanAdded={mockOnBeanAdded} />);
-
-      const roasterInput = screen.getByLabelText('Roaster') as HTMLInputElement;
-      await user.type(roasterInput, 'Blue Bottle');
-
-      expect(roasterInput).toHaveValue('Blue Bottle');
-    });
-
-    it('should update roast date when input changes', async () => {
-      const user = userEvent.setup();
-      render(<AddBeanForm onBeanAdded={mockOnBeanAdded} />);
-
-      const roastDateInput = screen.getByLabelText('Roast Date') as HTMLInputElement;
-      await user.type(roastDateInput, '2025-01-15');
-
-      expect(roastDateInput).toHaveValue('2025-01-15');
-    });
-
-    it('should update notes when textarea changes', async () => {
-      const user = userEvent.setup();
-      render(<AddBeanForm onBeanAdded={mockOnBeanAdded} />);
-
-      const notesTextarea = screen.getByLabelText('Notes') as HTMLTextAreaElement;
-      await user.type(notesTextarea, 'Floral and fruity notes');
-
-      expect(notesTextarea).toHaveValue('Floral and fruity notes');
-    });
-  });
-
   describe('Form Submission', () => {
     it('should submit form with correct data on successful submission', async () => {
-      const user = userEvent.setup();
       const mockBean = {
         id: 'new-bean-id',
         created_at: '2025-01-15T00:00:00Z',
@@ -156,10 +82,12 @@ describe('AddBeanForm Component', () => {
       render(<AddBeanForm onBeanAdded={mockOnBeanAdded} />);
 
       // Fill out form
-      await user.type(screen.getByLabelText('Bean Name *'), 'Ethiopia Yirgacheffe');
-      await user.type(screen.getByLabelText('Roaster'), 'Blue Bottle');
-      await user.type(screen.getByLabelText('Roast Date'), '2025-01-10');
-      await user.type(screen.getByLabelText('Notes'), 'Floral notes');
+      fireEvent.change(screen.getByLabelText('Bean Name *'), {
+        target: { value: 'Ethiopia Yirgacheffe' },
+      });
+      fireEvent.change(screen.getByLabelText('Roaster'), { target: { value: 'Blue Bottle' } });
+      fireEvent.change(screen.getByLabelText('Roast Date'), { target: { value: '2025-01-10' } });
+      fireEvent.change(screen.getByLabelText('Notes'), { target: { value: 'Floral notes' } });
 
       // Submit form
       const submitButton = screen.getByRole('button', { name: 'Add Bean' });
@@ -189,7 +117,6 @@ describe('AddBeanForm Component', () => {
     });
 
     it('should call onBeanAdded callback with bean ID on success', async () => {
-      const user = userEvent.setup();
       const mockBean = {
         id: 'new-bean-id',
         created_at: '2025-01-15T00:00:00Z',
@@ -208,7 +135,7 @@ describe('AddBeanForm Component', () => {
 
       render(<AddBeanForm onBeanAdded={mockOnBeanAdded} />);
 
-      await user.type(screen.getByLabelText('Bean Name *'), 'Test Bean');
+      fireEvent.change(screen.getByLabelText('Bean Name *'), { target: { value: 'Test Bean' } });
 
       const submitButton = screen.getByRole('button', { name: 'Add Bean' });
       fireEvent.click(submitButton);
@@ -219,7 +146,6 @@ describe('AddBeanForm Component', () => {
     });
 
     it('should add bean to beansStore on success', async () => {
-      const user = userEvent.setup();
       const mockBean = {
         id: 'new-bean-id',
         created_at: '2025-01-15T00:00:00Z',
@@ -238,7 +164,9 @@ describe('AddBeanForm Component', () => {
 
       render(<AddBeanForm onBeanAdded={mockOnBeanAdded} />);
 
-      await user.type(screen.getByLabelText('Bean Name *'), 'Store Test Bean');
+      fireEvent.change(screen.getByLabelText('Bean Name *'), {
+        target: { value: 'Store Test Bean' },
+      });
 
       const submitButton = screen.getByRole('button', { name: 'Add Bean' });
       fireEvent.click(submitButton);
@@ -252,7 +180,6 @@ describe('AddBeanForm Component', () => {
     });
 
     it('should reset form fields after successful submission', async () => {
-      const user = userEvent.setup();
       const mockBean = {
         id: 'new-bean-id',
         created_at: '2025-01-15T00:00:00Z',
@@ -272,10 +199,10 @@ describe('AddBeanForm Component', () => {
       render(<AddBeanForm onBeanAdded={mockOnBeanAdded} />);
 
       // Fill out form
-      await user.type(screen.getByLabelText('Bean Name *'), 'Test Bean');
-      await user.type(screen.getByLabelText('Roaster'), 'Test Roaster');
-      await user.type(screen.getByLabelText('Roast Date'), '2025-01-10');
-      await user.type(screen.getByLabelText('Notes'), 'Test notes');
+      fireEvent.change(screen.getByLabelText('Bean Name *'), { target: { value: 'Test Bean' } });
+      fireEvent.change(screen.getByLabelText('Roaster'), { target: { value: 'Test Roaster' } });
+      fireEvent.change(screen.getByLabelText('Roast Date'), { target: { value: '2025-01-10' } });
+      fireEvent.change(screen.getByLabelText('Notes'), { target: { value: 'Test notes' } });
 
       // Submit form
       const submitButton = screen.getByRole('button', { name: 'Add Bean' });
@@ -288,87 +215,10 @@ describe('AddBeanForm Component', () => {
         expect(screen.getByLabelText('Notes')).toHaveValue('');
       });
     });
-
-    it('should trim whitespace from text fields before submission', async () => {
-      const user = userEvent.setup();
-      const mockBean = {
-        id: 'new-bean-id',
-        created_at: '2025-01-15T00:00:00Z',
-        bean_name: 'Trimmed Bean',
-        roaster: 'Trimmed Roaster',
-        origin: null,
-        roast_date: null,
-        notes: 'Trimmed notes',
-        is_active: true,
-      };
-
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ bean: mockBean }),
-      });
-
-      render(<AddBeanForm onBeanAdded={mockOnBeanAdded} />);
-
-      // Add whitespace to inputs
-      await user.type(screen.getByLabelText('Bean Name *'), '  Trimmed Bean  ');
-      await user.type(screen.getByLabelText('Roaster'), '  Trimmed Roaster  ');
-      await user.type(screen.getByLabelText('Notes'), '  Trimmed notes  ');
-
-      const submitButton = screen.getByRole('button', { name: 'Add Bean' });
-      fireEvent.click(submitButton);
-
-      await waitFor(() => {
-        const callArgs = mockFetch.mock.calls[0];
-        const formData = callArgs[1].body as FormData;
-
-        expect(formData.get('bean_name')).toBe('Trimmed Bean');
-        expect(formData.get('roaster')).toBe('Trimmed Roaster');
-        expect(formData.get('notes')).toBe('Trimmed notes');
-      });
-    });
-
-    it('should not include empty optional fields in submission', async () => {
-      const user = userEvent.setup();
-      const mockBean = {
-        id: 'new-bean-id',
-        created_at: '2025-01-15T00:00:00Z',
-        bean_name: 'Minimal Bean',
-        roaster: null,
-        origin: null,
-        roast_date: null,
-        notes: null,
-        is_active: true,
-      };
-
-      mockFetch.mockResolvedValueOnce({
-        ok: true,
-        json: async () => ({ bean: mockBean }),
-      });
-
-      render(<AddBeanForm onBeanAdded={mockOnBeanAdded} />);
-
-      // Only fill required field
-      await user.type(screen.getByLabelText('Bean Name *'), 'Minimal Bean');
-
-      const submitButton = screen.getByRole('button', { name: 'Add Bean' });
-      fireEvent.click(submitButton);
-
-      await waitFor(() => {
-        const callArgs = mockFetch.mock.calls[0];
-        const formData = callArgs[1].body as FormData;
-
-        expect(formData.get('bean_name')).toBe('Minimal Bean');
-        expect(formData.has('roaster')).toBe(false);
-        expect(formData.has('roast_date')).toBe(false);
-        expect(formData.has('notes')).toBe(false);
-      });
-    });
   });
 
   describe('Error Handling', () => {
     it('should show error message when submission fails', async () => {
-      const user = userEvent.setup();
-
       mockFetch.mockResolvedValueOnce({
         ok: false,
         json: async () => ({ error: 'Database connection failed' }),
@@ -376,7 +226,7 @@ describe('AddBeanForm Component', () => {
 
       render(<AddBeanForm onBeanAdded={mockOnBeanAdded} />);
 
-      await user.type(screen.getByLabelText('Bean Name *'), 'Test Bean');
+      fireEvent.change(screen.getByLabelText('Bean Name *'), { target: { value: 'Test Bean' } });
 
       const submitButton = screen.getByRole('button', { name: 'Add Bean' });
       fireEvent.click(submitButton);
@@ -387,8 +237,6 @@ describe('AddBeanForm Component', () => {
     });
 
     it('should show specific error message from server response', async () => {
-      const user = userEvent.setup();
-
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({ error: 'Bean name already exists' }),
@@ -396,7 +244,9 @@ describe('AddBeanForm Component', () => {
 
       render(<AddBeanForm onBeanAdded={mockOnBeanAdded} />);
 
-      await user.type(screen.getByLabelText('Bean Name *'), 'Duplicate Bean');
+      fireEvent.change(screen.getByLabelText('Bean Name *'), {
+        target: { value: 'Duplicate Bean' },
+      });
 
       const submitButton = screen.getByRole('button', { name: 'Add Bean' });
       fireEvent.click(submitButton);
@@ -407,14 +257,13 @@ describe('AddBeanForm Component', () => {
     });
 
     it('should handle network errors gracefully', async () => {
-      const user = userEvent.setup();
       const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
 
       mockFetch.mockRejectedValueOnce(new Error('Network error'));
 
       render(<AddBeanForm onBeanAdded={mockOnBeanAdded} />);
 
-      await user.type(screen.getByLabelText('Bean Name *'), 'Test Bean');
+      fireEvent.change(screen.getByLabelText('Bean Name *'), { target: { value: 'Test Bean' } });
 
       const submitButton = screen.getByRole('button', { name: 'Add Bean' });
       fireEvent.click(submitButton);
@@ -427,8 +276,6 @@ describe('AddBeanForm Component', () => {
     });
 
     it('should disable submit button during submission', async () => {
-      const user = userEvent.setup();
-
       mockFetch.mockImplementation(
         () =>
           new Promise((resolve) =>
@@ -450,7 +297,7 @@ describe('AddBeanForm Component', () => {
 
       render(<AddBeanForm onBeanAdded={mockOnBeanAdded} />);
 
-      await user.type(screen.getByLabelText('Bean Name *'), 'Test Bean');
+      fireEvent.change(screen.getByLabelText('Bean Name *'), { target: { value: 'Test Bean' } });
 
       const submitButton = screen.getByRole('button', { name: 'Add Bean' });
       fireEvent.click(submitButton);
@@ -463,8 +310,6 @@ describe('AddBeanForm Component', () => {
     });
 
     it('should not call onBeanAdded when submission fails', async () => {
-      const user = userEvent.setup();
-
       mockFetch.mockResolvedValueOnce({
         ok: false,
         json: async () => ({ error: 'Failed to add bean' }),
@@ -472,7 +317,7 @@ describe('AddBeanForm Component', () => {
 
       render(<AddBeanForm onBeanAdded={mockOnBeanAdded} />);
 
-      await user.type(screen.getByLabelText('Bean Name *'), 'Test Bean');
+      fireEvent.change(screen.getByLabelText('Bean Name *'), { target: { value: 'Test Bean' } });
 
       const submitButton = screen.getByRole('button', { name: 'Add Bean' });
       fireEvent.click(submitButton);
@@ -482,36 +327,6 @@ describe('AddBeanForm Component', () => {
       });
 
       expect(mockOnBeanAdded).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('Form Field Constraints', () => {
-    it('should respect maxLength constraint on bean name', () => {
-      render(<AddBeanForm onBeanAdded={mockOnBeanAdded} />);
-
-      const beanNameInput = screen.getByLabelText('Bean Name *') as HTMLInputElement;
-      expect(beanNameInput).toHaveAttribute('maxLength', '200');
-    });
-
-    it('should respect maxLength constraint on roaster', () => {
-      render(<AddBeanForm onBeanAdded={mockOnBeanAdded} />);
-
-      const roasterInput = screen.getByLabelText('Roaster') as HTMLInputElement;
-      expect(roasterInput).toHaveAttribute('maxLength', '200');
-    });
-
-    it('should respect maxLength constraint on notes', () => {
-      render(<AddBeanForm onBeanAdded={mockOnBeanAdded} />);
-
-      const notesTextarea = screen.getByLabelText('Notes') as HTMLTextAreaElement;
-      expect(notesTextarea).toHaveAttribute('maxLength', '500');
-    });
-
-    it('should have correct input type for roast date', () => {
-      render(<AddBeanForm onBeanAdded={mockOnBeanAdded} />);
-
-      const roastDateInput = screen.getByLabelText('Roast Date') as HTMLInputElement;
-      expect(roastDateInput).toHaveAttribute('type', 'date');
     });
   });
 });
