@@ -3,15 +3,48 @@ import type { AstroCookies } from 'astro';
 import { scryptSync, timingSafeEqual } from 'node:crypto';
 import { config } from './config';
 
+type SessionData = {
+  createdAt: number;
+  authenticated: boolean;
+  csrfToken?: string;
+};
+
 // In-memory session store (in production, use Redis or database)
-const sessions = new Map<string, { createdAt: number }>();
+const sessions = new Map<string, SessionData>();
 
 // Session expiry: 24 hours
 const SESSION_DURATION = 24 * 60 * 60 * 1000;
 
+const CSRF_TOKEN_LENGTH = 32;
+
+function isSessionExpired(session: SessionData): boolean {
+  return Date.now() - session.createdAt > SESSION_DURATION;
+}
+
+function ensureSessionEntry(sessionId: string | undefined): { sessionId: string; session: SessionData } {
+  if (sessionId) {
+    const existing = sessions.get(sessionId);
+    if (existing) {
+      if (isSessionExpired(existing)) {
+        sessions.delete(sessionId);
+      } else {
+        return { sessionId, session: existing };
+      }
+    }
+  }
+
+  const newSessionId = nanoid(32);
+  const session: SessionData = {
+    createdAt: Date.now(),
+    authenticated: false,
+  };
+  sessions.set(newSessionId, session);
+  return { sessionId: newSessionId, session };
+}
+
 export function createSession(): string {
   const sessionId = nanoid(32);
-  sessions.set(sessionId, { createdAt: Date.now() });
+  sessions.set(sessionId, { createdAt: Date.now(), authenticated: true });
   return sessionId;
 }
 
@@ -21,8 +54,7 @@ export function validateSession(sessionId: string | undefined): boolean {
   const session = sessions.get(sessionId);
   if (!session) return false;
 
-  // Check if session has expired
-  if (Date.now() - session.createdAt > SESSION_DURATION) {
+  if (isSessionExpired(session)) {
     sessions.delete(sessionId);
     return false;
   }
@@ -49,9 +81,68 @@ export function clearAuthCookie(cookies: AstroCookies): void {
   cookies.delete('session_id', { path: '/' });
 }
 
+export function issueCsrfToken(cookies: AstroCookies): string {
+  const currentSessionId = cookies.get('session_id')?.value;
+  const { sessionId, session } = ensureSessionEntry(currentSessionId);
+  const token = nanoid(CSRF_TOKEN_LENGTH);
+  session.csrfToken = token;
+  setAuthCookie(cookies, sessionId);
+  return token;
+}
+
+export function validateCsrfToken(sessionId: string | undefined, token: string | undefined): boolean {
+  if (!sessionId || !token) return false;
+
+  const session = sessions.get(sessionId);
+  if (!session) return false;
+
+  if (isSessionExpired(session)) {
+    sessions.delete(sessionId);
+    return false;
+  }
+
+  if (!session.csrfToken) return false;
+  if (session.csrfToken.length !== token.length) return false;
+
+  try {
+    return timingSafeEqual(Buffer.from(token), Buffer.from(session.csrfToken));
+  } catch {
+    return false;
+  }
+}
+
+export const CSRF_ERROR_MESSAGE = 'Invalid or expired session. Please refresh the page and try again.';
+
+export type CsrfValidationResult = {
+  isValid: boolean;
+  errorMessage?: string;
+};
+
+export function validateLoginCsrf(
+  sessionId: string | undefined,
+  token: FormDataEntryValue | null,
+): CsrfValidationResult {
+  const tokenValue = typeof token === 'string' ? token : undefined;
+  const isValid = validateCsrfToken(sessionId, tokenValue);
+  if (isValid) {
+    return { isValid: true };
+  }
+
+  return {
+    isValid: false,
+    errorMessage: CSRF_ERROR_MESSAGE,
+  };
+}
+
 export function checkAuth(cookies: AstroCookies): boolean {
   const sessionId = cookies.get('session_id')?.value;
-  return validateSession(sessionId);
+  if (!validateSession(sessionId)) {
+    return false;
+  }
+
+  if (!sessionId) return false;
+  const session = sessions.get(sessionId);
+  return session?.authenticated === true;
 }
 
 export function verifyAdminSecret(password: string): boolean {

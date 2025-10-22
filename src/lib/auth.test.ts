@@ -1,5 +1,30 @@
 import { describe, it, expect, vi } from 'vitest';
-import { createSession, validateSession, deleteSession } from './auth';
+import type { AstroCookies } from 'astro';
+import {
+  createSession,
+  validateSession,
+  deleteSession,
+  issueCsrfToken,
+  validateCsrfToken,
+  validateLoginCsrf,
+  CSRF_ERROR_MESSAGE,
+} from './auth';
+
+function createMockCookies(initial: Record<string, string> = {}): AstroCookies {
+  const store = new Map(Object.entries(initial));
+  return {
+    get(name: string) {
+      const value = store.get(name);
+      return value ? ({ value } as { value: string }) : undefined;
+    },
+    set(name: string, value: string) {
+      store.set(name, value);
+    },
+    delete(name: string) {
+      store.delete(name);
+    },
+  } as unknown as AstroCookies;
+}
 
 describe('Auth Module', () => {
   describe('createSession', () => {
@@ -91,6 +116,52 @@ describe('Auth Module', () => {
 
     it('should handle deleting non-existent session gracefully', () => {
       expect(() => deleteSession('non-existent-session-id')).not.toThrow();
+    });
+  });
+
+  describe('CSRF tokens', () => {
+    it('should issue and validate a CSRF token for a session', () => {
+      const cookies = createMockCookies();
+      const token = issueCsrfToken(cookies);
+      const sessionId = cookies.get('session_id')?.value;
+
+      expect(typeof token).toBe('string');
+      expect(token.length).toBeGreaterThan(0);
+      expect(sessionId).toBeDefined();
+      expect(validateCsrfToken(sessionId, token)).toBe(true);
+
+      deleteSession(sessionId);
+    });
+
+    it('should reject missing or invalid CSRF tokens', () => {
+      const cookies = createMockCookies();
+      const token = issueCsrfToken(cookies);
+      const sessionId = cookies.get('session_id')?.value;
+      expect(sessionId).toBeDefined();
+
+      expect(validateCsrfToken(sessionId, undefined)).toBe(false);
+      expect(validateCsrfToken(sessionId, 'invalid-token')).toBe(false);
+
+      const validationResult = validateLoginCsrf(sessionId, 'invalid-token');
+      expect(validationResult.isValid).toBe(false);
+      expect(validationResult.errorMessage).toBe(CSRF_ERROR_MESSAGE);
+
+      deleteSession(sessionId);
+      expect(validateCsrfToken(sessionId, token)).toBe(false);
+    });
+
+    it('should rotate the CSRF token when re-issued', () => {
+      const cookies = createMockCookies();
+      const firstToken = issueCsrfToken(cookies);
+      const sessionId = cookies.get('session_id')?.value;
+      expect(sessionId).toBeDefined();
+
+      const secondToken = issueCsrfToken(cookies);
+      expect(secondToken).not.toBe(firstToken);
+      expect(validateCsrfToken(sessionId, firstToken)).toBe(false);
+      expect(validateCsrfToken(sessionId, secondToken)).toBe(true);
+
+      deleteSession(sessionId);
     });
   });
 });
