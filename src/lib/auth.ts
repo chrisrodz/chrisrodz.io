@@ -2,69 +2,120 @@ import { nanoid } from 'nanoid';
 import type { AstroCookies } from 'astro';
 import { scryptSync, timingSafeEqual } from 'node:crypto';
 import { config } from './config';
+import { getServiceSupabase } from './supabase';
 
 type SessionData = {
-  createdAt: number;
+  id: string;
+  created_at: string;
+  expires_at: string;
   authenticated: boolean;
-  csrfToken?: string;
+  csrf_token?: string | null;
+  ip_address?: string | null;
+  user_agent?: string | null;
+  last_activity: string;
 };
-
-// In-memory session store (in production, use Redis or database)
-const sessions = new Map<string, SessionData>();
 
 // Session expiry: 24 hours
 const SESSION_DURATION = 24 * 60 * 60 * 1000;
 
 const CSRF_TOKEN_LENGTH = 32;
 
-function isSessionExpired(session: SessionData): boolean {
-  return Date.now() - session.createdAt > SESSION_DURATION;
+// Helper to calculate expiry timestamp
+function getExpiryTimestamp(): string {
+  const expiryDate = new Date(Date.now() + SESSION_DURATION);
+  return expiryDate.toISOString();
 }
 
-function ensureSessionEntry(sessionId: string | undefined): { sessionId: string; session: SessionData } {
-  if (sessionId) {
-    const existing = sessions.get(sessionId);
-    if (existing) {
-      if (isSessionExpired(existing)) {
-        sessions.delete(sessionId);
-      } else {
-        return { sessionId, session: existing };
-      }
-    }
+// Helper to check if a session is expired
+function isSessionExpired(expiresAt: string): boolean {
+  return new Date(expiresAt) < new Date();
+}
+
+/**
+ * Creates a new authenticated session in the database
+ * @param ipAddress - Optional IP address for security audit
+ * @param userAgent - Optional user agent for security audit
+ * @returns Session ID or null if database is not configured
+ */
+export async function createSession(
+  ipAddress?: string,
+  userAgent?: string
+): Promise<string | null> {
+  const supabase = getServiceSupabase();
+  if (!supabase) {
+    console.warn('Supabase not configured; session will not be persisted');
+    return null;
   }
 
-  const newSessionId = nanoid(32);
-  const session: SessionData = {
-    createdAt: Date.now(),
-    authenticated: false,
-  };
-  sessions.set(newSessionId, session);
-  return { sessionId: newSessionId, session };
-}
-
-export function createSession(): string {
   const sessionId = nanoid(32);
-  sessions.set(sessionId, { createdAt: Date.now(), authenticated: true });
+  const now = new Date().toISOString();
+  const expiresAt = getExpiryTimestamp();
+
+  const { error } = await supabase.from('sessions').insert({
+    id: sessionId,
+    created_at: now,
+    expires_at: expiresAt,
+    authenticated: true,
+    ip_address: ipAddress,
+    user_agent: userAgent,
+    last_activity: now,
+  });
+
+  if (error) {
+    console.error('Failed to create session:', error);
+    return null;
+  }
+
   return sessionId;
 }
 
-export function validateSession(sessionId: string | undefined): boolean {
+/**
+ * Validates a session ID and checks if it's authenticated and not expired
+ * @param sessionId - The session ID to validate
+ * @returns true if session is valid and authenticated
+ */
+export async function validateSession(sessionId: string | undefined): Promise<boolean> {
   if (!sessionId) return false;
 
-  const session = sessions.get(sessionId);
-  if (!session) return false;
-
-  if (isSessionExpired(session)) {
-    sessions.delete(sessionId);
+  const supabase = getServiceSupabase();
+  if (!supabase) {
+    console.warn('Supabase not configured; cannot validate session');
     return false;
   }
 
-  return true;
+  const { data: session, error } = await supabase
+    .from('sessions')
+    .select('*')
+    .eq('id', sessionId)
+    .single();
+
+  if (error || !session) {
+    return false;
+  }
+
+  // Check if session is expired
+  if (isSessionExpired(session.expires_at)) {
+    // Clean up expired session
+    await supabase.from('sessions').delete().eq('id', sessionId);
+    return false;
+  }
+
+  return session.authenticated === true;
 }
 
-export function deleteSession(sessionId: string | undefined): void {
+/**
+ * Deletes a session from the database
+ * @param sessionId - The session ID to delete
+ */
+export async function deleteSession(sessionId: string | undefined): Promise<void> {
   if (!sessionId) return;
-  sessions.delete(sessionId);
+
+  const supabase = getServiceSupabase();
+  if (!supabase) {
+    return;
+  }
+
+  await supabase.from('sessions').delete().eq('id', sessionId);
 }
 
 export function setAuthCookie(cookies: AstroCookies, sessionId: string): void {
@@ -81,49 +132,151 @@ export function clearAuthCookie(cookies: AstroCookies): void {
   cookies.delete('session_id', { path: '/' });
 }
 
-export function issueCsrfToken(cookies: AstroCookies): string {
-  const currentSessionId = cookies.get('session_id')?.value;
-  const { sessionId, session } = ensureSessionEntry(currentSessionId);
+/**
+ * Issues a CSRF token for a session (creates session if needed)
+ * @param cookies - Astro cookies object
+ * @returns CSRF token or null if database not configured
+ */
+export async function issueCsrfToken(cookies: AstroCookies): Promise<string | null> {
+  const supabase = getServiceSupabase();
+  if (!supabase) {
+    console.warn('Supabase not configured; cannot issue CSRF token');
+    return null;
+  }
+
+  let sessionId = cookies.get('session_id')?.value;
   const token = nanoid(CSRF_TOKEN_LENGTH);
-  session.csrfToken = token;
-  setAuthCookie(cookies, sessionId);
+  const now = new Date().toISOString();
+
+  // If no session exists, create an unauthenticated one
+  if (!sessionId) {
+    sessionId = nanoid(32);
+    const expiresAt = getExpiryTimestamp();
+
+    const { error } = await supabase.from('sessions').insert({
+      id: sessionId,
+      created_at: now,
+      expires_at: expiresAt,
+      authenticated: false,
+      csrf_token: token,
+      last_activity: now,
+    });
+
+    if (error) {
+      console.error('Failed to create session for CSRF:', error);
+      return null;
+    }
+
+    setAuthCookie(cookies, sessionId);
+    return token;
+  }
+
+  // Update existing session with new CSRF token
+  const { data, error } = await supabase
+    .from('sessions')
+    .update({
+      csrf_token: token,
+      last_activity: now,
+    })
+    .eq('id', sessionId)
+    .select();
+
+  if (error) {
+    console.error('Failed to update CSRF token:', error);
+    return null;
+  }
+
+  // If no rows were updated, the session was deleted (e.g., expired)
+  // Create a new unauthenticated session
+  if (!data || data.length === 0) {
+    sessionId = nanoid(32);
+    const expiresAt = getExpiryTimestamp();
+
+    const { error: insertError } = await supabase.from('sessions').insert({
+      id: sessionId,
+      created_at: now,
+      expires_at: expiresAt,
+      authenticated: false,
+      csrf_token: token,
+      last_activity: now,
+    });
+
+    if (insertError) {
+      console.error('Failed to create session for CSRF after stale cookie:', insertError);
+      return null;
+    }
+
+    setAuthCookie(cookies, sessionId);
+    return token;
+  }
+
   return token;
 }
 
-export function validateCsrfToken(sessionId: string | undefined, token: string | undefined): boolean {
+/**
+ * Validates a CSRF token against a session
+ * @param sessionId - The session ID to validate against
+ * @param token - The CSRF token to validate
+ * @returns true if token is valid
+ */
+export async function validateCsrfToken(
+  sessionId: string | undefined,
+  token: string | undefined
+): Promise<boolean> {
   if (!sessionId || !token) return false;
 
-  const session = sessions.get(sessionId);
-  if (!session) return false;
-
-  if (isSessionExpired(session)) {
-    sessions.delete(sessionId);
+  const supabase = getServiceSupabase();
+  if (!supabase) {
+    console.warn('Supabase not configured; cannot validate CSRF token');
     return false;
   }
 
-  if (!session.csrfToken) return false;
-  if (session.csrfToken.length !== token.length) return false;
+  const { data: session, error } = await supabase
+    .from('sessions')
+    .select('csrf_token, expires_at')
+    .eq('id', sessionId)
+    .single();
+
+  if (error || !session) {
+    return false;
+  }
+
+  // Check if session is expired
+  if (isSessionExpired(session.expires_at)) {
+    await supabase.from('sessions').delete().eq('id', sessionId);
+    return false;
+  }
+
+  if (!session.csrf_token) return false;
+  if (session.csrf_token.length !== token.length) return false;
 
   try {
-    return timingSafeEqual(Buffer.from(token), Buffer.from(session.csrfToken));
+    return timingSafeEqual(Buffer.from(token), Buffer.from(session.csrf_token));
   } catch {
     return false;
   }
 }
 
-export const CSRF_ERROR_MESSAGE = 'Invalid or expired session. Please refresh the page and try again.';
+export const CSRF_ERROR_MESSAGE =
+  'Invalid or expired session. Please refresh the page and try again.';
 
 export type CsrfValidationResult = {
   isValid: boolean;
   errorMessage?: string;
 };
 
-export function validateLoginCsrf(
+/**
+ * Validates CSRF token for login form submission
+ * @param sessionId - The session ID from cookies
+ * @param token - The CSRF token from form data
+ * @returns Validation result with error message if invalid
+ */
+export async function validateLoginCsrf(
   sessionId: string | undefined,
-  token: FormDataEntryValue | null,
-): CsrfValidationResult {
+  token: FormDataEntryValue | null
+): Promise<CsrfValidationResult> {
   const tokenValue = typeof token === 'string' ? token : undefined;
-  const isValid = validateCsrfToken(sessionId, tokenValue);
+  const isValid = await validateCsrfToken(sessionId, tokenValue);
   if (isValid) {
     return { isValid: true };
   }
@@ -134,15 +287,14 @@ export function validateLoginCsrf(
   };
 }
 
-export function checkAuth(cookies: AstroCookies): boolean {
+/**
+ * Checks if the current request has a valid authenticated session
+ * @param cookies - Astro cookies object
+ * @returns true if user is authenticated
+ */
+export async function checkAuth(cookies: AstroCookies): Promise<boolean> {
   const sessionId = cookies.get('session_id')?.value;
-  if (!validateSession(sessionId)) {
-    return false;
-  }
-
-  if (!sessionId) return false;
-  const session = sessions.get(sessionId);
-  return session?.authenticated === true;
+  return await validateSession(sessionId);
 }
 
 export function verifyAdminSecret(password: string): boolean {
