@@ -38,14 +38,27 @@ const createMockSupabaseClient = () => ({
       })),
     })),
     update: vi.fn((updates: any) => ({
-      eq: vi.fn(async (column: string, value: any) => {
-        if (table === 'sessions' && mockSessionsDb.has(value)) {
-          const session = mockSessionsDb.get(value);
-          mockSessionsDb.set(value, { ...session, ...updates });
-          return { data: { ...session, ...updates }, error: null };
-        }
-        return { data: null, error: new Error('Not found') };
-      }),
+      eq: vi.fn((column: string, value: any) => ({
+        select: vi.fn(async () => {
+          if (table === 'sessions' && mockSessionsDb.has(value)) {
+            const session = mockSessionsDb.get(value);
+            const updated = { ...session, ...updates };
+            mockSessionsDb.set(value, updated);
+            return { data: [updated], error: null };
+          }
+          return { data: [], error: null }; // No rows updated
+        }),
+        // Fallback for tests that don't use .select()
+        then: async (resolve: any) => {
+          if (table === 'sessions' && mockSessionsDb.has(value)) {
+            const session = mockSessionsDb.get(value);
+            mockSessionsDb.set(value, { ...session, ...updates });
+            resolve({ data: { ...session, ...updates }, error: null });
+          } else {
+            resolve({ data: null, error: new Error('Not found') });
+          }
+        },
+      })),
     })),
     delete: vi.fn(() => ({
       eq: vi.fn(async (column: string, value: any) => {
@@ -228,6 +241,35 @@ describe('Auth Module', () => {
       expect(await validateCsrfToken(sessionId, secondToken!)).toBe(true);
 
       await deleteSession(sessionId);
+    });
+
+    it('should create new session when cookie exists but DB row is missing', async () => {
+      // Create a session and get its ID
+      const cookies = createMockCookies();
+      const firstToken = await issueCsrfToken(cookies);
+      const firstSessionId = cookies.get('session_id')?.value;
+      expect(firstSessionId).toBeDefined();
+
+      // Delete the session from DB (simulating expiry cleanup)
+      await deleteSession(firstSessionId);
+
+      // Cookie still exists, but DB row is gone
+      // issueCsrfToken should create a new session
+      const secondToken = await issueCsrfToken(cookies);
+      const secondSessionId = cookies.get('session_id')?.value;
+
+      // Should have created a new session
+      expect(secondToken).not.toBeNull();
+      expect(secondSessionId).toBeDefined();
+      expect(secondSessionId).not.toBe(firstSessionId); // New session ID
+
+      // New token should be valid
+      expect(await validateCsrfToken(secondSessionId, secondToken!)).toBe(true);
+
+      // Old token should not work with new session
+      expect(await validateCsrfToken(secondSessionId, firstToken!)).toBe(false);
+
+      await deleteSession(secondSessionId);
     });
   });
 });

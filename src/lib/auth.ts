@@ -172,17 +172,42 @@ export async function issueCsrfToken(cookies: AstroCookies): Promise<string | nu
   }
 
   // Update existing session with new CSRF token
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from('sessions')
     .update({
       csrf_token: token,
       last_activity: now,
     })
-    .eq('id', sessionId);
+    .eq('id', sessionId)
+    .select();
 
   if (error) {
     console.error('Failed to update CSRF token:', error);
     return null;
+  }
+
+  // If no rows were updated, the session was deleted (e.g., expired)
+  // Create a new unauthenticated session
+  if (!data || data.length === 0) {
+    sessionId = nanoid(32);
+    const expiresAt = getExpiryTimestamp();
+
+    const { error: insertError } = await supabase.from('sessions').insert({
+      id: sessionId,
+      created_at: now,
+      expires_at: expiresAt,
+      authenticated: false,
+      csrf_token: token,
+      last_activity: now,
+    });
+
+    if (insertError) {
+      console.error('Failed to create session for CSRF after stale cookie:', insertError);
+      return null;
+    }
+
+    setAuthCookie(cookies, sessionId);
+    return token;
   }
 
   return token;
