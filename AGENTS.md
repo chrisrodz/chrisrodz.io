@@ -553,7 +553,7 @@ The language switcher in `Layout.astro` uses `getTranslatedPost()` to:
 - ✅ Fix ESLint warnings as you code
 - ✅ Pre-commit hooks will catch issues before they're committed
 - ❌ Don't disable ESLint rules without good reason
-- ❌ Don't skip pre-commit hooks (`--no-verify`)
+- ❌ Don't skip pre-commit hooks (`--no-verify`) unless absolutely necessary (e.g., emergency hotfixes, automated tooling)
 
 ## Testing
 
