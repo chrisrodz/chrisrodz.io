@@ -132,6 +132,7 @@ if (Astro.request.method === 'POST') {
       const sessionId = await createSession(ipAddress, userAgent);
       if (sessionId) {
         setAuthCookie(cookies, sessionId);
+        csrfToken = 'authenticated'; // Prevent CSRF token generation after successful login
         return Astro.redirect('/admin/cafe');
       } else {
         loginError = 'Failed to create session. Please check database configuration.';
