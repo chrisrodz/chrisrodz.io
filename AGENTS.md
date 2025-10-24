@@ -31,7 +31,7 @@ yarn db:pull          # Pull schema from dev DB
 
 ## Git Workflow
 
-**Critical**: Always work on feature branches to protect `main` which auto-deploys to production.
+**Critical**: Always work on feature branches and use GitHub pull requests to protect `main` which auto-deploys to production.
 
 ### Standard Workflow
 
@@ -59,31 +59,34 @@ yarn db:pull          # Pull schema from dev DB
    git push -u origin feature/description
    ```
 
-4. **Merge when ready**:
+4. **Create Pull Request** (always required):
+
+   ```bash
+   gh pr create --title "Feature: [description]" --body "[detailed description]"
+   ```
+
+   For work-in-progress:
+
+   ```bash
+   gh pr create --draft --title "WIP: [description]" --body "[description]"
+   gh pr ready  # When ready for review
+   ```
+
+5. **Merge via GitHub** after review:
+   - Use GitHub's merge button (squash and merge recommended)
+   - Delete feature branch automatically via GitHub
+
+6. **Clean up locally**:
 
    ```bash
    git checkout main
-   git merge feature/description
-   git push
-   ```
-
-5. **Clean up** after merge:
-
-   ```bash
+   git pull
    git branch -d feature/description
-   git push origin --delete feature/description
    ```
 
-### Pull Requests (Optional)
+### Pull Request Requirements
 
-**Only create PRs when explicitly requested.** For most autonomous development tasks, direct merge to main after local testing is sufficient.
-
-When a PR is requested:
-
-```bash
-gh pr create --draft --title "Feature: [description]" --body "[description]"
-gh pr ready  # When ready for review
-```
+**All changes must go through pull requests** - no direct merges to main allowed.
 
 ### Branch Naming Convention
 
@@ -98,8 +101,10 @@ gh pr ready  # When ready for review
 - ✅ Write clear, descriptive commit messages.
 - ✅ Always test locally before committing
 - ✅ Always push immediately after committing
+- ✅ Always create pull requests for code review
 - ❌ Never commit without pushing (work could be lost)
 - ❌ Never commit directly to `main`
+- ❌ Never merge feature branches directly to main
 - ❌ Never add Claude or Anthropic as a co-author to commits
 - ❌ Never mention Claude or Anthropic in commit descriptions
 
@@ -460,7 +465,7 @@ The site supports Spanish (default) and English:
 
 **Example**:
 
-```
+```sh
 src/content/blog/welcome-post-2025/
 ├── en.md    # slug: "welcome-to-my-site"  → /en/blog/welcome-to-my-site
 └── es.md    # slug: "bienvenido-a-mi-sitio" → /blog/bienvenido-a-mi-sitio
@@ -548,7 +553,7 @@ The language switcher in `Layout.astro` uses `getTranslatedPost()` to:
 - ✅ Fix ESLint warnings as you code
 - ✅ Pre-commit hooks will catch issues before they're committed
 - ❌ Don't disable ESLint rules without good reason
-- ❌ Don't skip pre-commit hooks (`--no-verify`) unless absolutely necessary
+- ❌ Don't skip pre-commit hooks (`--no-verify`)
 
 ## Testing
 
