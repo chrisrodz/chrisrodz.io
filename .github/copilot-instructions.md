@@ -95,11 +95,14 @@ const result = coffeeSchema.safeParse(formData);
 
 ## Git Workflow
 
-- **Never commit to `main`** - always use feature branches
-- `main` auto-deploys to production (Vercel)
-- **Always push immediately after commit** (prevents lost work)
-- Use: `git add . && git commit -m "msg" && git push`
-
+- **Never commit directly to `main`** – always use feature branches.
+- `main` auto-deploys to production (Vercel).
+- **All changes must be merged via Pull Request (PR)** – PRs are mandatory.
+- Workflow:
+  1. Create a feature branch: `git checkout -b my-feature`
+  2. Make changes, then commit and push: `git add . && git commit -m "msg" && git push -u origin my-feature`
+  3. Open a Pull Request (PR) on GitHub to merge your feature branch into `main`.
+  4. Wait for review and approval before merging.
 ## File Organization
 
 - `src/lib/`: Core utilities (auth, i18n, supabase, validation)
