@@ -155,12 +155,45 @@ export type Database = {
           },
         ];
       };
+      sessions: {
+        Row: {
+          authenticated: boolean;
+          created_at: string;
+          csrf_token: string | null;
+          expires_at: string;
+          id: string;
+          ip_address: string | null;
+          last_activity: string;
+          user_agent: string | null;
+        };
+        Insert: {
+          authenticated?: boolean;
+          created_at?: string;
+          csrf_token?: string | null;
+          expires_at: string;
+          id: string;
+          ip_address?: string | null;
+          last_activity?: string;
+          user_agent?: string | null;
+        };
+        Update: {
+          authenticated?: boolean;
+          created_at?: string;
+          csrf_token?: string | null;
+          expires_at?: string;
+          id?: string;
+          ip_address?: string | null;
+          last_activity?: string;
+          user_agent?: string | null;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      cleanup_expired_sessions: { Args: never; Returns: undefined };
     };
     Enums: {
       [_ in never]: never;
