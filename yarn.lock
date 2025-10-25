@@ -2747,7 +2747,7 @@ fast-uri@^3.0.1:
   resolved "https://registry.yarnpkg.com/fast-uri/-/fast-uri-3.1.0.tgz#66eecff6c764c0df9b762e62ca7edcfb53b4edfa"
   integrity sha512-iPeeDKJSWf4IEOasVVrknXpaBV0IApz/gp7S2bb7Z4Lljbl2MGJRqInZiUrQwV16cpzw/D3S5j5Julj/gT52AA==
 
-fast-xml-parser@^5.2.0:
+fast-xml-parser@^5.2.0, fast-xml-parser@^5.3.0:
   version "5.3.0"
   resolved "https://registry.yarnpkg.com/fast-xml-parser/-/fast-xml-parser-5.3.0.tgz#ae388d5a0f6ed31c8ce9e413c1ac89c8e57e7b07"
   integrity sha512-gkWGshjYcQCF+6qtlrqBqELqNqnt4CxruY6UVAWWnqb3DQ6qaNFEIKqzYep1XzHLM/QtrHVCxyPOtTk4LTQ7Aw==
