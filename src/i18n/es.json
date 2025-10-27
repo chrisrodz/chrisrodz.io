@@ -43,7 +43,8 @@
     "backToHome": "Volver al inicio",
     "tags": "Etiquetas",
     "category": "Categoría",
-    "rssTitle": "Christian Rodriguez - Blog (Español)"
+    "rssTitle": "Christian Rodriguez - Blog (Español)",
+    "rssDescription": "Ingeniería de software, lecciones de vida y pensamientos que vale la pena compartir"
   },
   "cafe": {
     "title": "Diario de Café",

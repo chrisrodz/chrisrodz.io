@@ -43,7 +43,8 @@
     "backToHome": "Back to home",
     "tags": "Tags",
     "category": "Category",
-    "rssTitle": "Christian Rodriguez - Blog (English)"
+    "rssTitle": "Christian Rodriguez - Blog (English)",
+    "rssDescription": "Software engineering, life lessons, and thoughts worth sharing by Christian Rodriguez"
   },
   "cafe": {
     "title": "Coffee Diary",

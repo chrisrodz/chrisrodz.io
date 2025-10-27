@@ -34,6 +34,7 @@ export type TranslationKey =
   | 'blog.tags'
   | 'blog.category'
   | 'blog.rssTitle'
+  | 'blog.rssDescription'
   | 'cafe.title'
   | 'cafe.metaDescription'
   | 'cafe.heading'

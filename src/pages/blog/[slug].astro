@@ -13,9 +13,9 @@ if (!slug) {
   return Astro.redirect('/404');
 }
 
-// Find the Spanish blog post by slug field (Spanish is now default)
+// Find the blog post by slug field for the current locale
 const allPosts = await getCollection('blog');
-const entry = allPosts.find((post) => post.data.slug === slug && post.data.locale === 'es');
+const entry = allPosts.find((post) => post.data.slug === slug && post.data.locale === locale);
 
 if (!entry) {
   return Astro.redirect('/404');
@@ -53,7 +53,7 @@ const structuredData = {
     name: 'Christian Rodriguez',
     url: 'https://chrisrodz.io',
   },
-  inLanguage: 'es',
+  inLanguage: locale,
   url: new URL(getBlogPostUrl(post), Astro.site || 'https://chrisrodz.io').toString(),
   mainEntityOfPage: {
     '@type': 'WebPage',
@@ -70,7 +70,7 @@ const structuredData = {
     <header style="margin-bottom: 3rem;">
       <nav style="margin-bottom: 1.5rem;">
         <a
-          href="/"
+          href={locale === 'en' ? '/en' : '/'}
           style="text-decoration: none; color: var(--pico-muted-color); font-weight: 500; font-size: 0.9375rem;"
         >
           ← {t('blog.backToHome')}
@@ -108,7 +108,9 @@ const structuredData = {
   <div style="max-width: 70ch; margin: 3rem auto 0;">
     <hr style="margin: 3rem 0;" />
     <nav>
-      <a href="/" role="button" class="secondary"> ← {t('blog.backToHome')} </a>
+      <a href={locale === 'en' ? '/en' : '/'} role="button" class="secondary">
+        ← {t('blog.backToHome')}
+      </a>
     </nav>
   </div>
 </Layout>
