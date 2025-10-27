@@ -116,8 +116,9 @@ yarn db:pull          # Pull schema from dev DB
 1. Move entries from `[Unreleased]` to a new version section
 2. Add version number and date: `## [X.Y.Z] - YYYY-MM-DD`
 3. Update comparison links at bottom of changelog
-4. Commit with message: `chore: release vX.Y.Z`
-5. Optionally create git tag: `git tag vX.Y.Z && git push --tags`
+4. Update version in `package.json` to match: `"version": "X.Y.Z"`
+5. Commit with message: `chore: release vX.Y.Z`
+6. Optionally create git tag: `git tag vX.Y.Z && git push --tags`
 
 **Version bumping guidelines**:
 
