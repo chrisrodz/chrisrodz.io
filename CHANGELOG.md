@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.1] - 2025-10-26
+
+**System Theme Detection** - Enhanced theme detection to automatically respect user's device dark/light mode preference on first visit.
+
+### Added
+
+- System preference detection using `prefers-color-scheme` media query
+- Automatic dark mode for first-time visitors with dark mode system preference
+- Automatic light mode for first-time visitors with light mode system preference
+
+### Changed
+
+- Theme initialization now checks localStorage first, then system preference, then defaults to light
+- Updated theme detection priority: explicit user choice > system preference > default
+
+### Technical Details
+
+- FOUC prevention script now detects `window.matchMedia('(prefers-color-scheme: dark)')`
+- Maintains backward compatibility - existing localStorage preferences take priority
+- First-time visitors automatically see their preferred theme without manual toggle
+
 ## [1.1.0] - 2025-10-26
 
 **I18n Consolidation** - Eliminated code duplication across internationalized pages using thin wrapper pattern.
@@ -302,7 +323,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-[Unreleased]: https://github.com/chrisrodz/chrisrodz.io/compare/v1.1.0...HEAD
+[Unreleased]: https://github.com/chrisrodz/chrisrodz.io/compare/v1.1.1...HEAD
+[1.1.1]: https://github.com/chrisrodz/chrisrodz.io/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/chrisrodz/chrisrodz.io/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/chrisrodz/chrisrodz.io/compare/v0.9.0...v1.0.0
 [0.9.0]: https://github.com/chrisrodz/chrisrodz.io/compare/v0.8.0...v0.9.0
