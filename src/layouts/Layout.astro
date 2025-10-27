@@ -107,7 +107,11 @@ const currentYear = new Date().getFullYear().toString();
 
     <!-- Theme script (prevent FOUC) -->
     <script is:inline>
-      const theme = localStorage.getItem('theme') || 'light';
+      // Check localStorage first (user's explicit choice), then system preference, then default to light
+      const savedTheme = localStorage.getItem('theme');
+      const systemPrefersDark =
+        window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      const theme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
       document.documentElement.setAttribute('data-theme', theme);
     </script>
   </head>
@@ -201,23 +205,30 @@ const currentYear = new Date().getFullYear().toString();
           >
             {t(locale, 'footer.x')}
           </a>
-          {isAdmin && (
-            <a
-              href="/admin/cafe"
-              style="font-size: 1.25rem; text-decoration: none; opacity: 0.6; transition: opacity 0.2s, transform 0.2s;"
-              onmouseover="this.style.opacity='1'; this.style.transform='scale(1.2)'"
-              onmouseout="this.style.opacity='0.6'; this.style.transform='scale(1)'"
-              title="Quick coffee log"
-              aria-label="Quick access to coffee logger"
-            >
-              ☕
-            </a>
-          )}
-          {isAdmin && (
-            <a href="/admin/logout" style="color: var(--pico-muted-color); text-decoration: none;">
-              {t(locale, 'footer.logout')}
-            </a>
-          )}
+          {
+            isAdmin && (
+              <a
+                href="/admin/cafe"
+                style="font-size: 1.25rem; text-decoration: none; opacity: 0.6; transition: opacity 0.2s, transform 0.2s;"
+                onmouseover="this.style.opacity='1'; this.style.transform='scale(1.2)'"
+                onmouseout="this.style.opacity='0.6'; this.style.transform='scale(1)'"
+                title="Quick coffee log"
+                aria-label="Quick access to coffee logger"
+              >
+                ☕
+              </a>
+            )
+          }
+          {
+            isAdmin && (
+              <a
+                href="/admin/logout"
+                style="color: var(--pico-muted-color); text-decoration: none;"
+              >
+                {t(locale, 'footer.logout')}
+              </a>
+            )
+          }
         </div>
       </div>
     </footer>
@@ -239,6 +250,7 @@ const currentYear = new Date().getFullYear().toString();
         localStorage.setItem('theme', theme);
       }
 
+      // Set initial icon based on the theme that was set (could be from localStorage, system preference, or default)
       const currentTheme = html.getAttribute('data-theme') || 'light';
       themeIcon.textContent = currentTheme === 'dark' ? '🌞' : '🌕';
 
