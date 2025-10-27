@@ -2,33 +2,6 @@
 
 This file provides comprehensive guidance to AI Coding Agents when working with code in this repository.
 
-## Development Commands
-
-```bash
-# Development
-yarn dev              # Start dev server (localhost:4321)
-yarn build            # Type check + build for production
-yarn preview          # Preview production build
-
-# Content
-yarn new-post "Title"       # Create both en.md and es.md
-yarn new-post "Title" en    # Create only English post
-yarn new-post "Title" es    # Create only Spanish post
-
-# Internationalization
-yarn generate:i18n    # Generate TypeScript types from translation JSON
-yarn validate:i18n    # Validate translation completeness (both languages)
-yarn check            # Run all checks (validate + type check + lint + format)
-
-# Database (Supabase - Cloud-based dev, no Docker required)
-yarn db:setup <ref>   # Link to dev project, push migrations, generate types
-yarn db:link <ref>    # Link to a Supabase project
-yarn db:migration <name>    # Create new migration file
-yarn db:types         # Generate TypeScript types from linked DB
-yarn db:push          # Push migrations to dev DB
-yarn db:pull          # Pull schema from dev DB
-```
-
 ## Git Workflow
 
 **Critical**: Always work on feature branches and use GitHub pull requests to protect `main` which auto-deploys to production.
@@ -65,30 +38,11 @@ yarn db:pull          # Pull schema from dev DB
    gh pr create --title "Feature: [description]" --body "[detailed description]"
    ```
 
-   For work-in-progress:
-
-   ```bash
-   gh pr create --draft --title "WIP: [description]" --body "[description]"
-   gh pr ready  # When ready for review
-   ```
-
-5. **Merge via GitHub** after review:
-   - Use GitHub's merge button (squash and merge recommended)
-   - Delete feature branch automatically via GitHub
-
-6. **Clean up locally**:
-
-   ```bash
-   git checkout main
-   git pull
-   git branch -d feature/description
-   ```
-
 ### Updating the Changelog
 
 **Before creating a pull request**, update [CHANGELOG.md](CHANGELOG.md):
 
-1. Add entry under `## [Unreleased]` section at the top of the changelog
+1. Add entry under a new version. Never infer the version. ALWAYS ask user for what type of bump it is major, minor, patch.
 2. Use appropriate category: `Added`, `Changed`, `Fixed`, `Removed`, `Security`
 3. Write concise description of your changes
 4. Include PR number placeholder that will be updated after PR creation
@@ -147,14 +101,6 @@ yarn db:pull          # Pull schema from dev DB
 - ❌ Never commit without pushing (work could be lost)
 - ❌ Never commit directly to `main`
 - ❌ Never merge feature branches directly to main
-- ❌ Never add Claude or Anthropic as a co-author to commits
-- ❌ Never mention Claude or Anthropic in commit descriptions
-
-### Deployment
-
-- **Main branch** auto-deploys to production (Vercel)
-- **Feature branches** do NOT auto-deploy
-- **Preview deployments** available for PRs (when created)
 
 ## Architecture Overview
 
@@ -256,8 +202,8 @@ if (!supabase) {
 Features work standalone without Supabase:
 
 - Blog: Fully functional (uses file-based content)
-- Coffee/Training: Show setup instructions when DB missing
-- Admin: Shows setup instructions when ADMIN_SECRET missing
+- Coffee: Show setup instructions when DB missing
+- Admin: Shows setup instructions when secrets are missing
 
 #### Database Migrations (Supabase CLI)
 
@@ -313,53 +259,12 @@ See `supabase/README.md` and `docs/DEPLOYMENT.md` for detailed workflow and best
 
 ### Authentication
 
-**Session-based auth** (not JWT):
-
-- Sessions stored in-memory Map (consider Redis for production)
-- 24-hour expiry
-- HttpOnly cookies with `secure` flag in production
-- No passwords in database (uses `ADMIN_SECRET` env var)
-
-**Auth flow**:
-
-```typescript
-import { checkAuth, setAuthCookie, createSession } from '@/lib/auth';
-
-// Check if authenticated
-const isAuth = checkAuth(Astro.cookies);
-
-// Create session after login
-if (verifyAdminSecret(password)) {
-  const sessionId = createSession();
-  setAuthCookie(Astro.cookies, sessionId);
-}
-```
-
 **Protected routes**: Check `checkAuth()` at top of page, redirect if false.
 
 ### Input Validation
 
 All forms use **Zod schemas** defined in `src/lib/validation.ts`:
-
-```typescript
-import { coffeeSchema } from '@/lib/validation';
-
-const result = coffeeSchema.safeParse(formData);
-if (!result.success) {
-  return { errors: result.error.flatten().fieldErrors };
-}
-```
-
 Never trust user input. Always validate with Zod before database operations.
-
-## Tech Stack
-
-- **Framework**: Astro v5.14+ (SSR mode)
-- **Styling**: Pico CSS v2
-- **Database**: Supabase (PostgreSQL, optional with graceful degradation)
-- **Auth**: Custom session-based (nanoid)
-- **Validation**: Zod schemas
-- **Deployment**: Vercel (Node.js 20+)
 
 ## Key Files
 
@@ -378,22 +283,7 @@ Never trust user input. Always validate with Zod before database operations.
 
 Required for full functionality (see `.env.example`):
 
-```bash
-# Admin access
-ADMIN_SECRET=random_string
-
-# Supabase (optional, for coffee/training)
-SUPABASE_URL=https://...
-SUPABASE_ANON_KEY=...
-SUPABASE_SERVICE_KEY=...
-
-# Strava (optional, for training sync)
-STRAVA_CLIENT_ID=...
-STRAVA_CLIENT_SECRET=...
-STRAVA_REFRESH_TOKEN=...
-```
-
-App functions without these (shows setup instructions instead).
+For testing locally you may read the .env file for credentials used to login to the admin page
 
 ## Database Schema
 
@@ -404,16 +294,6 @@ Supabase tables (if configured):
 - `activities`: Training activities (Strava sync)
 
 All tables have Row Level Security enabled with public read access.
-
-## Common Patterns
-
-### Creating a new page
-
-1. Add `.astro` file to `src/pages/`
-2. Import Layout: `import Layout from '@/layouts/Layout.astro';`
-3. Use PicoCSS classes/variables for styling
-
-### Adding a blog post
 
 ```bash
 # Create both English and Spanish versions
@@ -431,66 +311,6 @@ This creates:
 - `src/content/blog/my-post-title-2025/en.md` (and/or `es.md`)
 - Frontmatter includes: `title`, `description`, `slug`, `pubDate`, `tags`, `locale`
 - Edit the generated file(s) to customize the slug and add content
-
-### Accessing blog posts in code
-
-```typescript
-import { getCollection, render } from 'astro:content';
-import { getTranslatedPost, getBlogPostUrl } from '@/lib/i18n';
-
-// List all English posts
-const posts = await getCollection('blog', ({ data }) => data.locale === 'en');
-
-// Find post by custom slug (not by ID)
-const allPosts = await getCollection('blog');
-const post = allPosts.find((p) => p.data.slug === 'my-slug' && p.data.locale === 'en');
-if (!post) return Astro.redirect('/404');
-
-// Render content
-const { Content } = await render(post);
-
-// Find translation
-const translatedPost = await getTranslatedPost(post, 'es');
-if (translatedPost) {
-  const translatedUrl = getBlogPostUrl(translatedPost);
-}
-```
-
-### Working with forms
-
-```typescript
-import { coffeeSchema } from '@/lib/validation';
-
-const formData = await Astro.request.formData();
-const data = Object.fromEntries(formData);
-
-const result = coffeeSchema.safeParse(data);
-if (!result.success) {
-  // Handle validation errors
-}
-
-// Use result.data for type-safe access
-```
-
-## Production Deployment
-
-Deploys to **Vercel** with Node.js 20+ runtime.
-
-Auto-deploys on push to `main` branch.
-
-Required Vercel environment variables:
-
-- `ADMIN_SECRET` (required)
-- Supabase vars (optional)
-- Strava vars (optional)
-
-## Type Safety
-
-Full TypeScript coverage. Key types:
-
-- `CollectionEntry<'blog'>`: Blog post type
-- `SupabaseClient | null`: Database client
-- Zod inferred types: `z.infer<typeof coffeeSchema>`
 
 ## Internationalization (i18n)
 
@@ -542,79 +362,18 @@ The language switcher in `Layout.astro` uses `getTranslatedPost()` to:
 
 ### Formatting (Prettier)
 
-- Auto-formats on save in VSCode
-- Run manually: `yarn format`
-- Check formatting: `yarn format:check`
-- Config: `.prettierrc`
-
-**Prettier settings**:
-
-- Single quotes
-- Semicolons enabled
-- 2-space tabs
-- 100 character line width
-- Includes `prettier-plugin-astro` for `.astro` file support
-
 ### Linting (ESLint)
-
-- Auto-fixes on save in VSCode
-- Run manually: `yarn lint`
-- Fix auto-fixable issues: `yarn lint:fix`
-- Config: `eslint.config.js` (ESLint flat config format)
-
-**Key ESLint rules**:
-
-- Warns on unused variables (except those prefixed with `_`)
-- Warns on `console.log` (allows `console.warn` and `console.error`)
-- Enforces `const` over `let` where possible
-- Prohibits `var`
-- Includes Astro-specific linting rules
 
 ### Pre-commit Hooks (Husky + lint-staged)
 
-- Automatically formats and lints staged files before commit
-- Prevents committing improperly formatted code
-- Config: `lint-staged` in `package.json`
-
-**What runs on commit**:
-
-- `src/i18n/*.json`: Validate translations → Generate types → Stage generated types → Prettier format
-- `*.{js,ts,astro}`: ESLint fix → Prettier format
-- `*.{json,md,css}`: Prettier format
-
-**Translation file hooks ensure:**
-
-- Both language files always have matching keys
-- TypeScript types auto-regenerate when translations change
-- Generated `i18n-keys.ts` file is automatically staged
-
-### Best Practices
+### Code Quality Best Practices
 
 - ✅ Always run `yarn check` before pushing (runs type check + lint + format check)
 - ✅ Let VSCode auto-format on save (requires Prettier extension)
 - ✅ Fix ESLint warnings as you code
 - ✅ Pre-commit hooks will catch issues before they're committed
 - ❌ Don't disable ESLint rules without good reason
-- ❌ Don't skip pre-commit hooks (`--no-verify`) unless absolutely necessary (e.g., emergency hotfixes, automated tooling)
-
-## Testing
-
-Tests use **Vitest** + **Testing Library** (React) with coverage reporting via v8.
-
-### Running Tests
-
-```bash
-yarn test              # Run all tests
-yarn test:coverage     # Run with coverage report
-yarn test:watch        # Watch mode for development
-```
-
-### Test Files Location
-
-- Component tests: `src/components/**/*.test.tsx`
-- Utility tests: `src/lib/**/*.test.ts`
-- API tests: `src/pages/api/**/*.test.ts`
-- Config: `vitest.config.ts`, `vitest.setup.ts`
+- ❌ Don't skip pre-commit hooks (`--no-verify`) unless absolutely necessary (e.g., emergency hot-fixes, automated tooling)
 
 ### High-Value Tests (Write These)
 
@@ -734,12 +493,6 @@ Aim for **>80% coverage on critical paths**, but remember:
 - **High coverage with low-value tests = false security**
 - **Focus on signal-to-noise ratio over raw percentage**
 
-Current coverage for cafe components:
-
-- `AddBeanForm.tsx`: 100%
-- `CoffeeLogForm.tsx`: 93.5%
-- `cafe.ts` (schemas): 100%
-
 ### Test Organization
 
 ```typescript
@@ -768,73 +521,6 @@ describe('ComponentName', () => {
 });
 ```
 
-### Common Patterns
-
-**Mocking fetch:**
-
-```typescript
-const mockFetch = vi.fn();
-global.fetch = mockFetch;
-
-mockFetch.mockResolvedValueOnce({
-  ok: true,
-  json: async () => ({ data: mockData }),
-});
-```
-
-**Testing async operations:**
-
-```typescript
-import { waitFor } from '@testing-library/react';
-
-await waitFor(() => {
-  expect(screen.getByText('Success!')).toBeInTheDocument();
-});
-```
-
-**Testing form submission:**
-
-```typescript
-fireEvent.change(input, { target: { value: 'test' } });
-fireEvent.click(submitButton);
-
-await waitFor(() => {
-  expect(mockFetch).toHaveBeenCalledWith(
-    '/api/endpoint',
-    expect.objectContaining({ method: 'POST' })
-  );
-});
-```
-
-### Maintenance Strategy
-
-**When tests break:**
-
-1. **Feature change?** Update tests to reflect new behavior
-2. **Refactoring?** If tests break, they were testing implementation (bad tests)
-3. **False positive?** Remove or rewrite the test
-
-**Removing tests:**
-
-- Periodically review test value (signal vs noise)
-- Remove tests that haven't caught bugs in 6+ months
-- Consolidate redundant tests
-
-**Remember:** Fewer high-value tests > many low-value tests
-
-## Documentation
-
-All project documentation is organized in the `/docs` directory:
-
-- `docs/README.md` - Documentation index and quick links
-- `docs/DEPLOYMENT.md` - Database migration and deployment strategy
-- `docs/NEXT_STEPS.md` - Feature roadmap and optimization opportunities
-- `docs/development/` - Development guides and migration plans
-
-**When creating planning or design documents, place them in `/docs` or `/docs/development/` instead of the root directory.** This keeps the root clean and all documentation centralized.
-
-See `docs/README.md` for a complete index of all available documentation.
-
 ## Notes for Future Development
 
 1. **Don't override PicoCSS colors** unless absolutely necessary. Use CSS variables.
@@ -848,7 +534,3 @@ See `docs/README.md` for a complete index of all available documentation.
 9. **Translation system**: Use type-safe `t()` function for all user-facing text. Never hardcode strings. Pre-commit hooks validate translation completeness.
 10. **Spanish is default**: All non-prefixed URLs (`/about`, `/blog/slug`) serve Spanish content. English uses `/en/` prefix.
 11. **Content/Copy Review**: Whenever adding or updating user-facing text, **do a manual review in the browser before committing**. This includes homepage copy, headings, descriptions, and any translation content. Pre-commit hooks validate i18n completeness but not content accuracy or tone.
-
----
-
-**Last updated**: 2025-10-17 (Copy review reminder added)

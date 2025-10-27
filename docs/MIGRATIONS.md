@@ -228,78 +228,21 @@ git push
 
 ## Automated CI/CD Setup
 
-### Recommended: GitHub Actions
+For automatic migration deployment on every push to `main`, this repository includes a pre-configured GitHub Actions workflow.
 
-Create `.github/workflows/supabase-migrations.yml`:
+See `.github/workflows/supabase-migrations.yml` for the automated migrations runner that:
 
-```yaml
-name: Supabase Migrations
+1. Runs on every push to `main` branch
+2. Sets up Supabase CLI
+3. Links to your production project
+4. Pushes pending migrations
+5. Generates updated TypeScript types
 
-on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'supabase/migrations/**'
-
-jobs:
-  deploy-migrations:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'yarn'
-
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-
-      - name: Setup Supabase CLI
-        uses: supabase/setup-cli@v1
-        with:
-          version: latest
-
-      - name: Link to Supabase project
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-          PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
-        run: supabase link --project-ref $PROJECT_ID
-
-      - name: Push migrations to production
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
-        run: yarn db:push
-
-      - name: Generate TypeScript types
-        run: yarn db:types:remote
-
-      - name: Commit updated types
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add src/lib/database.types.ts
-          git diff --staged --quiet || git commit -m "Update database types from production schema"
-          git push
-```
-
-### Required GitHub Secrets
-
-Add these to your GitHub repository (Settings → Secrets and variables → Actions):
-
-- `SUPABASE_ACCESS_TOKEN` - Your Supabase access token
-- `SUPABASE_PROJECT_ID` - Your project reference ID
-- `SUPABASE_DB_PASSWORD` - Your database password
+**Manual override:** If you need to skip automated migrations for a specific deployment, include `[skip migrations]` in your commit message.
 
 ---
 
-## Verification & Rollback
-
-### Verify Migration Success
+### Verification & Rollback
 
 After deployment:
 
@@ -416,6 +359,7 @@ yarn db:pull
 6. **Back up production** before risky migrations
 7. **Monitor after deployment** - check logs and test features immediately
 8. **Use transactions** in migration SQL where possible:
+
    ```sql
    BEGIN;
    -- Your changes here
@@ -441,7 +385,3 @@ yarn db:types:remote    # Update types from production
 supabase migration list # Check migration status
 yarn db:status          # Check local services
 ```
-
----
-
-**Last updated**: 2025-10-16
