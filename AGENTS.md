@@ -84,6 +84,48 @@ yarn db:pull          # Pull schema from dev DB
    git branch -d feature/description
    ```
 
+### Updating the Changelog
+
+**Before creating a pull request**, update [CHANGELOG.md](CHANGELOG.md):
+
+1. Add entry under `## [Unreleased]` section at the top of the changelog
+2. Use appropriate category: `Added`, `Changed`, `Fixed`, `Removed`, `Security`
+3. Write concise description of your changes
+4. Include PR number placeholder that will be updated after PR creation
+
+**Example**:
+
+```markdown
+## [Unreleased]
+
+### Added
+
+- New feature for user authentication (#XX)
+```
+
+**After creating the PR**, update the placeholder:
+
+```markdown
+### Added
+
+- New feature for user authentication ([#123](https://github.com/chrisrodz/chrisrodz.io/pull/123))
+```
+
+**When releasing to production** (merging significant changes to main):
+
+1. Move entries from `[Unreleased]` to a new version section
+2. Add version number and date: `## [X.Y.Z] - YYYY-MM-DD`
+3. Update comparison links at bottom of changelog
+4. Update version in `package.json` to match: `"version": "X.Y.Z"`
+5. Commit with message: `chore: release vX.Y.Z`
+6. Optionally create git tag: `git tag vX.Y.Z && git push --tags`
+
+**Version bumping guidelines**:
+
+- **MAJOR** (X.0.0): Breaking changes, major architecture rewrites, incompatible API changes
+- **MINOR** (0.X.0): New features, significant improvements, non-breaking enhancements
+- **PATCH** (0.0.X): Bug fixes, minor tweaks, dependency updates
+
 ### Pull Request Requirements
 
 **All changes must go through pull requests** - no direct merges to main allowed.

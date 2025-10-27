@@ -8,6 +8,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Please see `AGENTS.md` in this same directory for the main project documentation and guidance.
 
+## Changelog
+
+See [CHANGELOG.md](CHANGELOG.md) for the project's version history and release notes. When making changes, remember to update the `[Unreleased]` section with your additions, fixes, or changes.
+
 ## Additional Component-Specific Guidance
 
 For detailed module-specific implementation guides, also check for AGENTS.md files in subdirectories throughout the project, particularly in:

@@ -8,6 +8,7 @@ This directory contains all project documentation organized by category.
 
 - **[../CLAUDE.md](../CLAUDE.md)** - Claude Code guidance for developers (architecture, commands, patterns)
 - **[../README.md](../README.md)** - Project overview and quick start
+- **[../CHANGELOG.md](../CHANGELOG.md)** - Version history and release notes
 
 ### Deployment & Operations
 
@@ -145,6 +146,7 @@ Developer guidance for Claude Code (external reference):
 | I want to...                   | Go to...                                                                 |
 | ------------------------------ | ------------------------------------------------------------------------ |
 | Understand the project         | [../README.md](../README.md)                                             |
+| See version history            | [../CHANGELOG.md](../CHANGELOG.md)                                       |
 | Develop locally                | [../CLAUDE.md](../CLAUDE.md)                                             |
 | Set up database                | [../supabase/README.md](../supabase/README.md)                           |
 | Deploy to production           | [DEPLOYMENT.md](DEPLOYMENT.md)                                           |
