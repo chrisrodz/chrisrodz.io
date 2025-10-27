@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.1] - 2025-10-27
+
+**Documentation Streamlining** - Comprehensive cleanup and restructuring for public repository readiness.
+
+### Added
+
+- MIT License for open-source distribution ([#49](https://github.com/chrisrodz/chrisrodz.io/pull/49))
+
+### Changed
+
+- Refactored AGENTS.md from verbose to concise table format (~80% reduction) ([#49](https://github.com/chrisrodz/chrisrodz.io/pull/49))
+- Streamlined README.md for public audience, removed internal planning details ([#49](https://github.com/chrisrodz/chrisrodz.io/pull/49))
+- Updated CLAUDE.md instructions for AI coding agents ([#49](https://github.com/chrisrodz/chrisrodz.io/pull/49))
+- Renamed docs/DEPLOYMENT.md → docs/MIGRATIONS.md to reflect actual content ([#49](https://github.com/chrisrodz/chrisrodz.io/pull/49))
+
+### Removed
+
+- Obsolete documentation files: NEXT_STEPS.md, README.md, TESTING.md, cafe-page-redesign.md ([#49](https://github.com/chrisrodz/chrisrodz.io/pull/49))
+- Outdated migration plans in docs/development/ directory ([#49](https://github.com/chrisrodz/chrisrodz.io/pull/49))
+- GitHub Copilot instructions file (.github/copilot-instructions.md) ([#49](https://github.com/chrisrodz/chrisrodz.io/pull/49))
+
 ## [1.2.0] - 2025-10-27
 
 **Schema.org Structured Data** - Enhanced SEO with Person schema for Google Knowledge Panel eligibility.
@@ -339,7 +360,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-[Unreleased]: https://github.com/chrisrodz/chrisrodz.io/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/chrisrodz/chrisrodz.io/compare/v1.2.1...HEAD
+[1.2.1]: https://github.com/chrisrodz/chrisrodz.io/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/chrisrodz/chrisrodz.io/compare/v1.1.1...v1.2.0
 [1.1.1]: https://github.com/chrisrodz/chrisrodz.io/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/chrisrodz/chrisrodz.io/compare/v1.0.0...v1.1.0
