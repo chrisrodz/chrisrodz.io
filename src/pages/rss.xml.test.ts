@@ -34,6 +34,16 @@ vi.mock('astro:content', () => ({
 // Mock the i18n module
 vi.mock('../lib/i18n', () => ({
   getBlogPostUrl: (post: any) => `https://chrisrodz.io/blog/${post.slug}/`,
+  useTranslations: (locale: string) => ({
+    t: (key: string) => {
+      if (key === 'blog.rssTitle') return 'Chris Rodz - Blog';
+      if (key === 'blog.rssDescription') return 'Latest blog posts from Chris Rodz';
+      return key;
+    },
+    locale,
+    formatDate: (date: Date) => date.toLocaleDateString(),
+    formatNumber: (num: number) => num.toLocaleString(),
+  }),
 }));
 
 describe('RSS Feed Generation', () => {

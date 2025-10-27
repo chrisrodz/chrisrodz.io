@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2025-10-26
+
+**I18n Consolidation** - Eliminated code duplication across internationalized pages using thin wrapper pattern.
+
+### Changed
+
+- Consolidated blog slug pages to use single source component with locale detection
+- Refactored RSS feed generation to shared helper function with i18n support
+- Moved RSS metadata (title, description) to translation JSON files
+- Reduced total i18n code by ~180 lines (35% reduction)
+
+### Added
+
+- Shared RSS helper function in `src/lib/rss-helper.ts`
+- RSS translation keys (`blog.rssTitle`, `blog.rssDescription`) in translation files
+- Type declarations for markdown-it and sanitize-html
+
+### Technical Details
+
+- Blog slug pages: Reduced from 230 to 121 lines (47% reduction)
+- RSS feeds: Reduced from 82 to 65 lines (21% reduction)
+- All i18n pages now follow consistent thin wrapper pattern
+- Single source of truth for RSS feed generation logic
+
 ## [1.0.0] - 2025-10-26
 
 **CHANGELOG.md created** - Created changelog file with history of work in repo and added instructions to update automatically
@@ -278,7 +302,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-[Unreleased]: https://github.com/chrisrodz/chrisrodz.io/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/chrisrodz/chrisrodz.io/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/chrisrodz/chrisrodz.io/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/chrisrodz/chrisrodz.io/compare/v0.9.0...v1.0.0
 [0.9.0]: https://github.com/chrisrodz/chrisrodz.io/compare/v0.8.0...v0.9.0
 [0.8.0]: https://github.com/chrisrodz/chrisrodz.io/compare/v0.7.0...v0.8.0
