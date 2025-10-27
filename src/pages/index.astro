@@ -14,9 +14,24 @@ try {
 } catch (e) {
   console.warn('No blog posts found:', e);
 }
+
+// Structured data for SEO
+const personSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: 'Christian Rodriguez',
+  url: 'https://chrisrodz.io',
+  email: 'hey@chrisrodz.io',
+  jobTitle: 'Software Engineer',
+  description: t('home.intro.paragraph1'),
+  sameAs: ['https://github.com/chrisrodz', 'https://x.com/chrisrodz35'],
+  knowsAbout: ['Software Engineering', 'Triathlon', 'Coffee'],
+};
 ---
 
 <Layout title={t('home.title')}>
+  <!-- Structured Data -->
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(personSchema)} />
   <section style="margin-top: 3rem; margin-bottom: 4rem;">
     <h1
       style="font-family: var(--pico-font-family-serif); font-size: clamp(2rem, 4vw, 2.5rem); font-weight: 600; margin-bottom: 1.5rem;"
