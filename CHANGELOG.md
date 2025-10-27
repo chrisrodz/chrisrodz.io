@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2025-10-26
+
+**CHANGELOG.md created** - Created changelog file with history of work in repo and added instructions to update automatically
+
 ### Added
 
 - Changelog to track project releases and updates ([#43](https://github.com/chrisrodz/chrisrodz.io/pull/43))
@@ -16,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Updated package.json version to 1.0.0 to match current release state ([#43](https://github.com/chrisrodz/chrisrodz.io/pull/43))
 
-## [1.0.0] - 2025-10-23
+## [0.10.0] - 2025-10-23
 
 **Production-Ready Release** - Security hardening, session management, and development workflow improvements.
 
