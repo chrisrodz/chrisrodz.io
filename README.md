@@ -1,12 +1,34 @@
-# Personal Site - Christian A. Rodriguez Encarnación
+# chrisrodz.io
 
-My personal website. Built with Astro, featuring my blog, my daily coffee tracking app, and some new stuff I'm cooking up.
+[![Tests](https://github.com/chrisrodz/chrisrodz.io/actions/workflows/test.yml/badge.svg)](https://github.com/chrisrodz/chrisrodz.io/actions/workflows/test.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Version](https://img.shields.io/github/package-json/v/chrisrodz/chrisrodz.io)](https://github.com/chrisrodz/chrisrodz.io)
+[![Built with Astro](https://astro.badg.es/v2/built-with-astro/tiny.svg)](https://astro.build)
+[![Made in Puerto Rico](https://img.shields.io/badge/Made%20in-Puerto%20Rico%20🇵🇷-red)](https://chrisrodz.io)
+
+Mi website personal, completamente bilingüe. Actualmente tiene mi blog y mi diario de café. Aunque el website es en español por default, esta documentación es en inglés, porque inglés es el lenguaje universal de software development. Si estás leyendo esta oración, te envío un abrazo
+
+My personal website and digital garden. A fully bilingual (Spanish/English) SSR-powered site featuring my blog, coffee brewing tracker.
 
 **Live at**: [chrisrodz.io](https://chrisrodz.io)
 
-## Quick Start
+## Features
 
-Follow these steps to get started:
+- **Bilingual by Design** - Spanish (default) and English with smart content translation system
+- **Coffee Tracking** - Track brewing methods, beans, and tasting notes with PostgreSQL backend
+- **Blog** - Markdown-based blog with Content Collections
+- **Dark Mode** - System-aware theme with manual toggle
+
+## Tech Stack
+
+- **Language**: TypeScript
+- **Framework**: [Astro](https://astro.build)
+- **Styling**: [Pico CSS](https://picocss.com/)
+- **Database**: [Supabase](https://supabase.com)
+- **Deployment**: [Vercel](https://vercel.com)
+- **Testing**: [Vitest](https://vitest.dev) + Testing Library
+
+## Quick Start
 
 ### 1. Install dependencies
 
@@ -14,30 +36,16 @@ Follow these steps to get started:
 yarn install
 ```
 
-### 2. Copy environment variables
+### 2. Set up environment (optional)
 
 ```bash
 cp .env.example .env
 ```
 
-Then edit `.env` with your actual values:
+The site works without configuration, but you'll need environment variables for:
 
-```bash
-# Supabase
-SUPABASE_URL=your_project_url
-SUPABASE_ANON_KEY=your_anon_key
-SUPABASE_SERVICE_KEY=your_service_key
-
-# Admin (store hashed secret values only)
-# You can use yarn generate:admin-secret to generate these values
-ADMIN_SECRET_SALT=hex_encoded_salt
-ADMIN_SECRET_HASH=hex_encoded_hash
-
-# Strava (optional, for training sync)
-STRAVA_CLIENT_ID=your_strava_client_id
-STRAVA_CLIENT_SECRET=your_strava_client_secret
-STRAVA_REFRESH_TOKEN=your_strava_refresh_token
-```
+- **Admin access**: Run `yarn generate:admin-secret` to create credentials
+- **Coffee tracking**: Supabase credentials (see `.env.example`)
 
 ### 3. Start development
 
@@ -45,84 +53,93 @@ STRAVA_REFRESH_TOKEN=your_strava_refresh_token
 yarn dev
 ```
 
-Visit <http://localhost:4321> to see the site
+Visit <http://localhost:4321> to see the site.
 
-### 4. Set up Supabase (optional but recommended)
+## Development Scripts
 
-The site works without Supabase, but you'll need it for coffee tracking and admin login. Follow the instructions at [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md).
+### Content Creation
+
+```bash
+yarn new-post "My Post Title"        # Create EN+ES blog posts
+yarn new-post "My Post Title" en     # English only
+yarn new-post "My Post Title" es     # Spanish only
+```
+
+### Internationalization
+
+```bash
+yarn generate:i18n      # Generate TypeScript types from translation JSON
+yarn validate:i18n      # Ensure EN/ES translation keys match
+```
+
+### Database (Supabase)
+
+```bash
+yarn db:setup <ref>     # One-time setup: link project + push migrations
+yarn db:migration name  # Create new migration file
+yarn db:push            # Push migrations to dev database
+yarn db:types           # Generate TypeScript types from schema
+```
+
+### Code Quality
+
+```bash
+yarn check              # Run all checks (i18n + types + lint + format)
+yarn lint               # ESLint
+yarn format             # Prettier
+yarn test               # Vitest unit tests
+yarn test:coverage      # With coverage report
+```
+
+### Admin
+
+```bash
+yarn generate:admin-secret  # Generate secure admin credentials
+```
 
 ## Testing
 
-Tests use **Vitest** + **Testing Library** (React) with coverage reporting via v8.
-
-### Running Tests
-
 ```bash
 yarn test              # Run all tests
-yarn test:coverage     # Run with coverage report
-yarn test:watch        # Watch mode for development
+yarn test:coverage     # With coverage report
+yarn test:watch        # Watch mode
 ```
 
-### Configuration
-
-- **vitest.config.ts** - Main Vitest configuration
-- **vitest.setup.ts** - Test setup file (runs before all tests)
-
-### CI/CD
-
-Tests run automatically on:
-
-- All pushes to `main` branch
-- All pushes to `claude/**` branches
-- All pull requests to `main`
-
-See `.github/workflows/test.yml` for the GitHub Actions configuration.
+Tests run automatically on all pushes to `main` and in pull requests via GitHub Actions.
 
 ## Deployment
 
-This site is configured for seamless deployment on Vercel with automatic deployments on every push to `main`.
+Deployed on Vercel with automatic deployments on every push to `main`. Preview deployments are created for all pull requests.
 
-### Initial Deployment
+Visit the live site at [chrisrodz.io](https://chrisrodz.io).
 
-**Via Vercel Dashboard (Recommended):**
+## Project Structure
 
-1. Push your code to GitHub
-2. Visit [vercel.com/new](https://vercel.com/new)
-3. Import your GitHub repository
-4. Configure environment variables:
-   - `ADMIN_SECRET` - Generate with: `openssl rand -base64 32`
-   - Optional: Supabase credentials (if using coffee/training features)
-5. Deploy!
-
-**Via Vercel CLI:**
-
-```bash
-npm i -g vercel
-vercel login
-vercel --prod
+```plaintext
+src/
+├── content/blog/    # Markdown blog posts (folder-per-post, EN/ES translations)
+├── pages/           # Astro routes (SSR mode)
+│   ├── [locale]/    # English routes (/en/*)
+│   ├── admin/       # Protected admin pages
+│   └── api/         # API endpoints
+├── components/      # React + Astro components
+├── lib/             # Utilities, DB client, i18n, validation
+├── i18n/            # Translation JSON files (en.json, es.json)
+└── styles/          # PicoCSS + minimal custom overrides
 ```
 
-### Continuous Deployment
+## Contributing
 
-- **Auto-deploy**: Every push to `main` triggers a new deployment
-- **Build time**: ~30-60 seconds
-- **Preview deploys**: Available for pull requests
-- **Rollback**: One-click rollback to previous deployments
+This is my personal website, but I welcome:
 
-## Tech Stack
+- 🐛 **Bug reports** - Open an issue if you spot something broken
+- 🔧 **Bug fix PRs** - Fixes are always appreciated
+- 💡 **Suggestions** - Feature ideas welcome, but may not be implemented
 
-- **Framework**: [Astro](https://astro.build) v5.14+
-- **Language**: TypeScript
-- **Styling**: [Pico CSS](https://picocss.com/)
-- **Database**: [Supabase](https://supabase.com) (PostgreSQL)
-- **Deployment**: [Vercel](https://vercel.com) (Node.js 20+)
-- **Validation**: [Zod](https://zod.dev)
-- **Authentication**: Custom session-based with [nanoid](https://github.com/ai/nanoid)
-- **Content**: Markdown with frontmatter (Astro Content Collections)
+Not actively seeking feature contributions since this is a personal project, but feel free to fork and adapt for your own use!
 
-## Resources
+## License
 
-- [Astro Documentation](https://docs.astro.build)
-- [Supabase Documentation](https://supabase.com/docs)
-- [Pico CSS Documentation](https://picocss.com/docs)
-- [Vercel Documentation](https://vercel.com/docs)
+MIT License - see [LICENSE](LICENSE) file for details.
+
+Copyright (c) 2025 Christian A. Rodriguez Encarnación
