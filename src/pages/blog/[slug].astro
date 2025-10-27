@@ -24,8 +24,9 @@ if (!entry) {
 const { Content } = await render(entry);
 const post = entry;
 
-// Check if English translation exists and get its URL
-const translatedPost = await getTranslatedPost(post, 'en');
+// Check if translation exists for the alternate locale and get its URL
+const alternateLocale = locale === 'es' ? 'en' : 'es';
+const translatedPost = await getTranslatedPost(post, alternateLocale);
 const alternateUrl = translatedPost ? getBlogPostUrl(translatedPost) : undefined;
 
 // Format date

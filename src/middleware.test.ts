@@ -61,6 +61,8 @@ describe('middleware security headers', () => {
       request,
       cookies,
       url,
+      currentLocale: 'es',
+      preferredLocale: 'es',
       redirect: (location: string, status = 302) =>
         new Response(null, {
           status,
@@ -94,6 +96,8 @@ describe('middleware security headers', () => {
       request,
       cookies,
       url,
+      currentLocale: 'es',
+      preferredLocale: 'en',
       redirect: (location: string, status = 302) =>
         new Response(null, {
           status,
@@ -107,8 +111,12 @@ describe('middleware security headers', () => {
 
     expect(response.status).toBe(302);
     expect(response.headers.get('Location')).toBe('/en');
-    expect(response.headers.get('Content-Security-Policy')).toContain('https://test-project.supabase.co');
-    expect(response.headers.get('Strict-Transport-Security')).toBe('max-age=63072000; includeSubDomains; preload');
+    expect(response.headers.get('Content-Security-Policy')).toContain(
+      'https://test-project.supabase.co'
+    );
+    expect(response.headers.get('Strict-Transport-Security')).toBe(
+      'max-age=63072000; includeSubDomains; preload'
+    );
   });
 
   it('respects Spanish preference redirects and keeps headers', async () => {
@@ -128,6 +136,8 @@ describe('middleware security headers', () => {
       request,
       cookies,
       url,
+      currentLocale: 'en',
+      preferredLocale: 'es',
       redirect: (location: string, status = 302) =>
         new Response(null, {
           status,
@@ -141,6 +151,8 @@ describe('middleware security headers', () => {
 
     expect(response.status).toBe(302);
     expect(response.headers.get('Location')).toBe('/');
-    expect(response.headers.get('Content-Security-Policy')).toContain('wss://test-project.supabase.co');
+    expect(response.headers.get('Content-Security-Policy')).toContain(
+      'wss://test-project.supabase.co'
+    );
   });
 });

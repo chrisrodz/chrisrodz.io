@@ -25,30 +25,17 @@ export const onRequest = defineMiddleware(async (context, next) => {
     return proceed();
   }
 
-  // 3. Check Accept-Language header (W3C standard) with robust parsing
-  const acceptLang = request.headers.get('accept-language') || '';
-
-  // Parse Accept-Language header more robustly
-  // Handles cases like: "es-MX, es-419, es;q=0.9, en;q=0.8"
-  const languages = acceptLang
-    .split(',')
-    .map((lang) => lang.split(';')[0].trim().toLowerCase())
-    .filter((lang) => lang.length > 0);
-
-  const browserPrefersEnglish = languages.some((lang) => lang.startsWith('en'));
+  // 3. Use Astro's built-in i18n properties for locale detection
+  // currentLocale: derived from URL ('es' for '/', 'en' for '/en')
+  // preferredLocale: best match between browser Accept-Language and supported locales
+  const { currentLocale, preferredLocale } = context;
 
   // 4. Redirect logic based on browser language preference
-  // FLIPPED: Spanish is now default
-  if (browserPrefersEnglish && url.pathname === '/') {
-    // User prefers English and is on Spanish homepage -> redirect to English
-    const response = redirect('/en', 302);
-    applySecurityHeaders(response.headers, securityHeaderOptions);
-    return response;
-  }
-
-  if (!browserPrefersEnglish && url.pathname === '/en') {
-    // User prefers Spanish and is on English homepage -> redirect to Spanish
-    const response = redirect('/', 302);
+  // Only redirect if browser prefers a different locale than current page
+  if (preferredLocale && currentLocale !== preferredLocale) {
+    // User prefers a different language than current page
+    const targetPath = preferredLocale === 'en' ? '/en' : '/';
+    const response = redirect(targetPath, 302);
     applySecurityHeaders(response.headers, securityHeaderOptions);
     return response;
   }
