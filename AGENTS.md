@@ -1,5 +1,7 @@
 # AGENTS.md
 
+**Be extremely concise, sacrifice grammar for the sake of conciseness**
+
 Guidance for AI Coding Agents working in this repository.
 
 ## Critical Rules
