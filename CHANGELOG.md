@@ -9,7 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Changelog to track project releases and updates
+- Changelog to track project releases and updates ([#43](https://github.com/chrisrodz/chrisrodz.io/pull/43))
+- Changelog workflow documentation in AGENTS.md ([#43](https://github.com/chrisrodz/chrisrodz.io/pull/43))
 
 ## [1.0.0] - 2025-10-23
 
