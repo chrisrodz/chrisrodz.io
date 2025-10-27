@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2025-10-27
+
+**Schema.org Structured Data** - Enhanced SEO with Person schema for Google Knowledge Panel eligibility.
+
+### Added
+
+- Person schema.org structured data on homepage with JSON-LD
+- Professional information, social links, and areas of expertise in structured format
+- Improved eligibility for Google Knowledge Panels and rich search results
+
+### Technical Details
+
+- Added JSON-LD Person schema to homepage (src/pages/index.astro)
+- Schema includes name, URL, email, job title, description, social profiles, and expertise areas
+- Follows schema.org Person specification for optimal search engine understanding
+
 ## [1.1.1] - 2025-10-26
 
 **System Theme Detection** - Enhanced theme detection to automatically respect user's device dark/light mode preference on first visit.
@@ -323,7 +339,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-[Unreleased]: https://github.com/chrisrodz/chrisrodz.io/compare/v1.1.1...HEAD
+[Unreleased]: https://github.com/chrisrodz/chrisrodz.io/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/chrisrodz/chrisrodz.io/compare/v1.1.1...v1.2.0
 [1.1.1]: https://github.com/chrisrodz/chrisrodz.io/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/chrisrodz/chrisrodz.io/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/chrisrodz/chrisrodz.io/compare/v0.9.0...v1.0.0
