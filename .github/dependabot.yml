@@ -89,6 +89,7 @@ updates:
           - 'astro'
           - '@astrojs/*'
           - 'react*'
+          - 'react-dom'
           - '@types/react*'
           - '@vercel/*'
           - '@supabase/*'
