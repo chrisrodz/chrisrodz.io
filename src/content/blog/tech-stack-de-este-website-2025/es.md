@@ -30,7 +30,7 @@ No tenía en mente un backend server muy complicado. Viendo que Supabase es la e
 
 Para el deployment, escogí Vercel porque lo veo recomendado mucho y quería entender que tal. Fue extremadamente simple de setup y me gusta que tiene Preview deployments en cada Pull Request automáticamente. Para mi el Continuous Delivery es un no negociable, y hasta ahora Vercel me ha funcionado bien.
 
-En ambos casos estoy en el tier gratis y el momento que me quieran cobrar es el momento que me movere a otra solución.
+En ambos casos estoy en el tier gratis y el momento que me quieran cobrar es el momento que me moveré a otra solución.
 
 ## Lecciones Codeando con AI
 
