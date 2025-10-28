@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.2] - 2025-10-27
+
+**Automated Dependency Management** - Added Dependabot for continuous dependency updates and security monitoring.
+
+### Added
+
+- Dependabot configuration for automated dependency updates ([#55](https://github.com/chrisrodz/chrisrodz.io/pull/55))
+- npm ecosystem monitoring with smart grouping (Astro, React, Vercel, Testing, Dev tools)
+- GitHub Actions ecosystem monitoring
+- Weekly update schedule (Mondays 9am UTC)
+- Conventional commit format for dependency PRs
+
 ## [1.2.1] - 2025-10-27
 
 **Documentation Streamlining** - Comprehensive cleanup and restructuring for public repository readiness.
@@ -360,7 +372,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-[Unreleased]: https://github.com/chrisrodz/chrisrodz.io/compare/v1.2.1...HEAD
+[Unreleased]: https://github.com/chrisrodz/chrisrodz.io/compare/v1.2.2...HEAD
+[1.2.2]: https://github.com/chrisrodz/chrisrodz.io/compare/v1.2.1...v1.2.2
 [1.2.1]: https://github.com/chrisrodz/chrisrodz.io/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/chrisrodz/chrisrodz.io/compare/v1.1.1...v1.2.0
 [1.1.1]: https://github.com/chrisrodz/chrisrodz.io/compare/v1.1.0...v1.1.1
