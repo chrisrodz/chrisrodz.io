@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Dependabot configuration for automated dependency updates (#XX)
+
 ## [1.2.1] - 2025-10-27
 
 **Documentation Streamlining** - Comprehensive cleanup and restructuring for public repository readiness.
