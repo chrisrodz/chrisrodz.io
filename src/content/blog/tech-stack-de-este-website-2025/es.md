@@ -26,7 +26,7 @@ Ambas elecciones fueron tecnologías o frameworks que no he usado antes, lo cual
 
 ### Backend y Deployment
 
-No tenía en mente un backend server muy complicado. Viendo que Supabase es la elección de un montón de vibe coded apps, decidí usarlo también para ver que tal. Por ahora solo estoy usándolo para la base de datos, aunque quizas pruebe algunos otros features en el futuro. En este DB es que estoy trackeando mi cafe diario, el primer vibe engineered feature de este website.
+No tenía en mente un backend server muy complicado. Viendo que Supabase es la elección de un montón de vibe coded apps, decidí usarlo también para ver que tal. Por ahora solo estoy usándolo para la base de datos, aunque quizás pruebe algunos otros features en el futuro. En este DB es que estoy trackeando mi cafe diario, el primer vibe engineered feature de este website.
 
 Para el deployment, escogí Vercel porque lo veo recomendado mucho y quería entender que tal. Fue extremadamente simple de setup y me gusta que tiene Preview deployments en cada Pull Request automáticamente. Para mi el Continuous Delivery es un no negociable, y hasta ahora Vercel me ha funcionado bien.
 
