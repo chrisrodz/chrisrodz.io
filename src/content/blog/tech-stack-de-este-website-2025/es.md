@@ -1,6 +1,6 @@
 ---
 title: 'Tech Stack de este Website'
-description: 'Cómo construí mi website personal con Astro, Supabase y Claude Code - lecciones aprendidas sobre desarrollo con AI y la importancia de las buenas prácticas'
+description: 'Cómo construí mi website personal con Claude Code - lecciones aprendidas sobre desarrollo con AI y la importancia de las buenas prácticas de desarrollo de software'
 slug: 'tech-stack-de-este-website-2025'
 pubDate: 2025-10-28
 locale: es
@@ -22,7 +22,7 @@ Ahora mismo estoy usando Claude Code bastante, tanto en el trabajo como en lo pe
 
 ### Frontend: Astro + Pico CSS
 
-Escogí el framework Astro después de investigar con Claude Code porque parece un buen campo de pruebas para lo que quiero del blog: construir y aprender construyendo. Leyendo los docs por encima vi que era bastante lightweight y straight forward. Lo comparé con Hugo, pero con Hugo me iba a limitar en lo que puedo construir. Y Next.js, etc no me parecía igual de fun. Igual me parece que Astro gana en términos de performance.
+Escogí el framework Astro después de investigar con Claude Code porque parece un buen campo de pruebas para lo que quiero del blog: construir y aprender construyendo. Leyendo los docs por encima vi que era bastante lightweight y straight forward. Lo comparé con Hugo, Next.js, y otras opciones. Al final, opte por Astro porque me pareció cool, y uno no necesita otra razón para aprender for fun.
 
 De la misma forma, escogí Pico CSS porque la idea es pasar lo menos tiempo posible pensando en el CSS y el _styling_, y aprender algo nuevo que no sea Tailwind, pero que sea un poco más llevadero.
 
@@ -30,11 +30,15 @@ Ambas elecciones fueron tecnologías o frameworks que no he usado antes, lo cual
 
 ### Backend y Deployment
 
-No tenía en mente un backend server muy complicado. Viendo que Supabase es la elección de un montón de vibe coded apps, decidí usarlo también para ver que tal. Por ahora solo estoy usandolo para la base de datos, aunque quizas pruebe algunos otros features en el futuro.
+No tenía en mente un backend server muy complicado. Viendo que Supabase es la elección de un montón de vibe coded apps, decidí usarlo también para ver que tal. Por ahora solo estoy usandolo para la base de datos, aunque quizas pruebe algunos otros features en el futuro. En este DB es que estoy trackeando mi cafe diario, el primer _vibe engineered_ feature de este website.
 
-Igual para el deployment, escogí Vercel porque lo veo recomendado mucho y quería entender que tal. No veo que tan diferente es de heroku o algún otro provider. Fue extremadamente simple de setup y me gusta que tiene Preview deployments en cada Pull Request automáticamente. Para mi el Continuous Delivery es un no negociable, y hasta ahora Vercel me ha funcionado bien.
+Para el deployment, escogí Vercel porque lo veo recomendado mucho y quería entender que tal. No veo que tan diferente es de heroku o algún otro provider. Fue extremadamente simple de setup y me gusta que tiene Preview deployments en cada Pull Request automáticamente. Para mi el Continuous Delivery es un no negociable, y hasta ahora Vercel me ha funcionado bien.
+
+En ambos casos estoy en el tier gratis y el momento que me quieran cobrar es el momento que me movere a otra solución.
 
 ## El Proceso de Desarrollo con Claude Code
+
+El TL;DR de esta sección es que **tener un AI _Coding Assistant_ y experiencia en desarrollo de software no sustituye leer la documentación**.
 
 ### Primeras Iteraciones: Rápido pero Caótico
 
@@ -46,13 +50,11 @@ El AI comete errores, pero uno también se equivoca en el proceso. Un ejemplo en
 
 ### El Momento de Parar y Reflexionar
 
-El TL;DR de esta sección es que **tener un AI _Coding Assistant_ y experiencia en desarrollo de software no sustituye leer la documentación**.
-
 Tuve muchas situaciones en las que, por no conocer bien el framework o por no planificar adecuadamente el cambio, la IA hacía modificaciones de más que no buscaba ni entendía la funcionalidad que quería. Una vez lo envié a producción con CI/CD, los cambios rápidos se reflejaban inmediatamente. En este punto, después de anunciarlo en las redes sociales y mostrar el sitio web a dos o tres amigos y familiares, empecé a pensar: _ok_, necesito dar un paso atrás.
 
-Necesitaba configurar bien el proyecto con buenas prácticas, pruebas y todo, como si fuera yo quien escribe el código, no como si lo estuviera escribiendo una IA. También tengo que escribir el código y hacer _Pull Requests_. No puedo estar haciendo _push_ directamente a _main_, no tiene sentido, sobre todo si quiero que el proyecto sea público y pueda mostrarse bien. Así podré sentirme orgulloso de lo que estoy haciendo.
+Necesitaba configurar bien el proyecto con buenas prácticas, pruebas y todo. Como si fuera yo quien escribe el código, no como si lo estuviera escribiendo un AI. También tengo que hacer _Pull Requests_ y revisar el código seriamente. No puedo estar haciendo _push_ directamente a _main_, no tiene sentido, sobre todo si quiero que el proyecto sea público y pueda mostrarse bien. Así podré sentirme orgulloso de lo que estoy haciendo.
 
-Con respecto a las tecnologías que escogí, debía dar un paso atrás, leer la documentación y entender bien estos frameworks. Además, participar más activamente en las sesiones de codear me permitiría obtener un buen resultado y no perder tiempo.
+Con respecto a las tecnologías que escogí, debía dar un paso atrás, leer la documentación y entender bien estos frameworks. Además, participar más activamente en las sesiones de codear me permitiría obtener un buen resultado y no perder tiempo. Específicamente usando Plan mode y enfocandome en cambios más pequeños. El truco de magia de construir un 0 to 1 app de un solo prompt esta chevere, pero no funciona para seguir iterando sobre el código.
 
 Siento que se pierde mucho tiempo con las herramientas de AI, especialmente si una sesión se desvía. Es más fácil abandonarla y empezar algo nuevo. Resulta más sencillo hacer un `git reset`, retroceder y volver a intentarlo. Además, si no tienes buen entendimiento o el plan no está bien hecho, se complica aún más.
 
@@ -66,15 +68,11 @@ Específicamente, creo que hay que evolucionar de usar los _Markdown files_ que 
 
 Estoy moviendo todo el trabajo del repo a GitHub Issues para poder _trackearlo_ un poquito mejor y definir el plan bien en el _issue_ antes de empezar a programar. Como lo veo, puedo tener sesiones que quizás lo único que yo haga sea planificar el _issue_ y usar el AI para definir bien lo que se va a hacer, explorar y dejar todo escrito en el GitHub _issue_. Y otros _sessions_ que van a ser de programar como tal, donde puedo usar el AI para tomar este GitHub _issue_, producir el _pull request_, seguir el proceso adecuado para el _pull request_ y mergear el cambio.
 
-[https://github.com/chrisrodz/chrisrodz.io](https://github.com/chrisrodz/chrisrodz.io)
-
 ## Lo Que Viene
 
-Pueden ver el código del website en GitHub ahora y también ver los _features_ que estoy pensando de añadir al website en el futuro en los mismos GitHub _issues_. Mi plan es seguir trabajando. Creo que esto es un buen _testing ground_ para todos estos _tools_ de AI. Vamos a ver cómo me va.
+Pueden ver el código del website en GitHub ahora y también ver los _features_ que estoy pensando de añadir al website en el futuro en los mismos GitHub _issues_. Mi plan es seguir trabajando. Creo que esto es un buen _testing ground_ para todos estos _tools_ de AI.
 
 He visto que otras personas un poco más conocidas en las redes, en el mundo de _software development_, también se han movido más a un sistema similar. Y mi plan es seguir iterando y seguir escribiendo aquí.
-
-[https://github.com/chrisrodz/chrisrodz.io/issues](https://github.com/chrisrodz/chrisrodz.io/issues)
 
 También estoy trabajando algunos otros _apps_ y otras cositas que espero mostrar en el futuro, pero por ahora pueden suscribirse aquí a mi RSS _feed_, seguirme en las redes o entrar aquí para ver el café que me tomo todos los días.
 
@@ -84,9 +82,7 @@ Este proyecto ha sido un recordatorio de que las herramientas evolucionan, pero 
 
 Estoy emocionado de ver hacia dónde va este proyecto y qué puedo aprender en el camino. Si estás pensando en hacer algo similar, mi consejo es: _ship_ rápido, pero no tengas miedo de parar, reflexionar y mejorar tu proceso. Al final, es tu proyecto y debe reflejar el nivel de calidad con el que te sientas cómodo.
 
-<!-- TODO: Añadir links a:
-- Repo en GitHub
-- RSS feed
-- Redes sociales
-- Página del café
--->
+- [Repo en GitHub](https://github.com/chrisrodz/chrisrodz.io)
+- [RSS feed](https://chrisrodz.io/rss.xml)
+- [Redes sociales](https://x.com/chrisrodz35)
+- [Diario de café](https://chrisrodz.io/cafe)
