@@ -40,7 +40,7 @@ En ambos casos estoy en el tier gratis y el momento que me quieran cobrar es el 
 
 ### De 0 a 1: Rápido pero Caótico
 
-El cero a uno fue bastante rápido, utilizando las tecnologías mencioné arriba. Pero aún con conocimiento, hay que mantener control de todos los cambios que el AI esta haciendo y tener buenas prácticas de desarrollo de software, porque si no se te sale de control bien rápido.
+El cero a uno fue bastante rápido, utilizando las tecnologías mencioné arriba. Pero aún con conocimiento, hay que mantener control de todos los cambios que el AI está haciendo y tener buenas prácticas de desarrollo de software, porque si no se te sale de control bien rápido.
 
 Por ejemplo, yo le dedico horas por la noche a este proyecto y estaba shipping directamente al main branch. Varias veces me pasó que se rompió la aplicación o que pasó algo inesperado que yo no pude cachar durante la sesión con Claude Code, en casos donde Claude hace commit y push automático. Y muchas veces ahí tuve que entrar a mano a arreglar la situación.
 
