@@ -8,7 +8,7 @@ locale: es
 
 # Tech Stack de este Website
 
-## Introducción
+## Intro
 
 Recuerdo cuando hice mi primer website en la universidad. Me ofrecí de voluntario para tomar las riendas del website del laboratorio donde hacía investigación subgraduada. Lo primero que hice fue tratar de reescribirlo _from scratch_ sin mirar el código, para aprender cómo se hacía. Fue uno de los _leading indicators_ de mi futura habilidad para aprender rápido y de mi automotivación en mi propio aprendizaje.
 
@@ -36,7 +36,7 @@ Para el deployment, escogí Vercel porque lo veo recomendado mucho y quería ent
 
 En ambos casos estoy en el tier gratis y el momento que me quieran cobrar es el momento que me movere a otra solución.
 
-## El Proceso de Desarrollo con Claude Code
+## Codeando con Claude Code
 
 El TL;DR de esta sección es que **tener un AI _Coding Assistant_ y experiencia en desarrollo de software no sustituye leer la documentación**.
 
@@ -58,7 +58,7 @@ Con respecto a las tecnologías que escogí, debía dar un paso atrás, leer la 
 
 Siento que se pierde mucho tiempo con las herramientas de AI, especialmente si una sesión se desvía. Es más fácil abandonarla y empezar algo nuevo. Resulta más sencillo hacer un `git reset`, retroceder y volver a intentarlo. Además, si no tienes buen entendimiento o el plan no está bien hecho, se complica aún más.
 
-## El Proceso Actual: Construyendo en Público
+## El Proceso Actual
 
 Decidí construir en público, así que decidí hacer mi website un repositorio público. Para sentirme orgulloso de mi trabajo, me puse para el problema y me senté a leer todo el código, a revisar toda la documentación de Astro y hacer algunos cambios al proceso de desarrollo que creo que me van a dar más resultados en mis sesiones de codear.
 
