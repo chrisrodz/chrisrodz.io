@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Dependabot configuration for automated dependency updates (#XX)
+- Dependabot configuration for automated dependency updates ([#55](https://github.com/chrisrodz/chrisrodz.io/pull/55))
 
 ## [1.2.1] - 2025-10-27
 
