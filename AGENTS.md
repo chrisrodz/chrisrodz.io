@@ -41,22 +41,27 @@ gh pr create --title "Feature: description" --body "details"
 
 **Branch prefixes**: `feature/`, `fix/`, `docs/`, `refactor/`
 
-### Changelog Updates
+### Version Bumping (Automated)
 
-**Before creating PR:**
+**PR Title Conventions** - Merge to main triggers automated version bump via semantic-release.
 
-1. Add entry under `[Unreleased]` in CHANGELOG.md
-2. Ask user for version bump type (never infer)
-3. Use category: `Added`, `Changed`, `Fixed`, `Removed`, `Security`
-4. Use placeholder: `(#XX)` for PR number
+| Prefix                     | Version Bump | Example                                                 |
+| -------------------------- | ------------ | ------------------------------------------------------- |
+| `feat:`                    | MINOR        | `feat: Add coffee export`                               |
+| `fix:`                     | PATCH        | `fix: Correct brew time`                                |
+| `docs:`                    | None         | `docs: Update README`                                   |
+| `ci:`                      | None         | `ci: Update Actions`                                    |
+| `refactor:`                | None         | `refactor: Extract i18n`                                |
+| `BREAKING CHANGE:` in body | MAJOR        | `feat: New auth\n\nBREAKING CHANGE: Old tokens invalid` |
 
-**After PR creation:** Update placeholder with actual PR link.
+**How it works:**
 
-**Version bumps:**
+1. Use conventional commit prefix in PR title (e.g., `feat:`, `fix:`, `docs:`)
+2. Merge PR to main (requires squash merge to preserve title as commit message)
+3. Semantic-release workflow runs automatically
+4. Bumps version in package.json, creates Git tag, generates GitHub Release
 
-- **MAJOR**: Breaking changes, API incompatibilities
-- **MINOR**: New features, non-breaking enhancements
-- **PATCH**: Bug fixes, tweaks, dependency updates
+**No manual version management needed** - Version updates happen via CI/CD on merge.
 
 ## Architecture Gotchas
 

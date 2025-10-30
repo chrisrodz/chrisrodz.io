@@ -1,5 +1,7 @@
 # Changelog
 
+**📌 As of v1.3.0, release notes are published to [GitHub Releases](https://github.com/chrisrodz/chrisrodz.io/releases).** This file is retained for historical reference.
+
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
