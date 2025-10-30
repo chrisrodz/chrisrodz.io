@@ -22,7 +22,7 @@ jobs:
         with:
           node-version-file: .nvmrc
 
-      - run: npm ci
+      - run: yarn install --frozen-lockfile
 
       - run: npx semantic-release
         env:
