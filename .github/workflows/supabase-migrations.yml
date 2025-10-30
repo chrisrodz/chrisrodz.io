@@ -22,11 +22,9 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           persist-credentials: true
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
+      - uses: actions/setup-node@v6
         with:
-          node-version: '20'
-          cache: 'yarn'
+          node-version-file: .nvmrc
 
       - name: Install dependencies
         run: yarn install --frozen-lockfile
