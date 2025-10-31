@@ -1,7 +1,7 @@
 {
   "name": "chrisrodz.io",
   "type": "module",
-  "version": "1.2.2",
+  "version": "1.0.0",
   "scripts": {
     "dev": "yarn generate:i18n && astro dev",
     "start": "astro dev",
