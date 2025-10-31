@@ -16,7 +16,7 @@
     "format:check": "prettier --check .",
     "lint": "eslint . --ext .js,.ts,.astro",
     "lint:fix": "eslint . --ext .js,.ts,.astro --fix",
-    "check": "yarn validate:i18n && astro check && yarn lint && yarn format:check",
+    "verify": "yarn validate:i18n && astro check && yarn lint && yarn format:check",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",

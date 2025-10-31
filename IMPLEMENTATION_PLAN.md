@@ -8,6 +8,7 @@
 Refactor index and cafe pages to use component-based architecture.
 
 **Goals:**
+
 - Extract inline HTML into reusable Astro components
 - Add i18n support to all components
 - Reduce page complexity (cafe.astro: 900→150 lines, index.astro: 88→30 lines)
@@ -83,9 +84,11 @@ Refactor index and cafe pages to use component-based architecture.
 ## Phase 3: I18n Updates
 
 ### Files to Update:
+
 **`src/i18n/en.json`** and **`src/i18n/es.json`**
 
 Add translation keys for:
+
 - Home page components (greeting, intro paragraphs)
 - Cafe empty state
 - Cafe brew method distribution heading
@@ -151,19 +154,21 @@ const locale = getLocaleFromUrl(Astro.url);
 ---
 
 <Layout title={/* ... */}>
-  {error ? (
-    <ErrorState error={error} locale={locale} />
-  ) : logs.length === 0 ? (
-    <EmptyState locale={locale} />
-  ) : (
-    <>
-      <WhyTracking locale={locale} />
-      {todaysLog && <TodaysCoffeeCard log={todaysLog} locale={locale} />}
-      <StatsCards stats={stats} locale={locale} />
-      <BrewDistribution distribution={brewDist} locale={locale} />
-      <RecentLogs logs={recentLogs} locale={locale} />
-    </>
-  )}
+  {
+    error ? (
+      <ErrorState error={error} locale={locale} />
+    ) : logs.length === 0 ? (
+      <EmptyState locale={locale} />
+    ) : (
+      <>
+        <WhyTracking locale={locale} />
+        {todaysLog && <TodaysCoffeeCard log={todaysLog} locale={locale} />}
+        <StatsCards stats={stats} locale={locale} />
+        <BrewDistribution distribution={brewDist} locale={locale} />
+        <RecentLogs logs={recentLogs} locale={locale} />
+      </>
+    )
+  }
 </Layout>
 ```
 
@@ -178,6 +183,7 @@ Add tests for components with conditional logic:
 - **`src/components/cafe/TodaysCoffeeCard.test.ts`** - Test conditional rendering (dialed in badge, notes)
 
 **Testing approach:**
+
 - Use existing test setup (Vitest)
 - Test behavior, not implementation
 - Focus on conditional logic and edge cases
@@ -188,14 +194,16 @@ Add tests for components with conditional logic:
 ## Phase 6: Quality Assurance
 
 ### Pre-push checklist:
+
 ```bash
-yarn check        # Types + lint + format + i18n validation
+yarn verify       # Types + lint + format + i18n validation
 yarn dev          # Manual testing in browser
 yarn build        # Production build verification
 yarn test         # Run test suite
 ```
 
 ### Manual testing checklist:
+
 - [ ] Index page renders correctly (ES + EN)
 - [ ] Cafe page with data renders correctly (ES + EN)
 - [ ] Cafe page error state displays properly
@@ -208,6 +216,7 @@ yarn test         # Run test suite
 ## Expected Impact
 
 ### Before:
+
 - `index.astro`: 88 lines (mostly inline HTML)
 - `cafe.astro`: 900 lines (547 CSS + 300+ HTML)
 - Components: 5 (React only, no i18n)
@@ -215,6 +224,7 @@ yarn test         # Run test suite
 - Maintainability: Difficult (tightly coupled)
 
 ### After:
+
 - `index.astro`: ~30 lines (component composition)
 - `cafe.astro`: ~150 lines (component composition)
 - Components: 15 (10 new Astro + 5 updated React, all with i18n)
@@ -227,13 +237,13 @@ yarn test         # Run test suite
 
 ## Architecture Decisions
 
-| Decision | Choice | Rationale |
-|----------|--------|-----------|
-| **Component Type** | Astro components | Server-side rendered, better performance for presentational content |
-| **Granularity** | Single component per section | Start simple; refactor to nested if needed |
-| **I18n Strategy** | Full i18n for all components | Consistency across codebase, proper localization |
-| **Styling** | Component-specific `<style>` blocks | Encapsulation, uses PicoCSS variables |
-| **Testing** | Focus on conditional logic | Skip trivial presentational components initially |
+| Decision           | Choice                              | Rationale                                                           |
+| ------------------ | ----------------------------------- | ------------------------------------------------------------------- |
+| **Component Type** | Astro components                    | Server-side rendered, better performance for presentational content |
+| **Granularity**    | Single component per section        | Start simple; refactor to nested if needed                          |
+| **I18n Strategy**  | Full i18n for all components        | Consistency across codebase, proper localization                    |
+| **Styling**        | Component-specific `<style>` blocks | Encapsulation, uses PicoCSS variables                               |
+| **Testing**        | Focus on conditional logic          | Skip trivial presentational components initially                    |
 
 ---
 

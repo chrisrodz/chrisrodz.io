@@ -169,7 +169,7 @@ Dark mode: Toggle via `data-theme="dark"` on `<html>`
 
 ### Pre-push Checklist
 
-- [ ] Run `yarn check` (types + lint + format + i18n)
+- [ ] Run `yarn verify` (types + lint + format + i18n)
 - [ ] Test locally with `yarn dev`
 - [ ] Build succeeds: `yarn build`
 - [ ] Tests pass: `yarn test`
@@ -213,7 +213,7 @@ Dark mode: Toggle via `data-theme="dark"` on `<html>`
 ```bash
 yarn dev                    # Start dev server
 yarn build                  # Build for production
-yarn check                  # Run all checks
+yarn verify                 # Run all checks
 yarn test                   # Run tests
 yarn new-post "Title"       # Create blog post (EN+ES)
 yarn db:setup <ref>         # One-time DB setup
