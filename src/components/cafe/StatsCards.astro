@@ -1,0 +1,86 @@
+---
+import { useTranslations, type Locale } from '@/lib/i18n';
+
+interface Props {
+  totalLogs: number;
+  avgRating: string;
+  avgDose: number;
+  locale: Locale;
+}
+
+const { totalLogs, avgRating, avgDose, locale } = Astro.props;
+const { t } = useTranslations(locale);
+---
+
+<div class="hero-stats-grid">
+  <article class="hero-stat-card">
+    <p class="stat-value">{totalLogs}</p>
+    <small>{t('cafe.stats.totalLogs')}</small>
+  </article>
+  <article class="hero-stat-card">
+    <p class="stat-value">{avgRating}</p>
+    <small>{t('cafe.stats.avgRating')}</small>
+  </article>
+  <article class="hero-stat-card">
+    <p class="stat-value">{avgDose.toFixed(1)}g</p>
+    <small>{t('cafe.stats.avgDose')}</small>
+  </article>
+</div>
+
+<style>
+  .hero-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .hero-stat-card {
+    background: var(--pico-card-background-color);
+    border: 1px solid var(--pico-card-border-color);
+    border-radius: var(--pico-border-radius);
+    padding: 1.25rem 1rem;
+    text-align: center;
+    transition: transform 0.2s ease;
+  }
+
+  .hero-stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  .hero-stat-card .stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--pico-color);
+    margin: 0.25rem 0;
+    line-height: 1;
+  }
+
+  .hero-stat-card small {
+    display: block;
+    color: var(--pico-muted-color);
+    font-weight: 500;
+    font-size: 0.8125rem;
+  }
+
+  @media (max-width: 768px) {
+    .hero-stats-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-stat-card {
+      padding: 0.875rem 0.5rem;
+    }
+
+    .hero-stat-card .stat-value {
+      font-size: 1.75rem;
+    }
+
+    .hero-stat-card small {
+      font-size: 0.75rem;
+    }
+  }
+</style>

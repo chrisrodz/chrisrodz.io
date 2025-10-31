@@ -1,0 +1,403 @@
+---
+import { useTranslations, type Locale } from '@/lib/i18n';
+import type { CoffeeLogWithBean } from '@/lib/schemas/cafe';
+
+interface Props {
+  todaysCoffee: CoffeeLogWithBean[];
+  locale: Locale;
+}
+
+const { todaysCoffee, locale } = Astro.props;
+const { t } = useTranslations(locale);
+
+const localeWithRegion = locale === 'es' ? 'es-PR' : 'en-US';
+const puertoRicoTimeFormatter = new Intl.DateTimeFormat(localeWithRegion, {
+  hour: 'numeric',
+  minute: '2-digit',
+  hour12: true,
+  timeZone: 'America/Puerto_Rico',
+});
+
+function formatPuertoRicoTime(date: Date): string {
+  return puertoRicoTimeFormatter.format(date);
+}
+
+function calculateRatio(dose: number | null, yield_grams: number | null): string {
+  if (!dose || !yield_grams) return '-';
+  return `1:${(yield_grams / dose).toFixed(1)}`;
+}
+---
+
+<section class="todays-coffee-section">
+  <h2 class="todays-coffee-heading">{t('cafe.todaysCoffee.heading')}</h2>
+  {
+    todaysCoffee.length === 0 ? (
+      <div class="todays-coffee-empty">
+        <p>{t('cafe.todaysCoffee.emptyHeading')}</p>
+        <small>{t('cafe.todaysCoffee.emptyMessage')}</small>
+      </div>
+    ) : (
+      <div class="todays-coffee-list">
+        {todaysCoffee.map((log, index) => {
+          const brewDate = new Date(log.brew_time);
+          const isoString = brewDate.toISOString();
+
+          return (
+            <>
+              {index > 0 && <hr class="coffee-divider" />}
+              <article class="coffee-entry">
+                <header class="coffee-entry-header">
+                  <span class="time-compare time-compare--badge" data-local-time={isoString}>
+                    <span class="time-compare__zone">
+                      <span class="time-compare__value">{formatPuertoRicoTime(brewDate)}</span>
+                      <small class="time-compare__label">
+                        {t('cafe.timeComparison.puertoRico')}
+                      </small>
+                    </span>
+                    <span class="time-compare__zone time-compare__zone--local">
+                      <span class="time-compare__value" data-local-time-display>
+                        {t('common.loading')}
+                      </span>
+                      <small class="time-compare__label">
+                        {t('cafe.timeComparison.local')}
+                      </small>
+                    </span>
+                  </span>
+                  <div class="coffee-method-bean">
+                    <span class="coffee-method">{log.brew_method}</span>
+                    <span class="coffee-bean">{log.bean?.bean_name || t('cafe.misc.unknown')}</span>
+                  </div>
+                </header>
+
+                <div class="coffee-metrics">
+                  <div class="metric-block">
+                    <span class="metric-label">{t('cafe.todaysCoffee.ratio')}</span>
+                    <span class="metric-value">
+                      {log.dose_grams}g → {log.yield_grams}g ·{' '}
+                      {calculateRatio(log.dose_grams, log.yield_grams)}
+                    </span>
+                  </div>
+                  <div class="metric-block">
+                    <span class="metric-label">{t('cafe.todaysCoffee.grind')}</span>
+                    <span class="metric-value">{log.grind_setting}</span>
+                  </div>
+                </div>
+
+                <div
+                  class="coffee-rating"
+                  role="group"
+                  aria-label={`${t('cafe.table.rating')}: ${log.quality_rating} out of 5`}
+                >
+                  <span class="rating-badge" aria-hidden="true">
+                    {log.quality_rating} / 5
+                  </span>
+                  <span class="rating-text">
+                    {log.quality_rating === 5
+                      ? t('cafe.todaysCoffee.dialedIn')
+                      : log.quality_rating >= 4
+                        ? t('cafe.todaysCoffee.greatShot')
+                        : log.quality_rating >= 3
+                          ? t('cafe.todaysCoffee.decent')
+                          : t('cafe.todaysCoffee.needsWork')}
+                  </span>
+                </div>
+
+                {log.notes && (
+                  <div class="coffee-notes">
+                    <span class="notes-label">{t('cafe.todaysCoffee.notes')}</span>
+                    <span class="notes-text">
+                      {log.notes.substring(0, 120)}
+                      {log.notes.length > 120 ? '…' : ''}
+                    </span>
+                  </div>
+                )}
+              </article>
+            </>
+          );
+        })}
+      </div>
+    )
+  }
+</section>
+
+<script is:inline>
+  (() => {
+    const updateLocalTimes = () => {
+      const localFormatter = new Intl.DateTimeFormat(undefined, {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+      });
+
+      const prFormatter = new Intl.DateTimeFormat(undefined, {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+        timeZone: 'America/Puerto_Rico',
+      });
+
+      document.querySelectorAll('[data-local-time]').forEach((element) => {
+        const iso = element.getAttribute('data-local-time');
+        if (!iso) return;
+
+        const date = new Date(iso);
+        if (Number.isNaN(date.getTime())) return;
+
+        const localTime = localFormatter.format(date);
+        const prTime = prFormatter.format(date);
+
+        // Update local time display
+        element.querySelectorAll('[data-local-time-display]').forEach((target) => {
+          target.textContent = localTime;
+        });
+
+        // Hide local time zone if it matches Puerto Rico time
+        if (localTime === prTime) {
+          element.querySelectorAll('.time-compare__zone--local').forEach((zone) => {
+            zone.style.display = 'none';
+          });
+        }
+      });
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', updateLocalTimes, { once: true });
+    } else {
+      updateLocalTimes();
+    }
+  })();
+</script>
+
+<style>
+  .todays-coffee-section {
+    position: relative;
+    background:
+      linear-gradient(135deg, rgba(111, 78, 55, 0.12), transparent 55%),
+      var(--pico-card-background-color);
+    border: 1px solid var(--pico-card-border-color);
+    border-radius: calc(var(--pico-border-radius) * 1.25);
+    padding: clamp(1.5rem, 5vw, 2.75rem);
+    margin-bottom: 2.5rem;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+    overflow: hidden;
+  }
+
+  .todays-coffee-section::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(circle at top right, rgba(255, 255, 255, 0.25), transparent 60%);
+    opacity: 0.7;
+  }
+
+  .todays-coffee-heading {
+    position: relative;
+    z-index: 1;
+    margin-top: 0;
+    margin-bottom: 2rem;
+    color: var(--pico-h2-color);
+    font-size: clamp(1.6rem, 5vw, 2.4rem);
+    letter-spacing: -0.01em;
+  }
+
+  .todays-coffee-list {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .todays-coffee-empty {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: var(--pico-muted-color);
+  }
+
+  .coffee-divider {
+    border: none;
+    border-top: 1px dashed var(--pico-muted-border-color);
+    margin: 0;
+    opacity: 0.35;
+    align-self: stretch;
+  }
+
+  .coffee-entry {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .coffee-entry-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+  }
+
+  .time-compare {
+    display: inline-flex;
+    align-items: stretch;
+    gap: 0.85rem;
+    flex-wrap: wrap;
+  }
+
+  .time-compare--badge {
+    padding: 0.5rem 0.9rem;
+    border-radius: var(--pico-border-radius);
+    background: #6f4e37;
+    color: #fff7f0;
+  }
+
+  :global([data-theme='dark']) .time-compare--badge {
+    background: #b88d5f;
+    color: #1c1108;
+  }
+
+  .time-compare__zone {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: fit-content;
+  }
+
+  .time-compare__value {
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    font-size: clamp(0.8rem, 2vw, 0.95rem);
+    text-transform: uppercase;
+  }
+
+  .time-compare__label {
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 600;
+    font-size: 0.65rem;
+    opacity: 0.7;
+  }
+
+  .time-compare--badge .time-compare__value {
+    font-size: clamp(0.85rem, 1.6vw, 0.95rem);
+  }
+
+  .time-compare--badge .time-compare__zone--local .time-compare__value {
+    opacity: 0.85;
+  }
+
+  @media (max-width: 480px) {
+    .time-compare {
+      gap: 0.65rem;
+    }
+  }
+
+  .coffee-method-bean {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .coffee-method {
+    font-size: clamp(1.125rem, 3vw, 1.5rem);
+    font-weight: 700;
+    color: var(--pico-color);
+    letter-spacing: -0.01em;
+  }
+
+  .coffee-bean {
+    font-size: clamp(0.95rem, 2vw, 1.05rem);
+    color: var(--pico-muted-color);
+  }
+
+  .coffee-metrics {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+
+  .metric-block {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    padding: 0.9rem 1rem;
+    border-radius: 0.9rem;
+    background: var(--pico-background-color);
+    border: 1px solid var(--pico-muted-border-color);
+    min-height: 82px;
+  }
+
+  .metric-label {
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    color: var(--pico-muted-color);
+  }
+
+  .metric-value {
+    font-family:
+      'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Monaco, Consolas,
+      'Liberation Mono', 'Courier New', monospace;
+    font-size: clamp(0.95rem, 2.4vw, 1.05rem);
+    color: var(--pico-color);
+  }
+
+  .coffee-rating {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .rating-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.4rem 0.85rem;
+    border-radius: 999px;
+    background: #6f4e37;
+    color: #fff7f0;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    font-size: 0.85rem;
+  }
+
+  :global([data-theme='dark']) .rating-badge {
+    background: #b88d5f;
+    color: #1c1108;
+  }
+
+  .rating-text {
+    font-weight: 600;
+    color: var(--pico-color);
+    font-size: clamp(0.95rem, 2vw, 1.05rem);
+  }
+
+  .coffee-notes {
+    display: grid;
+    gap: 0.35rem;
+    padding: 1rem 1.25rem;
+    border-radius: 0.9rem;
+    border: 1px dashed var(--pico-muted-border-color);
+    background: var(--pico-card-background-color);
+  }
+
+  .notes-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--pico-muted-color);
+  }
+
+  .notes-text {
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--pico-muted-color);
+  }
+
+  @media (max-width: 768px) {
+    .todays-coffee-section {
+      margin-bottom: 1.5rem;
+    }
+  }
+</style>

@@ -1,0 +1,286 @@
+---
+import { useTranslations, type Locale } from '@/lib/i18n';
+import type { CoffeeLogWithBean } from '@/lib/schemas/cafe';
+import { formatBrewRatio } from '@/lib/cafe-stats';
+
+interface Props {
+  logs: CoffeeLogWithBean[];
+  locale: Locale;
+}
+
+const { logs, locale } = Astro.props;
+const { t, formatDate } = useTranslations(locale);
+
+const localeWithRegion = locale === 'es' ? 'es-PR' : 'en-US';
+const puertoRicoTimeFormatter = new Intl.DateTimeFormat(localeWithRegion, {
+  hour: 'numeric',
+  minute: '2-digit',
+  hour12: true,
+  timeZone: 'America/Puerto_Rico',
+});
+
+function formatPuertoRicoTime(date: Date): string {
+  return puertoRicoTimeFormatter.format(date);
+}
+---
+
+<section class="recent-logs-section">
+  <h2>{t('cafe.sections.recentBrews')}</h2>
+  <div class="recent-logs-list">
+    {
+      logs.map((log) => {
+        const brewDate = new Date(log.brew_time);
+        const isoString = brewDate.toISOString();
+
+        return (
+          <article class="recent-log-card">
+            <header class="recent-log-header">
+              <div class="recent-log-meta">
+                <span class="recent-log-date">
+                  {formatDate(brewDate, {
+                    month: 'short',
+                    day: 'numeric',
+                  })}
+                </span>
+                <span class="time-compare time-compare--subtle" data-local-time={isoString}>
+                  <span class="time-compare__zone">
+                    <span class="time-compare__value">{formatPuertoRicoTime(brewDate)}</span>
+                    <small class="time-compare__label">
+                      {t('cafe.timeComparison.puertoRico')}
+                    </small>
+                  </span>
+                  <span class="time-compare__zone time-compare__zone--local">
+                    <span class="time-compare__value" data-local-time-display>
+                      {t('common.loading')}
+                    </span>
+                    <small class="time-compare__label">{t('cafe.timeComparison.local')}</small>
+                  </span>
+                </span>
+              </div>
+              <span class="recent-log-method">{log.brew_method}</span>
+            </header>
+
+            <dl class="recent-log-details">
+              <div class="detail-item">
+                <dt>{t('cafe.table.bean')}</dt>
+                <dd>{log.bean?.bean_name || t('cafe.misc.unknown')}</dd>
+              </div>
+              <div class="detail-item">
+                <dt>{t('cafe.table.ratio')}</dt>
+                <dd>{formatBrewRatio(log.dose_grams, log.yield_grams)}</dd>
+              </div>
+              <div class="detail-item">
+                <dt>{t('cafe.table.grind')}</dt>
+                <dd>{log.grind_setting}</dd>
+              </div>
+              <div class="detail-item">
+                <dt>{t('cafe.table.rating')}</dt>
+                <dd>{log.quality_rating} / 5</dd>
+              </div>
+            </dl>
+          </article>
+        );
+      })
+    }
+  </div>
+</section>
+
+<script is:inline>
+  (() => {
+    const updateLocalTimes = () => {
+      const localFormatter = new Intl.DateTimeFormat(undefined, {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+      });
+
+      const prFormatter = new Intl.DateTimeFormat(undefined, {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+        timeZone: 'America/Puerto_Rico',
+      });
+
+      document.querySelectorAll('[data-local-time]').forEach((element) => {
+        const iso = element.getAttribute('data-local-time');
+        if (!iso) return;
+
+        const date = new Date(iso);
+        if (Number.isNaN(date.getTime())) return;
+
+        const localTime = localFormatter.format(date);
+        const prTime = prFormatter.format(date);
+
+        // Update local time display
+        element.querySelectorAll('[data-local-time-display]').forEach((target) => {
+          target.textContent = localTime;
+        });
+
+        // Hide local time zone if it matches Puerto Rico time
+        if (localTime === prTime) {
+          element.querySelectorAll('.time-compare__zone--local').forEach((zone) => {
+            zone.style.display = 'none';
+          });
+        }
+      });
+    };
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', updateLocalTimes, { once: true });
+    } else {
+      updateLocalTimes();
+    }
+  })();
+</script>
+
+<style>
+  .recent-logs-section {
+    margin-bottom: 3rem;
+  }
+
+  .recent-logs-section h2 {
+    margin-bottom: 1.75rem;
+  }
+
+  .recent-logs-list {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .recent-log-card {
+    display: grid;
+    gap: 1.25rem;
+    padding: 1.5rem;
+    border-radius: var(--pico-border-radius);
+    border: 1px solid var(--pico-card-border-color);
+    background: var(--pico-card-background-color);
+  }
+
+  .recent-log-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .recent-log-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .recent-log-date {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--pico-color);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .time-compare {
+    display: inline-flex;
+    align-items: stretch;
+    gap: 0.85rem;
+    flex-wrap: wrap;
+  }
+
+  .time-compare--subtle {
+    color: var(--pico-muted-color);
+    gap: 0.75rem;
+  }
+
+  .time-compare--subtle .time-compare__value {
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+  }
+
+  .time-compare--subtle .time-compare__label {
+    font-size: 0.6rem;
+    opacity: 0.6;
+  }
+
+  .time-compare__zone {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: fit-content;
+  }
+
+  .time-compare__value {
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    font-size: clamp(0.8rem, 2vw, 0.95rem);
+    text-transform: uppercase;
+  }
+
+  .time-compare__label {
+    display: block;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-weight: 600;
+    font-size: 0.65rem;
+    opacity: 0.7;
+  }
+
+  .recent-log-method {
+    padding: 0.35rem 0.75rem;
+    border-radius: var(--pico-border-radius);
+    background: #6f4e37;
+    color: #fff7f0;
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  :global([data-theme='dark']) .recent-log-method {
+    background: #b88d5f;
+    color: #1c1108;
+  }
+
+  .recent-log-details {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .detail-item {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  .detail-item dt {
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--pico-muted-color);
+  }
+
+  .detail-item dd {
+    margin: 0;
+    font-size: 0.95rem;
+    color: var(--pico-color);
+    font-weight: 500;
+  }
+
+  @media (min-width: 768px) {
+    .recent-logs-list {
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    }
+
+    .recent-log-details {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.25rem 1.5rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .recent-logs-section {
+      margin-bottom: 2.25rem;
+    }
+
+    .recent-log-card {
+      padding: 1.25rem;
+    }
+  }
+</style>
