@@ -146,6 +146,10 @@ See [supabase/README.md](supabase/README.md) for detailed workflow.
 
 ### Styling (PicoCSS v2)
 
+If working on UI or touching components, load the PicoCSS into context and avoid creating any custom CSS.
+Always rely on PicoCSS defaults, custom CSS is reserved exclusively for custom styling beyond what PicoCSS provides.
+Load from this link: <https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css>
+
 **Always use CSS variables:**
 
 ```css
