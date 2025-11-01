@@ -49,6 +49,8 @@ gh pr create --title "Feature: description" --body "details"
 | -------------------------- | ------------ | ------------------------------------------------------- |
 | `feat:`                    | MINOR        | `feat: Add coffee export`                               |
 | `fix:`                     | PATCH        | `fix: Correct brew time`                                |
+| `chore(deps):`             | PATCH        | `chore(deps): bump @supabase/supabase-js`               |
+| `chore(deps-dev):`         | None         | `chore(deps-dev): bump eslint`                          |
 | `docs:`                    | None         | `docs: Update README`                                   |
 | `ci:`                      | None         | `ci: Update Actions`                                    |
 | `refactor:`                | None         | `refactor: Extract i18n`                                |
