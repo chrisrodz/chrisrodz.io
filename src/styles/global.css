@@ -20,6 +20,14 @@
 
   /* Custom accent colors */
   --accent-warm: #ff6b6b; /* Coral accent for personality */
+
+  /* Coffee-themed colors for brew visualizations */
+  --coffee-espresso: #6f4e37;
+  --coffee-filter: #d4a574;
+  --coffee-french-press: #b88d5f;
+  --coffee-pour-over: #8b6f47;
+  --coffee-cold-brew: #5d4e37;
+  --coffee-aeropress: #a67c52;
 }
 
 /* Light mode overrides - must match PicoCSS specificity */
