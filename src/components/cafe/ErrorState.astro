@@ -1,0 +1,20 @@
+---
+import { useTranslations, type Locale } from '@/lib/i18n';
+
+interface Props {
+  error: string;
+  locale: Locale;
+}
+
+const { error, locale } = Astro.props;
+const { t } = useTranslations(locale);
+---
+
+<section class="notice-box" data-variant="warning">
+  <h2>{t('cafe.errors.heading')}</h2>
+  <p>
+    {error === 'Database not configured'
+      ? t('cafe.errors.notConfigured')
+      : t('cafe.errors.failed')}
+  </p>
+</section>

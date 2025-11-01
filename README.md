@@ -84,7 +84,7 @@ yarn db:types           # Generate TypeScript types from schema
 ### Code Quality
 
 ```bash
-yarn check              # Run all checks (i18n + types + lint + format)
+yarn verify             # Run all checks (i18n + types + lint + format)
 yarn lint               # ESLint
 yarn format             # Prettier
 yarn test               # Vitest unit tests

@@ -1,0 +1,16 @@
+---
+import { useTranslations, type Locale } from '@/lib/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const { t } = useTranslations(locale);
+---
+
+<h1
+  style="font-family: var(--pico-font-family-serif); font-size: clamp(2rem, 4vw, 2.5rem); font-weight: 600; margin-bottom: 1.5rem;"
+>
+  {t('home.greeting')}
+</h1>

@@ -1,0 +1,42 @@
+---
+import { useTranslations, type Locale } from '@/lib/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const { t } = useTranslations(locale);
+---
+
+<section class="coffee-why-section">
+  <p class="coffee-why-text">{t('cafe.why.text')}</p>
+</section>
+
+<style>
+  .coffee-why-section {
+    margin-bottom: 2rem;
+    text-align: center;
+    padding: 1rem 0;
+  }
+
+  .coffee-why-text {
+    color: var(--pico-muted-color);
+    line-height: 1.6;
+    margin: 0;
+    font-size: 0.9375rem;
+    margin-left: auto;
+    margin-right: auto;
+    font-style: italic;
+  }
+
+  @media (max-width: 768px) {
+    .coffee-why-section {
+      margin-bottom: 1.5rem;
+    }
+
+    .coffee-why-text {
+      font-size: 0.875rem;
+    }
+  }
+</style>

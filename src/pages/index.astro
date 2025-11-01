@@ -1,10 +1,13 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Greeting from '@/components/home/Greeting.astro';
+import IntroParagraphs from '@/components/home/IntroParagraphs.astro';
+import BlogPostsList from '@/components/home/BlogPostsList.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
-import { getBlogPostUrl, getLocaleFromUrl, useTranslations } from '@/lib/i18n';
+import { getLocaleFromUrl, useTranslations } from '@/lib/i18n';
 
 const locale = getLocaleFromUrl(Astro.url);
-const { t, formatDate } = useTranslations(locale);
+const { t } = useTranslations(locale);
 
 // Fetch blog posts for current locale
 let allPosts: CollectionEntry<'blog'>[] = [];
@@ -33,55 +36,9 @@ const personSchema = {
   <!-- Structured Data -->
   <script type="application/ld+json" is:inline set:html={JSON.stringify(personSchema)} />
   <section style="margin-top: 3rem; margin-bottom: 4rem;">
-    <h1
-      style="font-family: var(--pico-font-family-serif); font-size: clamp(2rem, 4vw, 2.5rem); font-weight: 600; margin-bottom: 1.5rem;"
-    >
-      {t('home.greeting')}
-    </h1>
-
-    <div style="max-width: 65ch;">
-      <p
-        style="font-size: 1.125rem; line-height: 1.8; color: var(--pico-color); margin-bottom: 1.5rem;"
-      >
-        {t('home.intro.paragraph1')}
-      </p>
-
-      <p style="font-size: 1.125rem; line-height: 1.8; color: var(--pico-color);">
-        {t('home.intro.paragraph2')}
-      </p>
-    </div>
+    <Greeting locale={locale} />
+    <IntroParagraphs locale={locale} />
   </section>
 
-  {
-    allPosts.length > 0 && (
-      <section>
-        <ul class="post-list" style="list-style: none; padding: 0; margin: 0;">
-          {allPosts.map((post) => (
-            <li style="padding: 1.25rem 0; border-bottom: 1px solid var(--pico-muted-border-color); display: flex; align-items: baseline; gap: 1.5rem; flex-wrap: wrap;">
-              <time
-                datetime={post.data.pubDate.toISOString()}
-                style="font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; color: var(--pico-muted-color); min-width: 100px; flex-shrink: 0;"
-              >
-                {formatDate(post.data.pubDate, {
-                  year: 'numeric',
-                  month: 'short',
-                })}
-              </time>
-              <a
-                href={getBlogPostUrl(post)}
-                style="font-family: var(--pico-font-family-serif); font-size: 1.125rem; font-weight: 600; text-decoration: none; color: var(--pico-color); flex: 1;"
-              >
-                {post.data.title}
-              </a>
-              {post.data.category && (
-                <span style="font-size: 0.75rem; padding: 0.125rem 0.5rem; background: var(--pico-secondary-background); border-radius: 3px; color: var(--pico-muted-color);">
-                  {post.data.category}
-                </span>
-              )}
-            </li>
-          ))}
-        </ul>
-      </section>
-    )
-  }
+  <BlogPostsList posts={allPosts} locale={locale} />
 </Layout>
