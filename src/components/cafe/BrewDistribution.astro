@@ -16,54 +16,44 @@ const { distribution, locale } = Astro.props;
 const { t } = useTranslations(locale);
 ---
 
-<section class="brew-method-section">
+<article>
   <h2>{t('cafe.sections.brewMethods')}</h2>
-  <div class="brew-method-bars">
+  <div class="brew-methods">
     {
       distribution.map((method) => (
-        <div class="bar-container">
-          <span class="method-name">{method.method}</span>
-          <div class="bar-wrapper">
-            <div
-              class="bar"
-              style={`width: ${method.percentage}%`}
-              data-method={method.method.toLowerCase()}
-            />
+        <div class="method-item">
+          <div class="method-header">
+            <span class="method-name">{method.method}</span>
+            <span class="method-stats">
+              {method.percentage}% ({method.count})
+            </span>
           </div>
-          <span class="stats">
-            {method.percentage}% ({method.count})
-          </span>
+          <progress value={method.percentage} max="100" data-method={method.method.toLowerCase()}>
+            {method.percentage}%
+          </progress>
         </div>
       ))
     }
   </div>
-</section>
+</article>
 
 <style>
-  .brew-method-section {
-    background: var(--pico-card-background-color);
-    border: 1px solid var(--pico-card-border-color);
-    border-radius: var(--pico-border-radius);
-    padding: 2rem;
-    margin-bottom: 3rem;
-  }
-
-  .brew-method-section h2 {
-    margin-top: 0;
-    margin-bottom: 1.5rem;
-  }
-
-  .brew-method-bars {
+  .brew-methods {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: var(--pico-spacing);
   }
 
-  .bar-container {
-    display: grid;
-    grid-template-columns: 120px 1fr auto;
-    gap: 1rem;
-    align-items: center;
+  .method-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .method-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
   }
 
   .method-name {
@@ -71,68 +61,49 @@ const { t } = useTranslations(locale);
     color: var(--pico-color);
   }
 
-  .bar-wrapper {
-    background: var(--pico-background-color);
-    border-radius: 0.25rem;
-    height: 36px;
-    overflow: hidden;
-  }
-
-  .bar {
-    height: 100%;
-    border-radius: 0.25rem;
-    transition: width 0.3s ease;
-    min-width: 2%;
-  }
-
-  .bar[data-method='espresso'] {
-    background: #6f4e37;
-  }
-
-  .bar[data-method='aeropress'] {
-    background: #8b6f47;
-  }
-
-  .bar[data-method='french press'] {
-    background: #a0826d;
-  }
-
-  :global([data-theme='dark']) .bar[data-method='espresso'] {
-    background: #9d6f4f;
-  }
-
-  :global([data-theme='dark']) .bar[data-method='aeropress'] {
-    background: #b88d5f;
-  }
-
-  :global([data-theme='dark']) .bar[data-method='french press'] {
-    background: #c4a47f;
-  }
-
-  .bar-container .stats {
+  .method-stats {
     font-family: monospace;
     font-size: 0.875rem;
     color: var(--pico-muted-color);
-    white-space: nowrap;
   }
 
-  @media (max-width: 768px) {
-    .brew-method-section {
-      padding: 1.5rem;
-      margin-bottom: 2rem;
-    }
+  /* Coffee method colors - WebKit/Blink */
+  progress[data-method='espresso']::-webkit-progress-value {
+    background: var(--coffee-espresso);
+  }
+  progress[data-method='aeropress']::-webkit-progress-value {
+    background: var(--coffee-aeropress);
+  }
+  progress[data-method='french press']::-webkit-progress-value {
+    background: var(--coffee-french-press);
+  }
+  progress[data-method='pour over']::-webkit-progress-value {
+    background: var(--coffee-pour-over);
+  }
+  progress[data-method='filter']::-webkit-progress-value {
+    background: var(--coffee-filter);
+  }
+  progress[data-method='cold brew']::-webkit-progress-value {
+    background: var(--coffee-cold-brew);
+  }
 
-    .bar-container {
-      grid-template-columns: 1fr;
-      gap: 0.5rem;
-    }
-
-    .bar-wrapper {
-      order: 2;
-    }
-
-    .stats {
-      order: 3;
-    }
+  /* Coffee method colors - Firefox */
+  progress[data-method='espresso']::-moz-progress-bar {
+    background: var(--coffee-espresso);
+  }
+  progress[data-method='aeropress']::-moz-progress-bar {
+    background: var(--coffee-aeropress);
+  }
+  progress[data-method='french press']::-moz-progress-bar {
+    background: var(--coffee-french-press);
+  }
+  progress[data-method='pour over']::-moz-progress-bar {
+    background: var(--coffee-pour-over);
+  }
+  progress[data-method='filter']::-moz-progress-bar {
+    background: var(--coffee-filter);
+  }
+  progress[data-method='cold brew']::-moz-progress-bar {
+    background: var(--coffee-cold-brew);
   }
 </style>
