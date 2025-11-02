@@ -14,32 +14,62 @@ const { formatDate } = useTranslations(locale);
 {
   posts.length > 0 && (
     <section>
-      <ul class="post-list" style="list-style: none; padding: 0; margin: 0;">
+      <ul class="post-list">
         {posts.map((post) => (
-          <li style="padding: 1.25rem 0; border-bottom: 1px solid var(--pico-muted-border-color); display: flex; align-items: baseline; gap: 1.5rem; flex-wrap: wrap;">
-            <time
-              datetime={post.data.pubDate.toISOString()}
-              style="font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; color: var(--pico-muted-color); min-width: 100px; flex-shrink: 0;"
-            >
+          <li class="post-list-item">
+            <time class="post-list-date" datetime={post.data.pubDate.toISOString()}>
               {formatDate(post.data.pubDate, {
                 year: 'numeric',
                 month: 'short',
               })}
             </time>
-            <a
-              href={getBlogPostUrl(post)}
-              style="font-family: var(--pico-font-family-serif); font-size: 1.125rem; font-weight: 600; text-decoration: none; color: var(--pico-color); flex: 1;"
-            >
+            <a class="post-list-title" href={getBlogPostUrl(post)}>
               {post.data.title}
             </a>
-            {post.data.category && (
-              <span style="font-size: 0.75rem; padding: 0.125rem 0.5rem; background: var(--pico-secondary-background); border-radius: 3px; color: var(--pico-muted-color);">
-                {post.data.category}
-              </span>
-            )}
+            {post.data.category && <span class="post-list-category">{post.data.category}</span>}
           </li>
         ))}
       </ul>
     </section>
   )
 }
+
+<style>
+  .post-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .post-list-item {
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--pico-muted-border-color);
+    display: flex;
+    align-items: baseline;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .post-list-date {
+    font-size: 0.875rem;
+    color: var(--pico-muted-color);
+    min-width: 100px;
+    flex-shrink: 0;
+  }
+
+  .post-list-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--pico-color);
+    flex: 1;
+  }
+
+  .post-list-category {
+    font-size: 0.75rem;
+    padding: 0.125rem 0.5rem;
+    background: var(--pico-secondary-background);
+    border-radius: 3px;
+    color: var(--pico-muted-color);
+  }
+</style>
