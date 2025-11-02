@@ -146,6 +146,10 @@ See [supabase/README.md](supabase/README.md) for detailed workflow.
 
 ### Styling (PicoCSS v2)
 
+If working on UI or touching components, load the PicoCSS into context and avoid creating any custom CSS.
+Always rely on PicoCSS defaults, custom CSS is reserved exclusively for custom styling beyond what PicoCSS provides.
+Load from this link: <https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css>
+
 **Always use CSS variables:**
 
 ```css
@@ -169,7 +173,7 @@ Dark mode: Toggle via `data-theme="dark"` on `<html>`
 
 ### Pre-push Checklist
 
-- [ ] Run `yarn check` (types + lint + format + i18n)
+- [ ] Run `yarn verify` (types + lint + format + i18n)
 - [ ] Test locally with `yarn dev`
 - [ ] Build succeeds: `yarn build`
 - [ ] Tests pass: `yarn test`
@@ -213,7 +217,7 @@ Dark mode: Toggle via `data-theme="dark"` on `<html>`
 ```bash
 yarn dev                    # Start dev server
 yarn build                  # Build for production
-yarn check                  # Run all checks
+yarn verify                 # Run all checks
 yarn test                   # Run tests
 yarn new-post "Title"       # Create blog post (EN+ES)
 yarn db:setup <ref>         # One-time DB setup

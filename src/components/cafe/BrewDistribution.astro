@@ -1,0 +1,109 @@
+---
+import { useTranslations, type Locale } from '@/lib/i18n';
+
+interface BrewMethodData {
+  method: string;
+  count: number;
+  percentage: number;
+}
+
+interface Props {
+  distribution: BrewMethodData[];
+  locale: Locale;
+}
+
+const { distribution, locale } = Astro.props;
+const { t } = useTranslations(locale);
+---
+
+<article>
+  <h2>{t('cafe.sections.brewMethods')}</h2>
+  <div class="brew-methods">
+    {
+      distribution.map((method) => (
+        <div class="method-item">
+          <div class="method-header">
+            <span class="method-name">{method.method}</span>
+            <span class="method-stats">
+              {method.percentage}% ({method.count})
+            </span>
+          </div>
+          <progress value={method.percentage} max="100" data-method={method.method.toLowerCase()}>
+            {method.percentage}%
+          </progress>
+        </div>
+      ))
+    }
+  </div>
+</article>
+
+<style>
+  .brew-methods {
+    display: flex;
+    flex-direction: column;
+    gap: var(--pico-spacing);
+  }
+
+  .method-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .method-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .method-name {
+    font-weight: 600;
+    color: var(--pico-color);
+  }
+
+  .method-stats {
+    font-family: monospace;
+    font-size: 0.875rem;
+    color: var(--pico-muted-color);
+  }
+
+  /* Coffee method colors - WebKit/Blink */
+  progress[data-method='espresso']::-webkit-progress-value {
+    background: var(--coffee-espresso);
+  }
+  progress[data-method='aeropress']::-webkit-progress-value {
+    background: var(--coffee-aeropress);
+  }
+  progress[data-method='french press']::-webkit-progress-value {
+    background: var(--coffee-french-press);
+  }
+  progress[data-method='pour over']::-webkit-progress-value {
+    background: var(--coffee-pour-over);
+  }
+  progress[data-method='filter']::-webkit-progress-value {
+    background: var(--coffee-filter);
+  }
+  progress[data-method='cold brew']::-webkit-progress-value {
+    background: var(--coffee-cold-brew);
+  }
+
+  /* Coffee method colors - Firefox */
+  progress[data-method='espresso']::-moz-progress-bar {
+    background: var(--coffee-espresso);
+  }
+  progress[data-method='aeropress']::-moz-progress-bar {
+    background: var(--coffee-aeropress);
+  }
+  progress[data-method='french press']::-moz-progress-bar {
+    background: var(--coffee-french-press);
+  }
+  progress[data-method='pour over']::-moz-progress-bar {
+    background: var(--coffee-pour-over);
+  }
+  progress[data-method='filter']::-moz-progress-bar {
+    background: var(--coffee-filter);
+  }
+  progress[data-method='cold brew']::-moz-progress-bar {
+    background: var(--coffee-cold-brew);
+  }
+</style>

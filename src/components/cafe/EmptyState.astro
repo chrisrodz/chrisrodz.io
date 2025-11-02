@@ -1,0 +1,15 @@
+---
+import { useTranslations, type Locale } from '@/lib/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const { t } = useTranslations(locale);
+---
+
+<section class="notice-box" data-variant="info">
+  <h2>{t('cafe.noLogsYet.heading')}</h2>
+  <p>{t('cafe.noLogsYet.message')}</p>
+</section>

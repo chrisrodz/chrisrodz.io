@@ -1,0 +1,36 @@
+---
+import { useTranslations, type Locale } from '@/lib/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const { t } = useTranslations(locale);
+---
+
+<div class="intro-container">
+  <p class="intro-paragraph">
+    {t('home.intro.paragraph1')}
+  </p>
+
+  <p class="intro-paragraph intro-paragraph--last">
+    {t('home.intro.paragraph2')}
+  </p>
+</div>
+
+<style>
+  .intro-container {
+    max-width: 65ch;
+  }
+
+  .intro-paragraph {
+    font-size: 1.125rem;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+  }
+
+  .intro-paragraph--last {
+    margin-bottom: 0;
+  }
+</style>

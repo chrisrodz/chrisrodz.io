@@ -20,6 +20,18 @@
 
   /* Custom accent colors */
   --accent-warm: #ff6b6b; /* Coral accent for personality */
+
+  /* Coffee-themed colors for brew visualizations */
+  --coffee-espresso: #6f4e37;
+  --coffee-filter: #d4a574;
+  --coffee-french-press: #b88d5f;
+  --coffee-pour-over: #8b6f47;
+  --coffee-cold-brew: #5d4e37;
+  --coffee-aeropress: #a67c52;
+
+  /* Coffee UI element colors */
+  --coffee-contrast-text: #fff7f0;
+  --coffee-accent-subtle: rgba(111, 78, 55, 0.12);
 }
 
 /* Light mode overrides - must match PicoCSS specificity */
@@ -78,6 +90,9 @@ nav.container {
 [data-theme='dark'] {
   /* Use PicoCSS's default dark colors - they're already well-designed */
   /* Only override if absolutely necessary */
+
+  /* Coffee UI element colors for dark mode */
+  --coffee-contrast-dark-text: #1c1108;
 }
 
 /* Custom base styles */
