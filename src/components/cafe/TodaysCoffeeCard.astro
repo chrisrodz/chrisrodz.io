@@ -58,9 +58,7 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
                       <span class="time-compare__value" data-local-time-display>
                         {t('common.loading')}
                       </span>
-                      <small class="time-compare__label">
-                        {t('cafe.timeComparison.local')}
-                      </small>
+                      <small class="time-compare__label">{t('cafe.timeComparison.local')}</small>
                     </span>
                   </span>
                   <div class="coffee-method-bean">
@@ -172,7 +170,7 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
   .todays-coffee-section {
     position: relative;
     background:
-      linear-gradient(135deg, rgba(111, 78, 55, 0.12), transparent 55%),
+      linear-gradient(135deg, var(--coffee-accent-subtle), transparent 55%),
       var(--pico-card-background-color);
     border: 1px solid var(--pico-card-border-color);
     border-radius: calc(var(--pico-border-radius) * 1.25);
@@ -246,13 +244,13 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
   .time-compare--badge {
     padding: 0.5rem 0.9rem;
     border-radius: var(--pico-border-radius);
-    background: #6f4e37;
-    color: #fff7f0;
+    background: var(--coffee-espresso);
+    color: var(--coffee-contrast-text);
   }
 
   :global([data-theme='dark']) .time-compare--badge {
-    background: #b88d5f;
-    color: #1c1108;
+    background: var(--coffee-french-press);
+    color: var(--coffee-contrast-dark-text);
   }
 
   .time-compare__zone {
@@ -355,16 +353,16 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
     justify-content: center;
     padding: 0.4rem 0.85rem;
     border-radius: 999px;
-    background: #6f4e37;
-    color: #fff7f0;
+    background: var(--coffee-espresso);
+    color: var(--coffee-contrast-text);
     font-weight: 700;
     letter-spacing: 0.08em;
     font-size: 0.85rem;
   }
 
   :global([data-theme='dark']) .rating-badge {
-    background: #b88d5f;
-    color: #1c1108;
+    background: var(--coffee-french-press);
+    color: var(--coffee-contrast-dark-text);
   }
 
   .rating-text {
