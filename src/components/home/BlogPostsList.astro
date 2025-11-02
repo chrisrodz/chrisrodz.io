@@ -21,6 +21,7 @@ const { formatDate } = useTranslations(locale);
               {formatDate(post.data.pubDate, {
                 year: 'numeric',
                 month: 'short',
+                day: 'numeric',
               })}
             </time>
             <a class="post-list-title" href={getBlogPostUrl(post)}>
