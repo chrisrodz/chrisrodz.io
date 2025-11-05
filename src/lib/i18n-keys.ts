@@ -25,6 +25,7 @@ export type TranslationKey =
   | 'home.greeting'
   | 'home.intro.paragraph1'
   | 'home.intro.paragraph2'
+  | 'home.recentPosts'
   | 'blog.title'
   | 'blog.metaTitle'
   | 'blog.readMore'
