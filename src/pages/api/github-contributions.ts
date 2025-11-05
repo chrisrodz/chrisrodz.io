@@ -7,12 +7,43 @@ import { fetchGitHubContributions, transformToActivityData } from '../../lib/git
  * This endpoint acts as a server-side proxy to keep the GH_PERSONAL_TOKEN secure
  */
 export const GET: APIRoute = async () => {
-  // Check if GitHub is configured
+  // Check if GitHub is configured with detailed error messages
+  if (!config.github.token) {
+    return new Response(
+      JSON.stringify({
+        error:
+          'GitHub Personal Access Token (GH_PERSONAL_TOKEN) is not configured in environment variables',
+      }),
+      {
+        status: 503,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
+  }
+
+  if (!config.github.username) {
+    return new Response(
+      JSON.stringify({
+        error: 'GitHub username (GITHUB_USERNAME) is not configured in environment variables',
+      }),
+      {
+        status: 503,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
+  }
+
   if (!config.github.isConfigured()) {
-    return new Response(JSON.stringify({ error: 'GitHub not configured' }), {
-      status: 503,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    return new Response(
+      JSON.stringify({
+        error:
+          'GitHub integration is not properly configured. Please set both GH_PERSONAL_TOKEN and GITHUB_USERNAME environment variables',
+      }),
+      {
+        status: 503,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
   }
 
   try {
@@ -41,10 +72,27 @@ export const GET: APIRoute = async () => {
   } catch (error) {
     console.error('GitHub API error:', error);
 
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    let errorMessage = 'Failed to fetch GitHub contributions';
+    let statusCode = 500;
+
+    if (error instanceof Error) {
+      errorMessage = error.message;
+
+      // Provide more specific error messages for common issues
+      if (error.message.includes('401')) {
+        errorMessage = 'Invalid GitHub token. Please check your GH_PERSONAL_TOKEN';
+        statusCode = 401;
+      } else if (error.message.includes('403')) {
+        errorMessage = 'GitHub API rate limit exceeded or insufficient permissions';
+        statusCode = 403;
+      } else if (error.message.includes('404')) {
+        errorMessage = `GitHub user '${config.github.username}' not found`;
+        statusCode = 404;
+      }
+    }
 
     return new Response(JSON.stringify({ error: errorMessage }), {
-      status: 500,
+      status: statusCode,
       headers: { 'Content-Type': 'application/json' },
     });
   }

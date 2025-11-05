@@ -18,8 +18,20 @@ try {
   const response = await fetch(new URL('/api/github-contributions', Astro.url.origin).href);
 
   if (!response.ok) {
-    const errorData = await response.json();
-    error = errorData.error || t('stats.errors.failed');
+    // Check if response is JSON before trying to parse
+    const contentType = response.headers.get('content-type');
+    if (contentType?.includes('application/json')) {
+      try {
+        const errorData = await response.json();
+        error = errorData.error || t('stats.errors.failed');
+      } catch {
+        // JSON parsing failed
+        error = `${t('stats.errors.failed')} (${response.status} ${response.statusText})`;
+      }
+    } else {
+      // Non-JSON response (likely HTML error page)
+      error = `${t('stats.errors.failed')} (${response.status} ${response.statusText})`;
+    }
   } else {
     const result = await response.json();
     data = result.data;

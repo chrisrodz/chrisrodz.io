@@ -93,6 +93,21 @@ export async function fetchGitHubContributions(
   });
 
   if (!response.ok) {
+    // Try to get error details if response is JSON
+    const contentType = response.headers.get('content-type');
+    if (contentType?.includes('application/json')) {
+      try {
+        const errorData = (await response.json()) as GitHubErrorResponse;
+        const errorMessage =
+          errorData.message || errorData.errors?.map((e) => e.message).join(', ');
+        throw new Error(
+          `GitHub API error: ${errorMessage || `${response.status} ${response.statusText}`}`
+        );
+      } catch {
+        // If JSON parsing fails, fall back to status text
+        throw new Error(`GitHub API error: ${response.status} ${response.statusText}`);
+      }
+    }
     throw new Error(`GitHub API error: ${response.status} ${response.statusText}`);
   }
 
