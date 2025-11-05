@@ -142,10 +142,31 @@
     "title": "GitHub Stats",
     "metaDescription": "GitHub contribution graph and activity",
     "heading": "GitHub Stats",
+    "subtitle": "Contribution trends, streaks, and insights from my GitHub activity.",
     "totalContributions": "total contributions in {year}",
     "errors": {
       "notConfigured": "GitHub stats are not available yet. Please configure your GitHub token and username.",
       "failed": "Failed to load GitHub stats"
+    },
+    "metrics": {
+      "heading": "Key metrics",
+      "currentStreak": "Current streak",
+      "longestStreak": "Longest streak",
+      "mostActiveDay": "Most active day",
+      "singleDay": "{count} day",
+      "days": "{count} days",
+      "dayNames": {
+        "sun": "Sunday",
+        "mon": "Monday",
+        "tue": "Tuesday",
+        "wed": "Wednesday",
+        "thu": "Thursday",
+        "fri": "Friday",
+        "sat": "Saturday"
+      }
+    },
+    "activity": {
+      "heading": "Contribution activity"
     },
     "months": {
       "jan": "Jan",
@@ -169,6 +190,12 @@
       "thu": "Thu",
       "fri": "Fri",
       "sat": "Sat"
+    },
+    "insights": {
+      "heading": "Insights",
+      "weeklyPattern": "Most productive on {day}s with an average of {avg} contributions",
+      "bestWeek": "Your most active week was {date} with {total} contributions",
+      "recentActivity": "You've contributed {days} out of the last 30 days ({percentage}% active)"
     },
     "contributionTooltip": "{{count}} contributions in {{year}}",
     "legend": {

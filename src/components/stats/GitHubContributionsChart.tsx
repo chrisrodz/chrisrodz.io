@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useState } from 'react';
 import ActivityCalendar from 'react-activity-calendar';
 import type { Activity } from 'react-activity-calendar';
 
@@ -12,6 +13,8 @@ interface GitHubContributionsChartProps {
   legendMore: string;
 }
 
+const getInitialWidth = () => (typeof window !== 'undefined' ? window.innerWidth : 1024);
+
 export default function GitHubContributionsChart({
   data,
   months,
@@ -20,6 +23,37 @@ export default function GitHubContributionsChart({
   legendLess,
   legendMore,
 }: GitHubContributionsChartProps) {
+  const [viewportWidth, setViewportWidth] = useState(getInitialWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setViewportWidth(window.innerWidth);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const blockSize = useMemo(() => {
+    if (viewportWidth < 640) return 8;
+    if (viewportWidth < 1024) return 10;
+    return 12;
+  }, [viewportWidth]);
+
+  const blockMargin = useMemo(() => (viewportWidth < 640 ? 2 : 4), [viewportWidth]);
+
+  const fontSize = useMemo(() => (viewportWidth < 640 ? 12 : 14), [viewportWidth]);
+
+  const showWeekdayLabels = useMemo(() => {
+    if (viewportWidth < 640) {
+      return [weekdays[1], weekdays[3], weekdays[5]].filter(Boolean);
+    }
+
+    return true;
+  }, [viewportWidth, weekdays]);
+
+  const hideMonthLabels = viewportWidth < 480;
+
   return (
     <ActivityCalendar
       data={data}
@@ -49,10 +83,11 @@ export default function GitHubContributionsChart({
           more: legendMore,
         },
       }}
-      showWeekdayLabels
-      blockSize={12}
-      blockMargin={4}
-      fontSize={14}
+      showWeekdayLabels={showWeekdayLabels}
+      hideMonthLabels={hideMonthLabels}
+      blockSize={blockSize}
+      blockMargin={blockMargin}
+      fontSize={fontSize}
     />
   );
 }

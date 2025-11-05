@@ -142,10 +142,31 @@
     "title": "Estadísticas de GitHub",
     "metaDescription": "Gráfico de contribuciones de GitHub y actividad",
     "heading": "Estadísticas de GitHub",
+    "subtitle": "Tendencias de contribuciones, rachas e insights de mi actividad en GitHub.",
     "totalContributions": "contribuciones totales en {year}",
     "errors": {
       "notConfigured": "Las estadísticas de GitHub aún no están disponibles. Por favor configura tu token de GitHub y nombre de usuario.",
       "failed": "Error al cargar estadísticas de GitHub"
+    },
+    "metrics": {
+      "heading": "Métricas clave",
+      "currentStreak": "Racha actual",
+      "longestStreak": "Racha más larga",
+      "mostActiveDay": "Día más activo",
+      "singleDay": "{count} día",
+      "days": "{count} días",
+      "dayNames": {
+        "sun": "domingo",
+        "mon": "lunes",
+        "tue": "martes",
+        "wed": "miércoles",
+        "thu": "jueves",
+        "fri": "viernes",
+        "sat": "sábado"
+      }
+    },
+    "activity": {
+      "heading": "Actividad de contribuciones"
     },
     "months": {
       "jan": "Ene",
@@ -169,6 +190,12 @@
       "thu": "Jue",
       "fri": "Vie",
       "sat": "Sáb"
+    },
+    "insights": {
+      "heading": "Insights",
+      "weeklyPattern": "Tu patrón semanal muestra mayor actividad los {day} con un promedio de {avg} contribuciones",
+      "bestWeek": "Tu semana más activa fue {date} con {total} contribuciones",
+      "recentActivity": "Has contribuido {days} de los últimos 30 días ({percentage}% activo)"
     },
     "contributionTooltip": "{{count}} contribuciones en {{year}}",
     "legend": {

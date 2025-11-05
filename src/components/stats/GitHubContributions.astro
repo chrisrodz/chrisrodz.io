@@ -2,38 +2,44 @@
 import { useTranslations, type Locale } from '@/lib/i18n';
 import type { Activity } from 'react-activity-calendar';
 import GitHubContributionsChart from './GitHubContributionsChart';
+import StatsCard from './StatsCard';
+import ContributionInsights from './ContributionInsights';
+import type { ContributionMetrics, InsightData, DayKey } from '@/lib/github-api';
 
 interface Props {
   locale: Locale;
 }
 
+interface StatsResponse {
+  activities: Activity[];
+  totalContributions: number;
+  metrics: ContributionMetrics;
+  insights: InsightData;
+}
+
 const { locale } = Astro.props;
 const { t } = useTranslations(locale);
 
-// Server-side data fetching
-let data: { activities: Activity[]; totalContributions: number } | null = null;
+let data: StatsResponse | null = null;
 let error: string | null = null;
 
 try {
   const response = await fetch(new URL('/api/github-contributions', Astro.url.origin).href);
 
   if (!response.ok) {
-    // Check if response is JSON before trying to parse
     const contentType = response.headers.get('content-type');
     if (contentType?.includes('application/json')) {
       try {
         const errorData = await response.json();
         error = errorData.error || t('stats.errors.failed');
       } catch {
-        // JSON parsing failed
         error = `${t('stats.errors.failed')} (${response.status} ${response.statusText})`;
       }
     } else {
-      // Non-JSON response (likely HTML error page)
       error = `${t('stats.errors.failed')} (${response.status} ${response.statusText})`;
     }
   } else {
-    const result = await response.json();
+    const result = (await response.json()) as { data: StatsResponse };
     data = result.data;
   }
 } catch (err) {
@@ -41,7 +47,6 @@ try {
   console.error('Failed to fetch GitHub contributions:', err);
 }
 
-// Prepare month and weekday labels
 const months = [
   t('stats.months.jan'),
   t('stats.months.feb'),
@@ -68,27 +73,110 @@ const weekdays = [
 ];
 
 const currentYear = new Date().getFullYear();
----
 
-<div class="github-contributions">
+const dayNames: Record<DayKey, string> = {
+  sun: t('stats.metrics.dayNames.sun'),
+  mon: t('stats.metrics.dayNames.mon'),
+  tue: t('stats.metrics.dayNames.tue'),
+  wed: t('stats.metrics.dayNames.wed'),
+  thu: t('stats.metrics.dayNames.thu'),
+  fri: t('stats.metrics.dayNames.fri'),
+  sat: t('stats.metrics.dayNames.sat'),
+};
+
+const formatDayCount = (value: number) =>
+  value === 1
+    ? t('stats.metrics.singleDay', { count: value })
+    : t('stats.metrics.days', { count: value });
+
+const numberFormatter = new Intl.NumberFormat(locale);
+const averageFormatter = new Intl.NumberFormat(locale, {
+  minimumFractionDigits: 1,
+  maximumFractionDigits: 1,
+});
+const dateFormatter = new Intl.DateTimeFormat(locale, { month: 'short', day: 'numeric' });
+
+const formatDateRange = (start: string, end: string) => {
+  const startText = dateFormatter.format(new Date(`${start}T00:00:00Z`));
+  const endText = dateFormatter.format(new Date(`${end}T00:00:00Z`));
+  return startText === endText ? startText : `${startText} – ${endText}`;
+};
+
+const metricsCards = data?.metrics
+  ? [
+      {
+        id: 'current-streak',
+        title: t('stats.metrics.currentStreak'),
+        value: formatDayCount(data.metrics.currentStreak),
+      },
+      {
+        id: 'longest-streak',
+        title: t('stats.metrics.longestStreak'),
+        value: formatDayCount(data.metrics.longestStreak),
+      },
+      {
+        id: 'most-active-day',
+        title: t('stats.metrics.mostActiveDay'),
+        value: dayNames[data.metrics.mostActiveDay] ?? dayNames.sun,
+      },
+    ]
+  : [];
+
+const insightsItems = data?.insights
+  ? [
+      {
+        id: 'weekly-pattern',
+        text: t('stats.insights.weeklyPattern', {
+          day: dayNames[data.insights.weeklyPattern.day] ?? dayNames.sun,
+          avg: averageFormatter.format(data.insights.weeklyPattern.avg),
+        }),
+      },
+      {
+        id: 'best-week',
+        text: t('stats.insights.bestWeek', {
+          date: formatDateRange(data.insights.bestWeek.startDate, data.insights.bestWeek.endDate),
+          total: numberFormatter.format(data.insights.bestWeek.total),
+        }),
+      },
+      {
+        id: 'recent-activity',
+        text: t('stats.insights.recentActivity', {
+          days: numberFormatter.format(data.insights.recentActivity.days),
+          percentage: numberFormatter.format(data.insights.recentActivity.percentage),
+        }),
+      },
+    ]
+  : [];
+---
+<div aria-live="polite">
   {
     error ? (
-      <div role="alert" class="error-container">
-        <p>
-          <strong>{t('common.error')}:</strong> {error}
-        </p>
-      </div>
+      <article role="alert">
+        <header>
+          <strong>{t('common.error')}</strong>
+        </header>
+        <p>{error}</p>
+      </article>
     ) : data ? (
       <>
-        <div class="contributions-summary">
-          <p>
-            <strong>
-              {data.totalContributions}{' '}
-              {t('stats.totalContributions', { year: currentYear.toString() })}
-            </strong>
-          </p>
-        </div>
-        <div class="calendar-container">
+        <p>
+          <strong>
+            {numberFormatter.format(data.totalContributions)}{' '}
+            {t('stats.totalContributions', { year: currentYear.toString() })}
+          </strong>
+        </p>
+
+        <section aria-labelledby="github-metrics">
+          <h2 id="github-metrics">{t('stats.metrics.heading')}</h2>
+          <div class="grid">
+            {metricsCards.map((card) => (
+              <StatsCard title={card.title} value={card.value} key={card.id} />
+            ))}
+          </div>
+        </section>
+
+        <section aria-labelledby="github-activity">
+          <h2 id="github-activity">{t('stats.activity.heading')}</h2>
           <GitHubContributionsChart
             client:only="react"
             data={data.activities}
@@ -100,43 +188,12 @@ const currentYear = new Date().getFullYear();
             legendLess={t('stats.legend.less')}
             legendMore={t('stats.legend.more')}
           />
-        </div>
+        </section>
+
+        <ContributionInsights heading={t('stats.insights.heading')} items={insightsItems} />
       </>
     ) : (
-      <div class="loading-container">
-        <p aria-busy="true">{t('common.loading')}</p>
-      </div>
+      <p aria-busy="true">{t('common.loading')}</p>
     )
   }
 </div>
-
-<style>
-  .github-contributions {
-    width: 100%;
-  }
-
-  .error-container,
-  .loading-container {
-    text-align: center;
-    padding: 2rem 0;
-  }
-
-  .contributions-summary {
-    margin-bottom: 1rem;
-    text-align: center;
-  }
-
-  .calendar-container {
-    display: flex;
-    justify-content: center;
-    overflow-x: auto;
-    padding: 0 1rem;
-  }
-
-  /* Ensure proper scrolling on smaller screens */
-  @media (max-width: 768px) {
-    .calendar-container {
-      justify-content: flex-start;
-    }
-  }
-</style>
