@@ -174,6 +174,24 @@
     "legend": {
       "less": "Menos",
       "more": "Más"
+    },
+    "subtitle": "Tu actividad de contribución en GitHub e información",
+    "metrics": {
+      "currentStreak": "Racha Actual",
+      "longestStreak": "Racha Más Larga",
+      "mostActiveDay": "Día Más Activo",
+      "days": "días"
+    },
+    "insights": {
+      "heading": "Información",
+      "weeklyPattern": "Más productivo los {day}s con un promedio de {avg} contribuciones",
+      "bestWeek": "Tu semana más activa fue {date} con {total} contribuciones",
+      "recentActivity": "Has contribuido {days} de los últimos 30 días ({percentage}% activo)"
+    },
+    "aria": {
+      "metrics": "Sección de métricas clave",
+      "calendar": "Sección de calendario de actividad",
+      "insights": "Sección de información de contribuciones"
     }
   },
   "errors": {
