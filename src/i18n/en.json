@@ -8,7 +8,8 @@
     "home": "Home",
     "blog": "Blog",
     "cafe": "Coffee Diary",
-    "training": "Training"
+    "training": "Training",
+    "stats": "Stats"
   },
   "footer": {
     "copyright": "© {year} Christian A. Rodríguez Encarnación",
@@ -135,6 +136,16 @@
       "duration": "Duration",
       "elevation": "Elevation",
       "avgHr": "Avg HR"
+    }
+  },
+  "stats": {
+    "title": "GitHub Stats",
+    "metaDescription": "GitHub contribution graph and activity",
+    "heading": "GitHub Stats",
+    "totalContributions": "total contributions in {year}",
+    "errors": {
+      "notConfigured": "GitHub stats are not available yet. Please configure your GitHub token and username.",
+      "failed": "Failed to load GitHub stats"
     }
   },
   "errors": {

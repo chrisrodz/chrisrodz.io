@@ -21,7 +21,10 @@ function isSessionExpired(session: SessionData): boolean {
   return Date.now() - session.createdAt > SESSION_DURATION;
 }
 
-function ensureSessionEntry(sessionId: string | undefined): { sessionId: string; session: SessionData } {
+function ensureSessionEntry(sessionId: string | undefined): {
+  sessionId: string;
+  session: SessionData;
+} {
   if (sessionId) {
     const existing = sessions.get(sessionId);
     if (existing) {
@@ -90,7 +93,10 @@ export function issueCsrfToken(cookies: AstroCookies): string {
   return token;
 }
 
-export function validateCsrfToken(sessionId: string | undefined, token: string | undefined): boolean {
+export function validateCsrfToken(
+  sessionId: string | undefined,
+  token: string | undefined
+): boolean {
   if (!sessionId || !token) return false;
 
   const session = sessions.get(sessionId);
@@ -111,7 +117,8 @@ export function validateCsrfToken(sessionId: string | undefined, token: string |
   }
 }
 
-export const CSRF_ERROR_MESSAGE = 'Invalid or expired session. Please refresh the page and try again.';
+export const CSRF_ERROR_MESSAGE =
+  'Invalid or expired session. Please refresh the page and try again.';
 
 export type CsrfValidationResult = {
   isValid: boolean;
@@ -120,7 +127,7 @@ export type CsrfValidationResult = {
 
 export function validateLoginCsrf(
   sessionId: string | undefined,
-  token: FormDataEntryValue | null,
+  token: FormDataEntryValue | null
 ): CsrfValidationResult {
   const tokenValue = typeof token === 'string' ? token : undefined;
   const isValid = validateCsrfToken(sessionId, tokenValue);

@@ -5,7 +5,9 @@ describe('security headers helper', () => {
   it('provides the baseline security headers', () => {
     const headers = getSecurityHeaders();
 
-    expect(headers['Strict-Transport-Security']).toBe('max-age=63072000; includeSubDomains; preload');
+    expect(headers['Strict-Transport-Security']).toBe(
+      'max-age=63072000; includeSubDomains; preload'
+    );
     expect(headers['X-Frame-Options']).toBe('DENY');
     expect(headers['Referrer-Policy']).toBe('strict-origin-when-cross-origin');
     expect(headers['Permissions-Policy']).toContain('camera=()');
@@ -25,7 +27,11 @@ describe('security headers helper', () => {
 
     applySecurityHeaders(responseHeaders, { supabaseUrl: 'https://example-project.supabase.co' });
 
-    expect(responseHeaders.get('Content-Security-Policy')).toContain('https://example-project.supabase.co');
-    expect(responseHeaders.get('Strict-Transport-Security')).toBe('max-age=63072000; includeSubDomains; preload');
+    expect(responseHeaders.get('Content-Security-Policy')).toContain(
+      'https://example-project.supabase.co'
+    );
+    expect(responseHeaders.get('Strict-Transport-Security')).toBe(
+      'max-age=63072000; includeSubDomains; preload'
+    );
   });
 });

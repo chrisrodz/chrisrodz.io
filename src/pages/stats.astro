@@ -1,0 +1,35 @@
+---
+import Layout from '../layouts/Layout.astro';
+import GitHubContributions from '@/components/stats/GitHubContributions';
+import { config } from '@/lib/config';
+import { getLocaleFromUrl, useTranslations } from '@/lib/i18n';
+
+const locale = getLocaleFromUrl(Astro.url);
+const { t } = useTranslations(locale);
+
+// Check if GitHub is configured
+const isConfigured = config.github.isConfigured();
+---
+
+<Layout title={t('stats.title')} description={t('stats.metaDescription')}>
+  <main class="container">
+    <hgroup>
+      <h1>{t('stats.heading')}</h1>
+    </hgroup>
+
+    {
+      !isConfigured ? (
+        <article>
+          <header>
+            <strong>{t('common.error')}</strong>
+          </header>
+          <p>{t('stats.errors.notConfigured')}</p>
+        </article>
+      ) : (
+        <article>
+          <GitHubContributions locale={locale} client:load />
+        </article>
+      )
+    }
+  </main>
+</Layout>

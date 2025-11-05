@@ -8,7 +8,8 @@
     "home": "Inicio",
     "blog": "Blog",
     "cafe": "Diario de Café",
-    "training": "Entrenamiento"
+    "training": "Entrenamiento",
+    "stats": "Estadísticas"
   },
   "footer": {
     "copyright": "© {year} Christian A. Rodríguez Encarnación",
@@ -135,6 +136,16 @@
       "duration": "Duración",
       "elevation": "Elevación",
       "avgHr": "FC Promedio"
+    }
+  },
+  "stats": {
+    "title": "Estadísticas de GitHub",
+    "metaDescription": "Gráfico de contribuciones de GitHub y actividad",
+    "heading": "Estadísticas de GitHub",
+    "totalContributions": "contribuciones totales en {year}",
+    "errors": {
+      "notConfigured": "Las estadísticas de GitHub aún no están disponibles. Por favor configura tu token de GitHub y nombre de usuario.",
+      "failed": "Error al cargar estadísticas de GitHub"
     }
   },
   "errors": {

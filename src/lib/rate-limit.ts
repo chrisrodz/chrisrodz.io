@@ -68,7 +68,7 @@ function toState(info: AttemptInfo, options: RateLimiterOptions, now: number): R
 export function getRateLimitState(
   key: string,
   options: RateLimiterOptions,
-  now: number = Date.now(),
+  now: number = Date.now()
 ): RateLimitState {
   const info = getInfo(key);
   pruneFailures(info, options.windowMs, now);
@@ -81,7 +81,7 @@ export function getRateLimitState(
 export function recordFailedAttempt(
   key: string,
   options: RateLimiterOptions,
-  now: number = Date.now(),
+  now: number = Date.now()
 ): RateLimitState {
   const info = getInfo(key);
   pruneFailures(info, options.windowMs, now);
