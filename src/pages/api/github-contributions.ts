@@ -33,18 +33,6 @@ export const GET: APIRoute = async () => {
     );
   }
 
-  if (!config.github.isConfigured()) {
-    return new Response(
-      JSON.stringify({
-        error:
-          'GitHub integration is not properly configured. Please set both GH_PERSONAL_TOKEN and GITHUB_USERNAME environment variables',
-      }),
-      {
-        status: 503,
-        headers: { 'Content-Type': 'application/json' },
-      }
-    );
-  }
 
   try {
     // Fetch contributions from GitHub (token stays server-side)
