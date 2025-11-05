@@ -45,6 +45,10 @@ const envSchema = z.object({
   STRAVA_CLIENT_ID: z.string().optional().or(z.literal('')),
   STRAVA_CLIENT_SECRET: z.string().optional().or(z.literal('')),
   STRAVA_REFRESH_TOKEN: z.string().optional().or(z.literal('')),
+
+  // GitHub (optional - enables stats page)
+  GH_PERSONAL_TOKEN: z.string().optional().or(z.literal('')),
+  GITHUB_USERNAME: z.string().optional().or(z.literal('')),
 });
 
 /**
@@ -62,6 +66,8 @@ function parseEnv() {
       STRAVA_CLIENT_ID: import.meta.env.STRAVA_CLIENT_ID,
       STRAVA_CLIENT_SECRET: import.meta.env.STRAVA_CLIENT_SECRET,
       STRAVA_REFRESH_TOKEN: import.meta.env.STRAVA_REFRESH_TOKEN,
+      GH_PERSONAL_TOKEN: import.meta.env.GH_PERSONAL_TOKEN,
+      GITHUB_USERNAME: import.meta.env.GITHUB_USERNAME,
     };
 
     return envSchema.parse(env);
@@ -158,6 +164,21 @@ export const config = {
         this.refreshToken &&
         this.refreshToken.trim()
       );
+    },
+  },
+
+  /**
+   * GitHub integration configuration (optional)
+   */
+  github: {
+    token: env.GH_PERSONAL_TOKEN,
+    username: env.GITHUB_USERNAME,
+
+    /**
+     * Check if GitHub is properly configured
+     */
+    isConfigured(): boolean {
+      return !!(this.token && this.token.trim() && this.username && this.username.trim());
     },
   },
 } as const;

@@ -2925,6 +2925,11 @@ csstype@^3.0.2:
   resolved "https://registry.npmjs.org/csstype/-/csstype-3.1.3.tgz"
   integrity sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==
 
+date-fns@^4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-4.1.0.tgz#64b3d83fff5aa80438f5b1a633c2e83b8a1c2d14"
+  integrity sha512-Ukq0owbQXxa/U3EGtsdVBkR1w7KOQ5gIBqdH2hkvknzZPYvBxb/aa6E8L7tmjFtkwZBu3UXBbjIgPo/Ez4xaNg==
+
 debug@4, debug@^4.0.0, debug@^4.1.0, debug@^4.1.1, debug@^4.3.1, debug@^4.3.2, debug@^4.3.4, debug@^4.4.0, debug@^4.4.1:
   version "4.4.3"
   resolved "https://registry.npmjs.org/debug/-/debug-4.4.3.tgz"
@@ -6145,6 +6150,13 @@ rc@^1.2.8:
     ini "~1.3.0"
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
+
+react-activity-calendar@^2.7.15:
+  version "2.7.15"
+  resolved "https://registry.yarnpkg.com/react-activity-calendar/-/react-activity-calendar-2.7.15.tgz#d73a190dc3b581330df6a300c9a1bbc35c0ab3dc"
+  integrity sha512-sPO4tDJp+sRbV8F/LhUZ/woHmi4dg0Phd+Kt1Jw0orSfGfEqGCm7fFXiTIAvuuAwpwxqPEYEnfNzOLEfUrdg1A==
+  dependencies:
+    date-fns "^4.1.0"
 
 react-dom@^19.2.0:
   version "19.2.0"

@@ -13,8 +13,6 @@ const { t } = useTranslations(locale);
 <section class="notice-box" data-variant="warning">
   <h2>{t('cafe.errors.heading')}</h2>
   <p>
-    {error === 'Database not configured'
-      ? t('cafe.errors.notConfigured')
-      : t('cafe.errors.failed')}
+    {error === 'Database not configured' ? t('cafe.errors.notConfigured') : t('cafe.errors.failed')}
   </p>
 </section>

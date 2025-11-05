@@ -142,7 +142,9 @@ describe('CoffeeLogForm Component', () => {
     });
 
     it('should auto-select newly added bean from store', async () => {
-      const { rerender } = render(<CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} />);
+      const { rerender } = render(
+        <CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} />
+      );
 
       const newBean: CoffeeBeanRow = {
         id: 'new-bean-id',
@@ -378,7 +380,9 @@ describe('CoffeeLogForm Component', () => {
 
       render(<CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} />);
 
-      expect(screen.getByText('Se encontró un borrador guardado. ¿Quieres restaurarlo?')).toBeInTheDocument();
+      expect(
+        screen.getByText('Se encontró un borrador guardado. ¿Quieres restaurarlo?')
+      ).toBeInTheDocument();
       expect(screen.getByRole('button', { name: 'Restaurar' })).toBeInTheDocument();
       expect(screen.getByRole('button', { name: 'Descartar' })).toBeInTheDocument();
     });
@@ -399,7 +403,9 @@ describe('CoffeeLogForm Component', () => {
 
       render(<CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} />);
 
-      expect(screen.queryByText('Se encontró un borrador guardado. ¿Quieres restaurarlo?')).not.toBeInTheDocument();
+      expect(
+        screen.queryByText('Se encontró un borrador guardado. ¿Quieres restaurarlo?')
+      ).not.toBeInTheDocument();
     });
 
     it('should restore draft when "Restaurar" is clicked', () => {
@@ -455,7 +461,9 @@ describe('CoffeeLogForm Component', () => {
       fireEvent.click(dismissButton);
 
       expect(sessionStorage.getItem('cafe_draft')).toBeNull();
-      expect(screen.queryByText('Se encontró un borrador guardado. ¿Quieres restaurarlo?')).not.toBeInTheDocument();
+      expect(
+        screen.queryByText('Se encontró un borrador guardado. ¿Quieres restaurarlo?')
+      ).not.toBeInTheDocument();
     });
 
     it('should clear draft from sessionStorage on successful submission', async () => {

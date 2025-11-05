@@ -1,0 +1,142 @@
+---
+import { useTranslations, type Locale } from '@/lib/i18n';
+import type { Activity } from 'react-activity-calendar';
+import GitHubContributionsChart from './GitHubContributionsChart';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const { t } = useTranslations(locale);
+
+// Server-side data fetching
+let data: { activities: Activity[]; totalContributions: number } | null = null;
+let error: string | null = null;
+
+try {
+  const response = await fetch(new URL('/api/github-contributions', Astro.url.origin).href);
+
+  if (!response.ok) {
+    // Check if response is JSON before trying to parse
+    const contentType = response.headers.get('content-type');
+    if (contentType?.includes('application/json')) {
+      try {
+        const errorData = await response.json();
+        error = errorData.error || t('stats.errors.failed');
+      } catch {
+        // JSON parsing failed
+        error = `${t('stats.errors.failed')} (${response.status} ${response.statusText})`;
+      }
+    } else {
+      // Non-JSON response (likely HTML error page)
+      error = `${t('stats.errors.failed')} (${response.status} ${response.statusText})`;
+    }
+  } else {
+    const result = await response.json();
+    data = result.data;
+  }
+} catch (err) {
+  error = t('stats.errors.failed');
+  console.error('Failed to fetch GitHub contributions:', err);
+}
+
+// Prepare month and weekday labels
+const months = [
+  t('stats.months.jan'),
+  t('stats.months.feb'),
+  t('stats.months.mar'),
+  t('stats.months.apr'),
+  t('stats.months.may'),
+  t('stats.months.jun'),
+  t('stats.months.jul'),
+  t('stats.months.aug'),
+  t('stats.months.sep'),
+  t('stats.months.oct'),
+  t('stats.months.nov'),
+  t('stats.months.dec'),
+];
+
+const weekdays = [
+  t('stats.weekdays.sun'),
+  t('stats.weekdays.mon'),
+  t('stats.weekdays.tue'),
+  t('stats.weekdays.wed'),
+  t('stats.weekdays.thu'),
+  t('stats.weekdays.fri'),
+  t('stats.weekdays.sat'),
+];
+
+const currentYear = new Date().getFullYear();
+---
+
+<div class="github-contributions">
+  {
+    error ? (
+      <div role="alert" class="error-container">
+        <p>
+          <strong>{t('common.error')}:</strong> {error}
+        </p>
+      </div>
+    ) : data ? (
+      <>
+        <div class="contributions-summary">
+          <p>
+            <strong>
+              {data.totalContributions}{' '}
+              {t('stats.totalContributions', { year: currentYear.toString() })}
+            </strong>
+          </p>
+        </div>
+        <div class="calendar-container">
+          <GitHubContributionsChart
+            client:only="react"
+            data={data.activities}
+            totalContributions={data.totalContributions}
+            year={currentYear}
+            months={months}
+            weekdays={weekdays}
+            tooltipTemplate={t('stats.contributionTooltip')}
+            legendLess={t('stats.legend.less')}
+            legendMore={t('stats.legend.more')}
+          />
+        </div>
+      </>
+    ) : (
+      <div class="loading-container">
+        <p aria-busy="true">{t('common.loading')}</p>
+      </div>
+    )
+  }
+</div>
+
+<style>
+  .github-contributions {
+    width: 100%;
+  }
+
+  .error-container,
+  .loading-container {
+    text-align: center;
+    padding: 2rem 0;
+  }
+
+  .contributions-summary {
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .calendar-container {
+    display: flex;
+    justify-content: center;
+    overflow-x: auto;
+    padding: 0 1rem;
+  }
+
+  /* Ensure proper scrolling on smaller screens */
+  @media (max-width: 768px) {
+    .calendar-container {
+      justify-content: flex-start;
+    }
+  }
+</style>

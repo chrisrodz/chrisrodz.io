@@ -18,6 +18,16 @@ Object.defineProperty(window, 'location', {
 describe('AddBeanForm Component', () => {
   const mockOnBeanAdded = vi.fn();
 
+  // Helper function to wait for form submission to complete
+  const waitForSubmissionComplete = async () => {
+    // Wait for the submit button to return to its normal state
+    await waitFor(() => {
+      const submitButton = screen.getByRole('button', { name: /Add Bean/i });
+      expect(submitButton).not.toHaveAttribute('aria-busy', 'true');
+      expect(submitButton).toHaveTextContent('Add Bean');
+    });
+  };
+
   beforeEach(() => {
     // Clear all stores
     beansStore.set([]);
@@ -28,7 +38,9 @@ describe('AddBeanForm Component', () => {
     mockOnBeanAdded.mockReset();
   });
 
-  afterEach(() => {
+  afterEach(async () => {
+    // Wait a tick for any pending state updates
+    await new Promise((resolve) => setTimeout(resolve, 0));
     vi.clearAllMocks();
   });
 
@@ -114,6 +126,9 @@ describe('AddBeanForm Component', () => {
       expect(formData.get('roaster')).toBe('Blue Bottle');
       expect(formData.get('roast_date')).toBe('2025-01-10');
       expect(formData.get('notes')).toBe('Floral notes');
+
+      // Wait for form submission to complete
+      await waitForSubmissionComplete();
     });
 
     it('should call onBeanAdded callback with bean ID on success', async () => {
@@ -143,6 +158,9 @@ describe('AddBeanForm Component', () => {
       await waitFor(() => {
         expect(mockOnBeanAdded).toHaveBeenCalledWith('new-bean-id');
       });
+
+      // Wait for form submission to complete
+      await waitForSubmissionComplete();
     });
 
     it('should add bean to beansStore on success', async () => {
@@ -177,6 +195,9 @@ describe('AddBeanForm Component', () => {
         expect(beans[0]).toEqual(mockBean);
         expect(lastAddedBeanIdStore.get()).toBe('new-bean-id');
       });
+
+      // Wait for form submission to complete
+      await waitForSubmissionComplete();
     });
 
     it('should reset form fields after successful submission', async () => {
@@ -214,6 +235,9 @@ describe('AddBeanForm Component', () => {
         expect(screen.getByLabelText('Roast Date')).toHaveValue('');
         expect(screen.getByLabelText('Notes')).toHaveValue('');
       });
+
+      // Wait for form submission to complete
+      await waitForSubmissionComplete();
     });
   });
 
@@ -234,6 +258,9 @@ describe('AddBeanForm Component', () => {
       await waitFor(() => {
         expect(screen.getByText('Failed to add bean')).toBeInTheDocument();
       });
+
+      // Wait for form submission to complete (even on error)
+      await waitForSubmissionComplete();
     });
 
     it('should show specific error message from server response', async () => {
@@ -254,6 +281,9 @@ describe('AddBeanForm Component', () => {
       await waitFor(() => {
         expect(screen.getByText('Bean name already exists')).toBeInTheDocument();
       });
+
+      // Wait for form submission to complete (even on error)
+      await waitForSubmissionComplete();
     });
 
     it('should handle network errors gracefully', async () => {
@@ -271,6 +301,9 @@ describe('AddBeanForm Component', () => {
       await waitFor(() => {
         expect(screen.getByText('Network error')).toBeInTheDocument();
       });
+
+      // Wait for form submission to complete (even on error)
+      await waitForSubmissionComplete();
 
       consoleErrorSpy.mockRestore();
     });
@@ -307,6 +340,9 @@ describe('AddBeanForm Component', () => {
         expect(submitButton).toBeDisabled();
         expect(submitButton).toHaveTextContent('Adding Bean...');
       });
+
+      // Wait for submission to complete and button to re-enable
+      await waitForSubmissionComplete();
     });
 
     it('should not call onBeanAdded when submission fails', async () => {
@@ -327,6 +363,9 @@ describe('AddBeanForm Component', () => {
       });
 
       expect(mockOnBeanAdded).not.toHaveBeenCalled();
+
+      // Wait for form submission to complete (even on error)
+      await waitForSubmissionComplete();
     });
   });
 });

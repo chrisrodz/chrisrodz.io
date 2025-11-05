@@ -38,9 +38,19 @@ function buildContentSecurityPolicy(options: SecurityHeaderOptions): string {
   const directives: Record<string, Set<string>> = {
     'default-src': new Set(["'self'"]),
     'script-src': new Set(["'self'", "'unsafe-inline'", ...VERCEL_SCRIPT_SOURCES]),
-    'style-src': new Set(["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com', 'https://cdn.jsdelivr.net']),
+    'style-src': new Set([
+      "'self'",
+      "'unsafe-inline'",
+      'https://fonts.googleapis.com',
+      'https://cdn.jsdelivr.net',
+    ]),
     'font-src': new Set(["'self'", 'https://fonts.gstatic.com']),
-    'img-src': new Set(["'self'", 'data:', 'https://cdn.jsdelivr.net', 'https://avatars.githubusercontent.com']),
+    'img-src': new Set([
+      "'self'",
+      'data:',
+      'https://cdn.jsdelivr.net',
+      'https://avatars.githubusercontent.com',
+    ]),
     'connect-src': new Set([
       "'self'",
       ...VERCEL_SCRIPT_SOURCES,
@@ -60,7 +70,9 @@ function buildContentSecurityPolicy(options: SecurityHeaderOptions): string {
   SUPABASE_WILDCARD_SOURCES.filter((source) => source.startsWith('https://')).forEach((source) =>
     imgSrc.add(source)
   );
-  supabaseSources.filter((source) => source.startsWith('https://')).forEach((source) => imgSrc.add(source));
+  supabaseSources
+    .filter((source) => source.startsWith('https://'))
+    .forEach((source) => imgSrc.add(source));
 
   return Object.entries(directives)
     .map(([directive, values]) => `${directive} ${Array.from(values).join(' ')}`)
