@@ -29,7 +29,7 @@ const ogImage = new URL(image, Astro.site || 'https://chrisrodz.io');
 // Generate alternate language URLs
 const alternateLocale: Locale = locale === 'es' ? 'en' : 'es';
 // Use provided alternateUrl (e.g., for translated blog posts) or generate one
-const alternateUrl = providedAlternateUrl || getAlternateUrl(currentPath, locale, alternateLocale);
+const alternateUrl = providedAlternateUrl || getAlternateUrl(currentPath, alternateLocale);
 const alternateFullUrl = new URL(alternateUrl, Astro.site || 'https://chrisrodz.io');
 
 // Format title with site name
