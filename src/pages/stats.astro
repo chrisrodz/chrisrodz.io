@@ -15,6 +15,7 @@ const isConfigured = config.github.isConfigured();
   <main class="container">
     <hgroup>
       <h1>{t('stats.heading')}</h1>
+      <p class="muted">{t('stats.subtitle')}</p>
     </hgroup>
 
     {
@@ -26,9 +27,9 @@ const isConfigured = config.github.isConfigured();
           <p>{t('stats.errors.notConfigured')}</p>
         </article>
       ) : (
-        <article>
+        <section>
           <GitHubContributions locale={locale} />
-        </article>
+        </section>
       )
     }
   </main>

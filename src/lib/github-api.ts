@@ -136,6 +136,21 @@ export interface ActivityData {
   level: 0 | 1 | 2 | 3 | 4;
 }
 
+export type DayName =
+  | 'sunday'
+  | 'monday'
+  | 'tuesday'
+  | 'wednesday'
+  | 'thursday'
+  | 'friday'
+  | 'saturday';
+
+export interface ContributionInsights {
+  weeklyPattern: { day: DayName; avg: number };
+  bestWeek: { startDate: string; endDate: string; total: number };
+  recentActivity: { days: number; total: number; percentage: number };
+}
+
 /**
  * Transform GitHub contribution data to react-activity-calendar format
  *
@@ -157,6 +172,223 @@ export function transformToActivityData(calendar: GitHubContributionCalendar): A
   }
 
   return activities;
+}
+
+function sortActivitiesByDate(activities: ActivityData[]): ActivityData[] {
+  return [...activities].sort(
+    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+  );
+}
+
+function getPreviousDate(date: Date): Date {
+  const copy = new Date(date);
+  copy.setDate(copy.getDate() - 1);
+  return copy;
+}
+
+function diffInDays(a: Date, b: Date): number {
+  const MS_PER_DAY = 24 * 60 * 60 * 1000;
+  const diff = Math.abs(a.getTime() - b.getTime());
+  return Math.round(diff / MS_PER_DAY);
+}
+
+export function calculateCurrentStreak(activities: ActivityData[]): number {
+  if (activities.length === 0) {
+    return 0;
+  }
+
+  const sorted = sortActivitiesByDate(activities);
+  let streak = 0;
+  let expectedDate = new Date(sorted[sorted.length - 1].date);
+
+  for (let i = sorted.length - 1; i >= 0; i -= 1) {
+    const activityDate = new Date(sorted[i].date);
+
+    if (diffInDays(expectedDate, activityDate) > 0) {
+      // Gap detected, streak stops
+      break;
+    }
+
+    if (sorted[i].count === 0) {
+      break;
+    }
+
+    streak += 1;
+    expectedDate = getPreviousDate(expectedDate);
+  }
+
+  return streak;
+}
+
+export function calculateLongestStreak(activities: ActivityData[]): number {
+  if (activities.length === 0) {
+    return 0;
+  }
+
+  const sorted = sortActivitiesByDate(activities);
+  let longest = 0;
+  let current = 0;
+  let previousDate: Date | null = null;
+
+  for (const activity of sorted) {
+    const activityDate = new Date(activity.date);
+
+    if (activity.count === 0) {
+      current = 0;
+      previousDate = activityDate;
+      continue;
+    }
+
+    if (previousDate && diffInDays(activityDate, previousDate) > 1) {
+      current = 0;
+    }
+
+    current += 1;
+    longest = Math.max(longest, current);
+    previousDate = activityDate;
+  }
+
+  return longest;
+}
+
+export function getMostActiveDay(activities: ActivityData[]): DayName {
+  if (activities.length === 0) {
+    return 'sunday';
+  }
+
+  const dayStats = new Map<number, { sum: number; count: number }>();
+
+  for (const activity of activities) {
+    const day = new Date(activity.date).getDay();
+    const current = dayStats.get(day) ?? { sum: 0, count: 0 };
+    current.sum += activity.count;
+    current.count += 1;
+    dayStats.set(day, current);
+  }
+
+  let bestDay = 0;
+  let bestAverage = -1;
+
+  for (const [day, { sum, count }] of dayStats.entries()) {
+    const average = count === 0 ? 0 : sum / count;
+    if (average > bestAverage) {
+      bestAverage = average;
+      bestDay = day;
+    }
+  }
+
+  const dayNames: DayName[] = [
+    'sunday',
+    'monday',
+    'tuesday',
+    'wednesday',
+    'thursday',
+    'friday',
+    'saturday',
+  ];
+
+  return dayNames[bestDay] ?? 'sunday';
+}
+
+export function analyzeContributions(activities: ActivityData[]): ContributionInsights {
+  const sorted = sortActivitiesByDate(activities);
+
+  if (sorted.length === 0) {
+    return {
+      weeklyPattern: { day: 'sunday', avg: 0 },
+      bestWeek: {
+        startDate: new Date().toISOString(),
+        endDate: new Date().toISOString(),
+        total: 0,
+      },
+      recentActivity: { days: 0, total: 0, percentage: 0 },
+    };
+  }
+
+  const weeklyAverages = new Map<number, { sum: number; count: number }>();
+  for (const activity of sorted) {
+    const weekday = new Date(activity.date).getDay();
+    const current = weeklyAverages.get(weekday) ?? { sum: 0, count: 0 };
+    current.sum += activity.count;
+    current.count += 1;
+    weeklyAverages.set(weekday, current);
+  }
+
+  const dayNames: DayName[] = [
+    'sunday',
+    'monday',
+    'tuesday',
+    'wednesday',
+    'thursday',
+    'friday',
+    'saturday',
+  ];
+
+  let topAverage = -1;
+  let topIndex = 0;
+  for (const [weekday, { sum, count }] of weeklyAverages.entries()) {
+    const average = count === 0 ? 0 : sum / count;
+    if (average > topAverage) {
+      topAverage = average;
+      topIndex = weekday;
+    }
+  }
+  const topDay = dayNames[topIndex] ?? 'sunday';
+
+  const windowSize = Math.min(7, sorted.length);
+  let bestTotal = 0;
+  let bestStartIndex = 0;
+  let windowSum = 0;
+  for (let i = 0; i < sorted.length; i += 1) {
+    windowSum += sorted[i].count;
+
+    if (i >= windowSize - 1) {
+      const startIndex = i - (windowSize - 1);
+      if (windowSum > bestTotal) {
+        bestTotal = windowSum;
+        bestStartIndex = startIndex;
+      }
+      windowSum -= sorted[startIndex].count;
+    }
+  }
+
+  const startDate = new Date(sorted[bestStartIndex].date);
+  const endDateIndex = Math.min(bestStartIndex + windowSize - 1, sorted.length - 1);
+  const endDate = new Date(sorted[endDateIndex].date);
+
+  const latestDate = new Date(sorted[sorted.length - 1].date);
+  const thirtyDaysAgo = new Date(latestDate);
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 29);
+
+  let activeDays = 0;
+  let totalRecent = 0;
+  for (const activity of sorted) {
+    const activityDate = new Date(activity.date);
+    if (activityDate >= thirtyDaysAgo && activityDate <= latestDate) {
+      if (activity.count > 0) {
+        activeDays += 1;
+      }
+      totalRecent += activity.count;
+    }
+  }
+
+  const consideredDays = Math.min(30, sorted.length);
+  const percentage =
+    consideredDays === 0 ? 0 : Math.round((activeDays / consideredDays) * 100);
+
+  return {
+    weeklyPattern: { day: topDay, avg: topAverage > 0 ? topAverage : 0 },
+    bestWeek: {
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString(),
+      total: bestTotal,
+    },
+    recentActivity: {
+      days: activeDays,
+      total: totalRecent,
+      percentage,
+    },
+  };
 }
 
 /**

@@ -1,47 +1,66 @@
 ---
-import { useTranslations, type Locale } from '@/lib/i18n';
-import type { Activity } from 'react-activity-calendar';
+import ContributionInsights from './ContributionInsights';
 import GitHubContributionsChart from './GitHubContributionsChart';
+import StatsCard from './StatsCard';
+import type { ContributionInsights as InsightData, DayName } from '@/lib/github-api';
+import { useTranslations, type Locale } from '@/lib/i18n';
+import type { TranslationKey } from '@/lib/i18n-keys';
+import type { Activity } from 'react-activity-calendar';
 
 interface Props {
   locale: Locale;
 }
 
-const { locale } = Astro.props;
-const { t } = useTranslations(locale);
+interface Metrics {
+  currentStreak: number;
+  longestStreak: number;
+  mostActiveDay: DayName;
+}
 
-// Server-side data fetching
-let data: { activities: Activity[]; totalContributions: number } | null = null;
+interface StatsData {
+  activities: Activity[];
+  totalContributions: number;
+  metrics: Metrics;
+  insights: InsightData;
+}
+
+const { locale } = Astro.props;
+const { t, formatNumber, formatDate } = useTranslations(locale);
+
+let data: StatsData | null = null;
 let error: string | null = null;
+let latestActivityDate: Date | null = null;
+let mostActiveDayKey: TranslationKey | null = null;
 
 try {
   const response = await fetch(new URL('/api/github-contributions', Astro.url.origin).href);
 
   if (!response.ok) {
-    // Check if response is JSON before trying to parse
     const contentType = response.headers.get('content-type');
     if (contentType?.includes('application/json')) {
       try {
         const errorData = await response.json();
         error = errorData.error || t('stats.errors.failed');
       } catch {
-        // JSON parsing failed
         error = `${t('stats.errors.failed')} (${response.status} ${response.statusText})`;
       }
     } else {
-      // Non-JSON response (likely HTML error page)
       error = `${t('stats.errors.failed')} (${response.status} ${response.statusText})`;
     }
   } else {
     const result = await response.json();
-    data = result.data;
+    data = result.data as StatsData;
+    if (data.activities.length > 0) {
+      const lastActivity = data.activities[data.activities.length - 1];
+      latestActivityDate = new Date(lastActivity.date);
+    }
+    mostActiveDayKey = `stats.metrics.dayNames.${data.metrics.mostActiveDay}` as TranslationKey;
   }
 } catch (err) {
   error = t('stats.errors.failed');
   console.error('Failed to fetch GitHub contributions:', err);
 }
 
-// Prepare month and weekday labels
 const months = [
   t('stats.months.jan'),
   t('stats.months.feb'),
@@ -68,75 +87,80 @@ const weekdays = [
 ];
 
 const currentYear = new Date().getFullYear();
+const activityReferenceDate = latestActivityDate ?? new Date();
 ---
 
-<div class="github-contributions">
+<section aria-live="polite">
   {
     error ? (
-      <div role="alert" class="error-container">
-        <p>
-          <strong>{t('common.error')}:</strong> {error}
-        </p>
-      </div>
+      <article role="alert">
+        <header>
+          <h2>{t('common.error')}</h2>
+        </header>
+        <p>{error}</p>
+      </article>
     ) : data ? (
       <>
-        <div class="contributions-summary">
-          <p>
-            <strong>
-              {data.totalContributions}{' '}
+        <section aria-labelledby="github-metrics-heading">
+          <header>
+            <h2 id="github-metrics-heading">{t('stats.metrics.heading')}</h2>
+            <p>
+              <strong>{formatNumber(data.totalContributions)}</strong>{' '}
               {t('stats.totalContributions', { year: currentYear.toString() })}
-            </strong>
-          </p>
-        </div>
-        <div class="calendar-container">
+            </p>
+          </header>
+          <div class="grid">
+            <StatsCard
+              title={t('stats.metrics.currentStreak')}
+              value={t('stats.metrics.days', {
+                count: formatNumber(data.metrics.currentStreak),
+              })}
+              description={t('stats.metrics.currentStreakDescription', {
+                date: formatDate(activityReferenceDate, {
+                  month: 'long',
+                  day: 'numeric',
+                }),
+              })}
+            />
+            <StatsCard
+              title={t('stats.metrics.longestStreak')}
+              value={t('stats.metrics.days', {
+                count: formatNumber(data.metrics.longestStreak),
+              })}
+            />
+            <StatsCard
+              title={t('stats.metrics.mostActiveDay')}
+              value={mostActiveDayKey ? t(mostActiveDayKey) : ''}
+            />
+          </div>
+        </section>
+
+        <section aria-labelledby="github-activity-heading">
+          <header>
+            <h2 id="github-activity-heading">{t('stats.activity.heading')}</h2>
+            <p class="muted">{t('stats.activity.subtitle')}</p>
+          </header>
           <GitHubContributionsChart
             client:only="react"
             data={data.activities}
-            totalContributions={data.totalContributions}
-            year={currentYear}
             months={months}
             weekdays={weekdays}
             tooltipTemplate={t('stats.contributionTooltip')}
             legendLess={t('stats.legend.less')}
             legendMore={t('stats.legend.more')}
           />
-        </div>
+        </section>
+
+        <ContributionInsights
+          insights={data.insights}
+          t={t}
+          locale={locale}
+          formatDate={formatDate}
+          formatNumber={formatNumber}
+        />
       </>
     ) : (
-      <div class="loading-container">
-        <p aria-busy="true">{t('common.loading')}</p>
-      </div>
+      <p aria-busy="true">{t('common.loading')}</p>
     )
   }
-</div>
-
-<style>
-  .github-contributions {
-    width: 100%;
-  }
-
-  .error-container,
-  .loading-container {
-    text-align: center;
-    padding: 2rem 0;
-  }
-
-  .contributions-summary {
-    margin-bottom: 1rem;
-    text-align: center;
-  }
-
-  .calendar-container {
-    display: flex;
-    justify-content: center;
-    overflow-x: auto;
-    padding: 0 1rem;
-  }
-
-  /* Ensure proper scrolling on smaller screens */
-  @media (max-width: 768px) {
-    .calendar-container {
-      justify-content: flex-start;
-    }
-  }
-</style>
+</section>

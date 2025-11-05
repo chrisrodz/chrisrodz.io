@@ -142,7 +142,36 @@
     "title": "GitHub Stats",
     "metaDescription": "GitHub contribution graph and activity",
     "heading": "GitHub Stats",
+    "subtitle": "A deeper look at contribution habits",
     "totalContributions": "total contributions in {year}",
+    "metrics": {
+      "heading": "Key metrics",
+      "currentStreak": "Current streak",
+      "currentStreakDescription": "Active through {date}",
+      "longestStreak": "Longest streak",
+      "mostActiveDay": "Most active day",
+      "days": "{count} days",
+      "dayNames": {
+        "sunday": "Sunday",
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday",
+        "saturday": "Saturday"
+      }
+    },
+    "activity": {
+      "heading": "Contribution activity",
+      "subtitle": "Contributions by day across the year"
+    },
+    "insights": {
+      "heading": "Insights",
+      "weeklyPattern": "Most productive on {day}s with an average of {avg} contributions",
+      "bestWeek": "Your most active week was {date} with {total} contributions",
+      "recentActivity": "You've contributed {days} out of the last 30 days ({percentage}% active)",
+      "recentTotal": "Total contributions over the last 30 days: {total}"
+    },
     "errors": {
       "notConfigured": "GitHub stats are not available yet. Please configure your GitHub token and username.",
       "failed": "Failed to load GitHub stats"
