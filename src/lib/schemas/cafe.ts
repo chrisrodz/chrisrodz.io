@@ -105,8 +105,9 @@ export const CoffeeLogSchema = z.object({
       message: 'Quality rating must be a number',
     })
     .int('Rating must be a whole number')
-    .min(1, 'Rating must be between 1 and 5')
-    .max(5, 'Rating must be between 1 and 5'),
+    .refine((val) => [1, 2, 4, 5].includes(val), {
+      message: 'Rating must be 1, 2, 4, or 5',
+    }),
 
   brew_time: z.string().datetime({ message: 'Invalid datetime format' }),
 

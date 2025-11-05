@@ -7,33 +7,45 @@ interface StarRatingProps {
   className?: string;
 }
 
+const ratingLabels: Record<number, string> = {
+  1: 'Undrinkable',
+  2: 'Passable',
+  4: 'Pretty good',
+  5: 'Excellent',
+};
+
 export default function StarRating({ value, onChange, className = '' }: StarRatingProps) {
   const [hoverValue, setHoverValue] = useState<number | null>(null);
   const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
-  const ratings = [1, 2, 3, 4, 5];
+  const ratings = [1, 2, 4, 5];
 
   const handleKeyDown = (e: KeyboardEvent<HTMLButtonElement>, currentRating: number) => {
     let newRating = currentRating;
+    const currentIndex = ratings.indexOf(currentRating);
 
     switch (e.key) {
       case 'ArrowRight':
       case 'ArrowUp':
         e.preventDefault();
-        newRating = Math.min(5, currentRating + 1);
+        if (currentIndex < ratings.length - 1) {
+          newRating = ratings[currentIndex + 1];
+        }
         break;
       case 'ArrowLeft':
       case 'ArrowDown':
         e.preventDefault();
-        newRating = Math.max(1, currentRating - 1);
+        if (currentIndex > 0) {
+          newRating = ratings[currentIndex - 1];
+        }
         break;
       case 'Home':
         e.preventDefault();
-        newRating = 1;
+        newRating = ratings[0];
         break;
       case 'End':
         e.preventDefault();
-        newRating = 5;
+        newRating = ratings[ratings.length - 1];
         break;
       default:
         return;
@@ -41,20 +53,21 @@ export default function StarRating({ value, onChange, className = '' }: StarRati
 
     onChange(newRating);
     // Focus the new rating button
-    buttonRefs.current[newRating - 1]?.focus();
+    const newIndex = ratings.indexOf(newRating);
+    buttonRefs.current[newIndex]?.focus();
   };
 
   return (
     <div className={`star-rating ${className}`} role="radiogroup" aria-label="Quality rating">
-      {ratings.map((rating) => {
-        const isFilled = hoverValue !== null ? rating <= hoverValue : rating <= value;
+      {ratings.map((rating, index) => {
         const isSelected = rating === value;
+        const label = ratingLabels[rating];
 
         return (
           <button
             key={rating}
             ref={(el) => {
-              buttonRefs.current[rating - 1] = el;
+              buttonRefs.current[index] = el;
             }}
             type="button"
             role="radio"
@@ -62,18 +75,16 @@ export default function StarRating({ value, onChange, className = '' }: StarRati
             tabIndex={isSelected ? 0 : -1}
             onClick={() => onChange(rating)}
             onKeyDown={(e) => handleKeyDown(e, rating)}
-            onMouseEnter={() => setHoverValue(rating)}
-            onMouseLeave={() => setHoverValue(null)}
             className="star-button"
-            data-filled={isFilled}
-            aria-label={`Rate ${rating} out of 5`}
+            data-filled={isSelected}
+            aria-label={`Rate as ${label}`}
           >
-            <span>{rating}</span>
+            <span>{label}</span>
           </button>
         );
       })}
       <small style={{ alignSelf: 'center', marginLeft: '0.5rem' }} aria-live="polite">
-        {value > 0 ? `${value} / 5` : 'Not rated'}
+        {value > 0 ? ratingLabels[value] || 'Not rated' : 'Not rated'}
       </small>
     </div>
   );

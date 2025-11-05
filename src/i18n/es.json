@@ -113,6 +113,12 @@
       "ratio": "Proporción",
       "grind": "Molienda",
       "rating": "Calificación"
+    },
+    "ratings": {
+      "undrinkable": "Inbebible",
+      "passable": "Pasable",
+      "prettyGood": "Bastante bueno",
+      "excellent": "Excelente"
     }
   },
   "training": {

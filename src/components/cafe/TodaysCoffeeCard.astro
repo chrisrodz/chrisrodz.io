@@ -11,6 +11,21 @@ const { todaysCoffee, locale } = Astro.props;
 const { t } = useTranslations(locale);
 
 const localeWithRegion = locale === 'es' ? 'es-PR' : 'en-US';
+
+function getRatingLabel(rating: number): string {
+  switch (rating) {
+    case 1:
+      return t('cafe.ratings.undrinkable');
+    case 2:
+      return t('cafe.ratings.passable');
+    case 4:
+      return t('cafe.ratings.prettyGood');
+    case 5:
+      return t('cafe.ratings.excellent');
+    default:
+      return String(rating);
+  }
+}
 const puertoRicoTimeFormatter = new Intl.DateTimeFormat(localeWithRegion, {
   hour: 'numeric',
   minute: '2-digit',
@@ -84,19 +99,10 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
                 <div
                   class="coffee-rating"
                   role="group"
-                  aria-label={`${t('cafe.table.rating')}: ${log.quality_rating} out of 5`}
+                  aria-label={`${t('cafe.table.rating')}: ${getRatingLabel(log.quality_rating)}`}
                 >
                   <span class="rating-badge" aria-hidden="true">
-                    {log.quality_rating} / 5
-                  </span>
-                  <span class="rating-text">
-                    {log.quality_rating === 5
-                      ? t('cafe.todaysCoffee.dialedIn')
-                      : log.quality_rating >= 4
-                        ? t('cafe.todaysCoffee.greatShot')
-                        : log.quality_rating >= 3
-                          ? t('cafe.todaysCoffee.decent')
-                          : t('cafe.todaysCoffee.needsWork')}
+                    {getRatingLabel(log.quality_rating)}
                   </span>
                 </div>
 

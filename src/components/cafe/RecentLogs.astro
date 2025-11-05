@@ -12,6 +12,21 @@ const { logs, locale } = Astro.props;
 const { t, formatDate } = useTranslations(locale);
 
 const localeWithRegion = locale === 'es' ? 'es-PR' : 'en-US';
+
+function getRatingLabel(rating: number): string {
+  switch (rating) {
+    case 1:
+      return t('cafe.ratings.undrinkable');
+    case 2:
+      return t('cafe.ratings.passable');
+    case 4:
+      return t('cafe.ratings.prettyGood');
+    case 5:
+      return t('cafe.ratings.excellent');
+    default:
+      return String(rating);
+  }
+}
 const puertoRicoTimeFormatter = new Intl.DateTimeFormat(localeWithRegion, {
   hour: 'numeric',
   minute: '2-digit',
@@ -73,7 +88,7 @@ function formatPuertoRicoTime(date: Date): string {
               </div>
               <div>
                 <dt>{t('cafe.table.rating')}</dt>
-                <dd>{log.quality_rating} / 5</dd>
+                <dd>{getRatingLabel(log.quality_rating)}</dd>
               </div>
             </dl>
           </article>

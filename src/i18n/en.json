@@ -113,6 +113,12 @@
       "ratio": "Ratio",
       "grind": "Grind",
       "rating": "Rating"
+    },
+    "ratings": {
+      "undrinkable": "Undrinkable",
+      "passable": "Passable",
+      "prettyGood": "Pretty good",
+      "excellent": "Excellent"
     }
   },
   "training": {
