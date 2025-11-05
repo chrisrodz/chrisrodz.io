@@ -3,6 +3,7 @@ import { useTranslations, type Locale } from '@/lib/i18n';
 import type { Activity } from 'react-activity-calendar';
 import GitHubContributionsChart from './GitHubContributionsChart';
 import { StatsCard } from './StatsCard';
+import { ContributionInsights } from './ContributionInsights';
 
 interface Props {
   locale: Locale;
@@ -131,6 +132,11 @@ const currentYear = new Date().getFullYear();
             legendMore={t('stats.legend.more')}
           />
         </div>
+        {data.insights && (
+          <section aria-label={t('stats.aria.insights')} class="insights-section">
+            <ContributionInsights insights={data.insights} locale={locale} />
+          </section>
+        )}
       </>
     ) : (
       <div class="loading-container">
@@ -170,6 +176,31 @@ const currentYear = new Date().getFullYear();
     justify-content: center;
     overflow-x: auto;
     padding: 0 1rem;
+  }
+
+  .insights-section {
+    margin: 2rem 0;
+  }
+
+  .insights-section article {
+    background: var(--pico-background-color);
+    border: 1px solid var(--pico-muted-border-color);
+    padding: 1.5rem;
+    border-radius: 0.25rem;
+  }
+
+  .insights-section h3 {
+    margin-top: 0;
+  }
+
+  .insights-section ul {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  .insights-section li {
+    padding: 0.5rem 0;
+    color: var(--pico-form-element-valid-border-color);
   }
 
   /* Ensure proper scrolling on smaller screens */
