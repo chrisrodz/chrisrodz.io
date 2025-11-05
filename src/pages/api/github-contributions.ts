@@ -1,7 +1,11 @@
 import type { APIRoute } from 'astro';
 import { config } from '../../lib/config';
 import { fetchGitHubContributions, transformToActivityData } from '../../lib/github-api';
-import { analyzeContributions } from '../../lib/github-stats';
+import {
+  analyzeContributions,
+  calculateCurrentStreak,
+  calculateLongestStreak,
+} from '../../lib/github-stats';
 
 /**
  * API endpoint to fetch GitHub contributions
@@ -44,14 +48,18 @@ export const GET: APIRoute = async () => {
     // Analyze contributions for insights
     const insights = analyzeContributions(activities);
 
+    // Calculate streaks for stats
+    const currentStreak = calculateCurrentStreak(activities);
+    const longestStreak = calculateLongestStreak(activities);
+
     return new Response(
       JSON.stringify({
         data: {
           activities,
           totalContributions: calendar.totalContributions,
           stats: {
-            currentStreak: insights.recentActivity.days,
-            longestStreak: 0, // Will be calculated in frontend if needed
+            currentStreak,
+            longestStreak,
             mostActiveDay: insights.mostActiveDay,
           },
           insights,

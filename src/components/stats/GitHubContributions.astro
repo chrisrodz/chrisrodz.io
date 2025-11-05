@@ -2,6 +2,7 @@
 import { useTranslations, type Locale } from '@/lib/i18n';
 import type { Activity } from 'react-activity-calendar';
 import GitHubContributionsChart from './GitHubContributionsChart';
+import { StatsCard } from './StatsCard';
 
 interface Props {
   locale: Locale;
@@ -11,7 +12,16 @@ const { locale } = Astro.props;
 const { t } = useTranslations(locale);
 
 // Server-side data fetching
-let data: { activities: Activity[]; totalContributions: number } | null = null;
+let data: {
+  activities: Activity[];
+  totalContributions: number;
+  stats?: { currentStreak: number; longestStreak: number; mostActiveDay: string };
+  insights?: {
+    mostActiveDay: string;
+    bestWeek: { startDate: string; total: number };
+    recentActivity: { days: number; total: number; percentage: number };
+  };
+} | null = null;
 let error: string | null = null;
 
 try {
@@ -88,6 +98,26 @@ const currentYear = new Date().getFullYear();
             </strong>
           </p>
         </div>
+        {data.stats && (
+          <section aria-label={t('stats.aria.metrics')} class="metrics-section">
+            <div class="grid">
+              <StatsCard
+                label={t('stats.metrics.currentStreak')}
+                value={data.stats.currentStreak}
+                unit={t('stats.metrics.days')}
+              />
+              <StatsCard
+                label={t('stats.metrics.longestStreak')}
+                value={data.stats.longestStreak}
+                unit={t('stats.metrics.days')}
+              />
+              <StatsCard
+                label={t('stats.metrics.mostActiveDay')}
+                value={data.stats.mostActiveDay}
+              />
+            </div>
+          </section>
+        )}
         <div class="calendar-container">
           <GitHubContributionsChart
             client:only="react"
@@ -124,6 +154,15 @@ const currentYear = new Date().getFullYear();
   .contributions-summary {
     margin-bottom: 1rem;
     text-align: center;
+  }
+
+  .metrics-section {
+    margin: 2rem 0;
+  }
+
+  .metrics-section .grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
   }
 
   .calendar-container {
