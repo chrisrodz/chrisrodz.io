@@ -4,7 +4,7 @@ import { fetchGitHubContributions, transformToActivityData } from '../../lib/git
 
 /**
  * API endpoint to fetch GitHub contributions
- * This endpoint acts as a server-side proxy to keep the GitHub token secure
+ * This endpoint acts as a server-side proxy to keep the GH_PERSONAL_TOKEN secure
  */
 export const GET: APIRoute = async () => {
   // Check if GitHub is configured

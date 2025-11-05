@@ -47,7 +47,7 @@ const envSchema = z.object({
   STRAVA_REFRESH_TOKEN: z.string().optional().or(z.literal('')),
 
   // GitHub (optional - enables stats page)
-  GITHUB_TOKEN: z.string().optional().or(z.literal('')),
+  GH_PERSONAL_TOKEN: z.string().optional().or(z.literal('')),
   GITHUB_USERNAME: z.string().optional().or(z.literal('')),
 });
 
@@ -66,7 +66,7 @@ function parseEnv() {
       STRAVA_CLIENT_ID: import.meta.env.STRAVA_CLIENT_ID,
       STRAVA_CLIENT_SECRET: import.meta.env.STRAVA_CLIENT_SECRET,
       STRAVA_REFRESH_TOKEN: import.meta.env.STRAVA_REFRESH_TOKEN,
-      GITHUB_TOKEN: import.meta.env.GITHUB_TOKEN,
+      GH_PERSONAL_TOKEN: import.meta.env.GH_PERSONAL_TOKEN,
       GITHUB_USERNAME: import.meta.env.GITHUB_USERNAME,
     };
 
@@ -171,7 +171,7 @@ export const config = {
    * GitHub integration configuration (optional)
    */
   github: {
-    token: env.GITHUB_TOKEN,
+    token: env.GH_PERSONAL_TOKEN,
     username: env.GITHUB_USERNAME,
 
     /**
