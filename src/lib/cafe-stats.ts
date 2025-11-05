@@ -1,9 +1,44 @@
-import type { CoffeeLogWithBean } from './schemas/cafe';
+import type { CoffeeLogWithBean, CoffeeBeanRow } from './schemas/cafe';
+
+/**
+ * Return type for calculateStats function
+ */
+export interface CafeStats {
+  totalLogs: number;
+  logsThisWeek: number;
+  avgRating: string;
+}
+
+/**
+ * Brew method distribution data point
+ */
+export interface BrewMethodData {
+  method: string;
+  count: number;
+  percentage: number;
+}
+
+/**
+ * Quality rating data point over time
+ */
+export interface QualityDataPoint {
+  date: string;
+  avgRating: number;
+  count: number;
+}
+
+/**
+ * Bean usage statistics
+ */
+export interface BeanUsage {
+  bean: CoffeeBeanRow;
+  count: number;
+}
 
 /**
  * Calculate statistics from coffee logs
  */
-export function calculateStats(logs: CoffeeLogWithBean[]) {
+export function calculateStats(logs: CoffeeLogWithBean[]): CafeStats {
   const now = new Date();
   const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
 
@@ -30,7 +65,7 @@ export function calculateStats(logs: CoffeeLogWithBean[]) {
 /**
  * Get brew method distribution
  */
-export function getBrewMethodDistribution(logs: CoffeeLogWithBean[]) {
+export function getBrewMethodDistribution(logs: CoffeeLogWithBean[]): BrewMethodData[] {
   const distribution = logs.reduce(
     (acc, log) => {
       acc[log.brew_method] = (acc[log.brew_method] || 0) + 1;
@@ -53,7 +88,7 @@ export function getBrewMethodDistribution(logs: CoffeeLogWithBean[]) {
 /**
  * Get quality ratings over time (last 30 days)
  */
-export function getQualityOverTime(logs: CoffeeLogWithBean[]) {
+export function getQualityOverTime(logs: CoffeeLogWithBean[]): QualityDataPoint[] {
   const thirtyDaysAgo = new Date();
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
@@ -89,7 +124,7 @@ export function getQualityOverTime(logs: CoffeeLogWithBean[]) {
 /**
  * Get most used beans
  */
-export function getMostUsedBeans(logs: CoffeeLogWithBean[]) {
+export function getMostUsedBeans(logs: CoffeeLogWithBean[]): BeanUsage[] {
   // Count by bean
   const beanCounts = logs.reduce(
     (acc, log) => {

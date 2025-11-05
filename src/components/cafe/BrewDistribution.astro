@@ -1,11 +1,6 @@
 ---
 import { useTranslations, type Locale } from '@/lib/i18n';
-
-interface BrewMethodData {
-  method: string;
-  count: number;
-  percentage: number;
-}
+import type { BrewMethodData } from '@/lib/cafe-stats';
 
 interface Props {
   distribution: BrewMethodData[];
