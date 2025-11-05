@@ -105,7 +105,9 @@ export async function fetchGitHubContributions(
         );
       } catch (err) {
         // If JSON parsing fails, include the parsing error message
-        throw new Error(`GitHub API error: ${response.status} ${response.statusText} (JSON parse error: ${err instanceof Error ? err.message : String(err)})`);
+        throw new Error(
+          `GitHub API error: ${response.status} ${response.statusText} (JSON parse error: ${err instanceof Error ? err.message : String(err)})`
+        );
       }
     }
     throw new Error(`GitHub API error: ${response.status} ${response.statusText}`);
@@ -172,4 +174,99 @@ function getContributionLevel(count: number): 0 | 1 | 2 | 3 | 4 {
   if (count < 6) return 2;
   if (count < 10) return 3;
   return 4;
+}
+
+/**
+ * Calculate current contribution streak ending at most recent day
+ *
+ * @param activities - Array of activity data sorted by date
+ * @returns Number of consecutive days with contributions ending at most recent day
+ */
+export function calculateCurrentStreak(activities: ActivityData[]): number {
+  if (activities.length === 0) return 0;
+
+  let streak = 0;
+
+  // Iterate from most recent day backwards
+  for (let i = activities.length - 1; i >= 0; i--) {
+    if (activities[i].count > 0) {
+      streak++;
+    } else {
+      break;
+    }
+  }
+
+  return streak;
+}
+
+/**
+ * Calculate longest contribution streak in the activity history
+ *
+ * @param activities - Array of activity data sorted by date
+ * @returns Length of longest consecutive days with contributions
+ */
+export function calculateLongestStreak(activities: ActivityData[]): number {
+  if (activities.length === 0) return 0;
+
+  let longestStreak = 0;
+  let currentStreak = 0;
+
+  for (const activity of activities) {
+    if (activity.count > 0) {
+      currentStreak++;
+      longestStreak = Math.max(longestStreak, currentStreak);
+    } else {
+      currentStreak = 0;
+    }
+  }
+
+  return longestStreak;
+}
+
+/**
+ * Get the day of week with highest average contributions
+ *
+ * @param activities - Array of activity data sorted by date
+ * @returns Name of most active day (e.g., "Monday") or "N/A" if no contributions
+ */
+export function getMostActiveDay(activities: ActivityData[]): string {
+  if (activities.length === 0) return 'N/A';
+
+  // Calculate totals and counts per day of week
+  const dayStats: Record<number, { total: number; count: number }> = {};
+
+  for (const activity of activities) {
+    if (activity.count > 0) {
+      // Parse date as UTC to avoid timezone issues
+      const [year, month, day] = activity.date.split('-').map(Number);
+      const date = new Date(Date.UTC(year, month - 1, day));
+      const dayOfWeek = date.getUTCDay(); // 0 = Sunday, 1 = Monday, etc.
+
+      if (!dayStats[dayOfWeek]) {
+        dayStats[dayOfWeek] = { total: 0, count: 0 };
+      }
+
+      dayStats[dayOfWeek].total += activity.count;
+      dayStats[dayOfWeek].count++;
+    }
+  }
+
+  // If no contributions at all
+  if (Object.keys(dayStats).length === 0) return 'N/A';
+
+  // Find day with highest average
+  let maxAverage = 0;
+  let mostActiveDay = 0;
+
+  for (const [day, stats] of Object.entries(dayStats)) {
+    const average = stats.total / stats.count;
+    if (average > maxAverage) {
+      maxAverage = average;
+      mostActiveDay = parseInt(day);
+    }
+  }
+
+  // Convert day number to name
+  const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  return dayNames[mostActiveDay];
 }
