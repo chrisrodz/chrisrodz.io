@@ -32,7 +32,8 @@
     "intro": {
       "paragraph1": "Soy Christian, ingeniero de software apasionado por construir cosas que faciliten la vida de los demás. Cuando no estoy sentado trabajando, estoy sentado en la bicicleta o pasando tiempo en familia.",
       "paragraph2": "Estaré escribiendo sobre software engineering, lecciones aprendidas de la vida, y lo que sea que valga la pena compartir. Aquí puedes ver lo más reciente:"
-    }
+    },
+    "recentPosts": "Posts Recientes"
   },
   "blog": {
     "title": "Blog",

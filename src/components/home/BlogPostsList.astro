@@ -8,12 +8,13 @@ interface Props {
 }
 
 const { posts, locale } = Astro.props;
-const { formatDate } = useTranslations(locale);
+const { formatDate, t } = useTranslations(locale);
 ---
 
 {
   posts.length > 0 && (
     <section>
+      <h2 class="posts-heading">{t('home.recentPosts')}</h2>
       <ul class="post-list">
         {posts.map((post) => (
           <li class="post-list-item">
@@ -36,6 +37,15 @@ const { formatDate } = useTranslations(locale);
 }
 
 <style>
+  .posts-heading {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin-bottom: 2rem;
+    margin-top: 3rem;
+    color: var(--pico-color);
+    letter-spacing: -0.02em;
+  }
+
   .post-list {
     list-style: none;
     padding: 0;

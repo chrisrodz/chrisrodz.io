@@ -32,7 +32,8 @@
     "intro": {
       "paragraph1": "I'm Christian Rodríguez. I'm a software engineer passionate about building things that make life easier for others. When I'm not sitting at my desk, I'm either on my bike or spending time with family.",
       "paragraph2": "I write about software engineering, life lessons, and whatever else is worth sharing. Here's some of my latest:"
-    }
+    },
+    "recentPosts": "Recent Posts"
   },
   "blog": {
     "title": "Blog",
