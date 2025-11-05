@@ -27,7 +27,7 @@ const isConfigured = config.github.isConfigured();
         </article>
       ) : (
         <article>
-          <GitHubContributions locale={locale} client:load />
+          <GitHubContributions locale={locale} t={t} client:load />
         </article>
       )
     }

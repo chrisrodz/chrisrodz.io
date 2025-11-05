@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
 import ActivityCalendar from 'react-activity-calendar';
 import type { Activity } from 'react-activity-calendar';
+import type { TranslationKey } from '@/lib/i18n-keys';
 
 interface GitHubContributionsProps {
   locale: 'en' | 'es';
+  t: (key: TranslationKey, vars?: Record<string, string>) => string;
 }
 
 interface ContributionsData {
@@ -11,7 +13,7 @@ interface ContributionsData {
   totalContributions: number;
 }
 
-export default function GitHubContributions({ locale }: GitHubContributionsProps) {
+export default function GitHubContributions({ locale, t }: GitHubContributionsProps) {
   const [data, setData] = useState<ContributionsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -41,7 +43,7 @@ export default function GitHubContributions({ locale }: GitHubContributionsProps
   if (loading) {
     return (
       <div style={{ textAlign: 'center', padding: '2rem 0' }}>
-        <p aria-busy="true">{locale === 'es' ? 'Cargando...' : 'Loading...'}</p>
+        <p aria-busy="true">{t('common.loading')}</p>
       </div>
     );
   }
@@ -50,7 +52,7 @@ export default function GitHubContributions({ locale }: GitHubContributionsProps
     return (
       <div role="alert" style={{ textAlign: 'center', padding: '2rem 0' }}>
         <p>
-          <strong>{locale === 'es' ? 'Error' : 'Error'}:</strong> {error}
+          <strong>{t('common.error')}:</strong> {error}
         </p>
       </div>
     );
@@ -61,16 +63,15 @@ export default function GitHubContributions({ locale }: GitHubContributionsProps
   }
 
   const currentYear = new Date().getFullYear();
-  const totalText =
-    locale === 'es'
-      ? `${data.totalContributions} contribuciones totales en ${currentYear}`
-      : `${data.totalContributions} total contributions in ${currentYear}`;
 
   return (
     <div className="github-contributions">
       <div style={{ marginBottom: '1rem', textAlign: 'center' }}>
         <p>
-          <strong>{totalText}</strong>
+          <strong>
+            {data.totalContributions}{' '}
+            {t('stats.totalContributions', { year: currentYear.toString() })}
+          </strong>
         </p>
       </div>
 
