@@ -146,6 +146,34 @@
     "errors": {
       "notConfigured": "GitHub stats are not available yet. Please configure your GitHub token and username.",
       "failed": "Failed to load GitHub stats"
+    },
+    "months": {
+      "jan": "Jan",
+      "feb": "Feb",
+      "mar": "Mar",
+      "apr": "Apr",
+      "may": "May",
+      "jun": "Jun",
+      "jul": "Jul",
+      "aug": "Aug",
+      "sep": "Sep",
+      "oct": "Oct",
+      "nov": "Nov",
+      "dec": "Dec"
+    },
+    "weekdays": {
+      "sun": "Sun",
+      "mon": "Mon",
+      "tue": "Tue",
+      "wed": "Wed",
+      "thu": "Thu",
+      "fri": "Fri",
+      "sat": "Sat"
+    },
+    "contributionTooltip": "{{count}} contributions in {{year}}",
+    "legend": {
+      "less": "Less",
+      "more": "More"
     }
   },
   "errors": {

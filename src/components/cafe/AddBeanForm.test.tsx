@@ -40,7 +40,7 @@ describe('AddBeanForm Component', () => {
 
   afterEach(async () => {
     // Wait a tick for any pending state updates
-    await new Promise(resolve => setTimeout(resolve, 0));
+    await new Promise((resolve) => setTimeout(resolve, 0));
     vi.clearAllMocks();
   });
 

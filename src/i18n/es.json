@@ -146,6 +146,34 @@
     "errors": {
       "notConfigured": "Las estadísticas de GitHub aún no están disponibles. Por favor configura tu token de GitHub y nombre de usuario.",
       "failed": "Error al cargar estadísticas de GitHub"
+    },
+    "months": {
+      "jan": "Ene",
+      "feb": "Feb",
+      "mar": "Mar",
+      "apr": "Abr",
+      "may": "May",
+      "jun": "Jun",
+      "jul": "Jul",
+      "aug": "Ago",
+      "sep": "Sep",
+      "oct": "Oct",
+      "nov": "Nov",
+      "dec": "Dic"
+    },
+    "weekdays": {
+      "sun": "Dom",
+      "mon": "Lun",
+      "tue": "Mar",
+      "wed": "Mié",
+      "thu": "Jue",
+      "fri": "Vie",
+      "sat": "Sáb"
+    },
+    "contributionTooltip": "{{count}} contribuciones en {{year}}",
+    "legend": {
+      "less": "Menos",
+      "more": "Más"
     }
   },
   "errors": {
