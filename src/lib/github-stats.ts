@@ -226,3 +226,23 @@ export function getRecentActivity(activities: ActivityData[]): {
     percentage,
   };
 }
+
+/**
+ * Insights interface
+ */
+export interface ContributionInsights {
+  mostActiveDay: string;
+  bestWeek: { startDate: string; total: number };
+  recentActivity: { days: number; total: number; percentage: number };
+}
+
+/**
+ * Analyze contributions and generate insights
+ */
+export function analyzeContributions(activities: ActivityData[]): ContributionInsights {
+  return {
+    mostActiveDay: getMostActiveDay(activities),
+    bestWeek: getBestWeek(activities),
+    recentActivity: getRecentActivity(activities),
+  };
+}

@@ -6,6 +6,7 @@ import {
   getWeeklyPattern,
   getBestWeek,
   getRecentActivity,
+  analyzeContributions,
 } from './github-stats';
 import type { ActivityData } from './github-api';
 
@@ -219,5 +220,36 @@ describe('getRecentActivity', () => {
     const recent = getRecentActivity(activities);
     expect(recent.days).toBe(15);
     expect(recent.percentage).toBe(50); // 15/30 = 50%
+  });
+});
+
+describe('analyzeContributions', () => {
+  it('should return complete insights object', () => {
+    const today = new Date();
+    const activities: ActivityData[] = [
+      { date: '2025-01-06', count: 5, level: 3 }, // Monday
+      { date: '2025-01-07', count: 2, level: 1 }, // Tuesday
+      { date: '2025-01-08', count: 10, level: 4 }, // Wednesday (best week)
+      { date: '2025-01-09', count: 3, level: 2 }, // Thursday
+      { date: '2025-01-10', count: 4, level: 2 }, // Friday
+      { date: '2025-01-13', count: 8, level: 3 }, // Monday
+      { date: today.toISOString().split('T')[0], count: 5, level: 3 },
+    ];
+
+    const insights = analyzeContributions(activities);
+
+    expect(insights.mostActiveDay).toBeDefined();
+    expect(insights.bestWeek).toBeDefined();
+    expect(insights.bestWeek.total).toBeGreaterThan(0);
+    expect(insights.recentActivity).toBeDefined();
+    expect(insights.recentActivity.days).toBeGreaterThanOrEqual(0);
+  });
+
+  it('should handle empty activities', () => {
+    const insights = analyzeContributions([]);
+
+    expect(insights.mostActiveDay).toBe('');
+    expect(insights.bestWeek.total).toBe(0);
+    expect(insights.recentActivity.days).toBe(0);
   });
 });
