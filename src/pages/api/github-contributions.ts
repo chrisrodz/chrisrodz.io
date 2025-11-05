@@ -33,7 +33,6 @@ export const GET: APIRoute = async () => {
     );
   }
 
-
   try {
     // Fetch contributions from GitHub (token stays server-side)
     const calendar = await fetchGitHubContributions(config.github.username!, config.github.token!);

@@ -105,7 +105,9 @@ export async function fetchGitHubContributions(
         );
       } catch (err) {
         // If JSON parsing fails, include the parsing error message
-        throw new Error(`GitHub API error: ${response.status} ${response.statusText} (JSON parse error: ${err instanceof Error ? err.message : String(err)})`);
+        throw new Error(
+          `GitHub API error: ${response.status} ${response.statusText} (JSON parse error: ${err instanceof Error ? err.message : String(err)})`
+        );
       }
     }
     throw new Error(`GitHub API error: ${response.status} ${response.statusText}`);

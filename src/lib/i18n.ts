@@ -61,14 +61,10 @@ export function t(locale: Locale, key: TranslationKey, vars?: Record<string, str
 
 /**
  * Generate URL for alternate language
- * getAlternateUrl('/blog/my-post', 'es', 'en') -> '/en/blog/my-post'
- * getAlternateUrl('/en/blog/my-post', 'en', 'es') -> '/blog/my-post'
+ * getAlternateUrl('/blog/my-post', 'en') -> '/en/blog/my-post'
+ * getAlternateUrl('/en/blog/my-post', 'es') -> '/blog/my-post'
  */
-export function getAlternateUrl(
-  currentPath: string,
-  _currentLocale: Locale,
-  targetLocale: Locale
-): string {
+export function getAlternateUrl(currentPath: string, targetLocale: Locale): string {
   // If switching to Spanish (default), remove /en prefix
   if (targetLocale === 'es') {
     return currentPath.replace(/^\/en(\/|$)/, '/') || '/';
