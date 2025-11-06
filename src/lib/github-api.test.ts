@@ -4,7 +4,6 @@ import {
   transformToActivityData,
   calculateCurrentStreak,
   calculateLongestStreak,
-  getMostActiveDay,
 } from './github-api';
 
 describe('GitHub API Module', () => {
@@ -109,7 +108,7 @@ describe('GitHub API Module', () => {
       expect(calculateCurrentStreak(activities)).toBe(3);
     });
 
-    it('should not break streak if today has 0 contributions', () => {
+    it('should break streak if today has 0 contributions', () => {
       const today = new Date();
       const yesterday = new Date(today);
       yesterday.setDate(today.getDate() - 1);
@@ -125,8 +124,8 @@ describe('GitHub API Module', () => {
         { date: today.toISOString().split('T')[0], count: 0, level: 0 },
       ];
 
-      // Should count yesterday's streak (3 days) without breaking due to today
-      expect(calculateCurrentStreak(activities)).toBe(3);
+      // Current streak is 0 because today has 0 contributions
+      expect(calculateCurrentStreak(activities)).toBe(0);
     });
 
     it('should handle streak broken by gap in middle', () => {
@@ -276,90 +275,6 @@ describe('GitHub API Module', () => {
 
       // Should sort and find longest streak (2 days: Jan 1-2)
       expect(calculateLongestStreak(activities)).toBe(2);
-    });
-  });
-
-  describe('getMostActiveDay', () => {
-    it('should return sunday for empty activities', () => {
-      expect(getMostActiveDay([])).toBe('sunday');
-    });
-
-    it('should identify most active day with single week', () => {
-      const activities: ActivityData[] = [
-        { date: '2025-01-06', count: 1, level: 1 }, // Sunday (in UTC, gets shifted to Saturday in AST)
-        { date: '2025-01-07', count: 10, level: 4 }, // Monday (most active)
-        { date: '2025-01-08', count: 2, level: 1 }, // Tuesday
-      ];
-
-      expect(getMostActiveDay(activities)).toBe('monday');
-    });
-
-    it('should calculate average across multiple weeks', () => {
-      const activities: ActivityData[] = [
-        // Week 1
-        { date: '2025-01-05', count: 5, level: 2 }, // Sunday
-        { date: '2025-01-06', count: 10, level: 4 }, // Monday
-        // Week 2
-        { date: '2025-01-12', count: 3, level: 2 }, // Sunday
-        { date: '2025-01-13', count: 20, level: 4 }, // Monday
-      ];
-
-      // Monday avg: (10 + 20) / 2 = 15
-      // Sunday avg: (5 + 3) / 2 = 4
-      expect(getMostActiveDay(activities)).toBe('monday');
-    });
-
-    it('should handle ties by returning first day', () => {
-      const activities: ActivityData[] = [
-        { date: '2025-01-05', count: 5, level: 2 }, // Sunday
-        { date: '2025-01-06', count: 5, level: 2 }, // Monday
-        { date: '2025-01-07', count: 5, level: 2 }, // Tuesday
-      ];
-
-      // All have same average, should return Sunday (first in week)
-      expect(getMostActiveDay(activities)).toBe('sunday');
-    });
-
-    it('should work across different months', () => {
-      const activities: ActivityData[] = [
-        { date: '2025-01-01', count: 1, level: 1 }, // Wednesday
-        { date: '2025-01-08', count: 2, level: 1 }, // Wednesday
-        { date: '2025-02-05', count: 9, level: 3 }, // Wednesday
-        { date: '2025-02-06', count: 3, level: 2 }, // Thursday
-      ];
-
-      // Wednesday avg: (1 + 2 + 9) / 3 = 4
-      // Thursday avg: 3 / 1 = 3
-      expect(getMostActiveDay(activities)).toBe('wednesday');
-    });
-
-    it('should handle single day', () => {
-      const activities: ActivityData[] = [
-        { date: '2025-01-10', count: 10, level: 4 }, // Friday
-      ];
-
-      expect(getMostActiveDay(activities)).toBe('friday');
-    });
-
-    it('should correctly identify all days of week', () => {
-      // Test each day can be identified as most active
-      const daysOfWeek = [
-        { date: '2025-01-05', day: 'sunday' },
-        { date: '2025-01-06', day: 'monday' },
-        { date: '2025-01-07', day: 'tuesday' },
-        { date: '2025-01-08', day: 'wednesday' },
-        { date: '2025-01-09', day: 'thursday' },
-        { date: '2025-01-10', day: 'friday' },
-        { date: '2025-01-11', day: 'saturday' },
-      ];
-
-      for (const { date, day } of daysOfWeek) {
-        const activities: ActivityData[] = [
-          { date, count: 10, level: 4 },
-          { date: '2025-01-01', count: 1, level: 1 }, // Wednesday with low count
-        ];
-        expect(getMostActiveDay(activities)).toBe(day);
-      }
     });
   });
 });

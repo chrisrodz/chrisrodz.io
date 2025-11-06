@@ -101,6 +101,7 @@ export type TranslationKey =
   | 'stats.title'
   | 'stats.metaDescription'
   | 'stats.heading'
+  | 'stats.githubTitle'
   | 'stats.totalContributions'
   | 'stats.errors.notConfigured'
   | 'stats.errors.failed'

@@ -6,8 +6,8 @@ interface StatsCardProps {
 export default function StatsCard({ label, value }: StatsCardProps) {
   return (
     <article style={{ textAlign: 'center' }}>
-      <h2>{value}</h2>
-      <p>{label}</p>
+      <h3>{value}</h3>
+      {label}
     </article>
   );
 }

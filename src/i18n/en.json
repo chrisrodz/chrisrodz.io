@@ -140,9 +140,10 @@
     }
   },
   "stats": {
-    "title": "GitHub Stats",
-    "metaDescription": "GitHub contribution graph and activity",
-    "heading": "GitHub Stats",
+    "title": "My Personal Stats",
+    "metaDescription": "GitHub, Training, and Coffee Diary statistics",
+    "heading": "My Personal Stats",
+    "githubTitle": "GitHub Stats",
     "totalContributions": "total contributions in {year}",
     "errors": {
       "notConfigured": "GitHub stats are not available yet. Please configure your GitHub token and username.",
