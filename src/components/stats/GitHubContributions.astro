@@ -2,6 +2,7 @@
 import { useTranslations, type Locale } from '@/lib/i18n';
 import type { Activity } from 'react-activity-calendar';
 import GitHubContributionsChart from './GitHubContributionsChart';
+import StatsCard from './StatsCard';
 
 interface Props {
   locale: Locale;
@@ -11,7 +12,12 @@ const { locale } = Astro.props;
 const { t } = useTranslations(locale);
 
 // Server-side data fetching
-let data: { activities: Activity[]; totalContributions: number } | null = null;
+let data: {
+  activities: Activity[];
+  totalContributions: number;
+  currentStreak: number;
+  longestStreak: number;
+} | null = null;
 let error: string | null = null;
 
 try {
@@ -80,14 +86,6 @@ const currentYear = new Date().getFullYear();
       </div>
     ) : data ? (
       <>
-        <div class="contributions-summary">
-          <p>
-            <strong>
-              {data.totalContributions}{' '}
-              {t('stats.totalContributions', { year: currentYear.toString() })}
-            </strong>
-          </p>
-        </div>
         <div class="calendar-container">
           <GitHubContributionsChart
             client:only="react"
@@ -96,9 +94,24 @@ const currentYear = new Date().getFullYear();
             year={currentYear}
             months={months}
             weekdays={weekdays}
-            tooltipTemplate={t('stats.contributionTooltip')}
+            tooltipTemplate={t('stats.contributionTooltip', {
+              count: data.totalContributions.toString(),
+              year: currentYear.toString(),
+            })}
             legendLess={t('stats.legend.less')}
             legendMore={t('stats.legend.more')}
+          />
+        </div>
+        <div class="metrics-grid grid">
+          <StatsCard
+            client:only="react"
+            label={t('stats.metrics.currentStreak')}
+            value={`${data.currentStreak} ${t('stats.metrics.days')}`}
+          />
+          <StatsCard
+            client:only="react"
+            label={t('stats.metrics.longestStreak')}
+            value={`${data.longestStreak} ${t('stats.metrics.days')}`}
           />
         </div>
       </>
@@ -113,6 +126,10 @@ const currentYear = new Date().getFullYear();
 <style>
   .github-contributions {
     width: 100%;
+  }
+
+  .metrics-grid {
+    margin-bottom: 2rem;
   }
 
   .error-container,

@@ -148,6 +148,11 @@
       "notConfigured": "Las estadísticas de GitHub aún no están disponibles. Por favor configura tu token de GitHub y nombre de usuario.",
       "failed": "Error al cargar estadísticas de GitHub"
     },
+    "metrics": {
+      "currentStreak": "Racha Actual",
+      "longestStreak": "Racha Más Larga",
+      "days": "días"
+    },
     "months": {
       "jan": "Ene",
       "feb": "Feb",
@@ -171,7 +176,7 @@
       "fri": "Vie",
       "sat": "Sáb"
     },
-    "contributionTooltip": "{{count}} contribuciones en {{year}}",
+    "contributionTooltip": "{count} contribuciones en {year}",
     "legend": {
       "less": "Menos",
       "more": "Más"

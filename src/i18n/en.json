@@ -148,6 +148,11 @@
       "notConfigured": "GitHub stats are not available yet. Please configure your GitHub token and username.",
       "failed": "Failed to load GitHub stats"
     },
+    "metrics": {
+      "currentStreak": "Current Streak",
+      "longestStreak": "Longest Streak",
+      "days": "days"
+    },
     "months": {
       "jan": "Jan",
       "feb": "Feb",
@@ -171,7 +176,7 @@
       "fri": "Fri",
       "sat": "Sat"
     },
-    "contributionTooltip": "{{count}} contributions in {{year}}",
+    "contributionTooltip": "{count} contributions in {year}",
     "legend": {
       "less": "Less",
       "more": "More"
