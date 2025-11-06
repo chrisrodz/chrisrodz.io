@@ -25,20 +25,7 @@ export default function GitHubContributionsChart({
       data={data}
       colorScheme="light"
       theme={{
-        light: [
-          'var(--pico-muted-border-color)',
-          'var(--pico-primary-background)',
-          'var(--pico-primary)',
-          'var(--pico-primary-hover)',
-          'var(--pico-primary-focus)',
-        ],
-        dark: [
-          'var(--pico-muted-border-color)',
-          'var(--pico-primary-background)',
-          'var(--pico-primary)',
-          'var(--pico-primary-hover)',
-          'var(--pico-primary-focus)',
-        ],
+        light: ['var(--pico-muted-border-color)', 'var(--pico-primary-hover)'],
       }}
       labels={{
         months,
