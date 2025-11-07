@@ -2,6 +2,7 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 import en from '../i18n/en.json';
 import es from '../i18n/es.json';
 import type { TranslationKey } from './i18n-keys';
+import { formatDate as formatDateWithDayjs } from './date-utils';
 
 export type Locale = 'en' | 'es';
 
@@ -139,7 +140,7 @@ export function useTranslations(locale: Locale) {
     t: (key: TranslationKey, vars?: Record<string, string>) => t(locale, key, vars),
     locale,
     formatDate: (date: Date, options?: Intl.DateTimeFormatOptions) =>
-      date.toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US', options),
+      formatDateWithDayjs(date, locale, options),
     formatNumber: (num: number) => num.toLocaleString(locale === 'es' ? 'es-ES' : 'en-US'),
   };
 }

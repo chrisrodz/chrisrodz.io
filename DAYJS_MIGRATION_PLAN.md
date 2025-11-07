@@ -14,16 +14,17 @@
 
 ### Why Day.js?
 
-| Benefit | Current Pain Point | Day.js Solution |
-|---------|-------------------|-----------------|
-| **Immutability** | `.setDate()`, `.setHours()` mutate originals | All operations return new instances |
-| **Readable Arithmetic** | `7 * 24 * 60 * 60 * 1000` | `.subtract(7, 'days')` |
-| **Consistent Formatting** | Manual YYYY-MM-DD + Intl API mix | `.format('YYYY-MM-DD')` |
-| **Timezone Support** | Hardcoded Puerto Rico formatters (duplicated 4x) | `dayjs.tz()` plugin |
-| **Validation** | Regex-only (allows invalid dates) | `.isValid()` checks |
-| **Bundle Size** | N/A | 2KB gzipped (smaller than moment.js) |
+| Benefit                   | Current Pain Point                               | Day.js Solution                      |
+| ------------------------- | ------------------------------------------------ | ------------------------------------ |
+| **Immutability**          | `.setDate()`, `.setHours()` mutate originals     | All operations return new instances  |
+| **Readable Arithmetic**   | `7 * 24 * 60 * 60 * 1000`                        | `.subtract(7, 'days')`               |
+| **Consistent Formatting** | Manual YYYY-MM-DD + Intl API mix                 | `.format('YYYY-MM-DD')`              |
+| **Timezone Support**      | Hardcoded Puerto Rico formatters (duplicated 4x) | `dayjs.tz()` plugin                  |
+| **Validation**            | Regex-only (allows invalid dates)                | `.isValid()` checks                  |
+| **Bundle Size**           | N/A                                              | 2KB gzipped (smaller than moment.js) |
 
 ### Success Criteria
+
 - ✅ Zero date mutation
 - ✅ Single timezone formatter utility
 - ✅ Eliminate all manual millisecond math
@@ -75,6 +76,7 @@ export default dayjs;
 ```
 
 **Why These Plugins?**
+
 - `utc` + `timezone`: Puerto Rico coffee log timestamps
 - `localeData`: ES/EN locale support (already using es-ES, en-US)
 - `customParseFormat`: Parse YYYY-MM-DD strings (roast dates)
@@ -112,6 +114,7 @@ Phase 4: Cleanup & Validation (Week 3)
 ```
 
 **Why This Order?**
+
 1. Start with **core utilities** (i18n, github-api, cafe-stats) - highest impact, used everywhere
 2. Then **components** that consume those utilities
 3. Finally **validation & forms** (lowest risk)
@@ -206,10 +209,7 @@ export function formatDate(
 /**
  * Format time in Puerto Rico timezone (consolidates RecentLogs + TodaysCoffeeCard)
  */
-export function formatTimeInPR(
-  date: Date | string,
-  locale: Locale = 'es'
-): string {
+export function formatTimeInPR(date: Date | string, locale: Locale = 'es'): string {
   return dayjs(date)
     .tz(DEFAULT_TIMEZONE)
     .locale(locale === 'es' ? 'es' : 'en')
@@ -347,12 +347,14 @@ describe('date-utils', () => {
 **Location**: Line 141-142
 
 **Before**:
+
 ```typescript
 formatDate: (date: Date, options?: Intl.DateTimeFormatOptions) =>
   date.toLocaleDateString(locale === 'es' ? 'es-ES' : 'en-US', options),
 ```
 
 **After**:
+
 ```typescript
 import { formatDate } from './date-utils';
 
@@ -370,6 +372,7 @@ formatDate: (date: Date, options?: Intl.DateTimeFormatOptions) =>
 **Changes**:
 
 1. **Replace formatLocalDate** (Lines 190-195):
+
    ```typescript
    // Remove manual implementation
    import { formatDateISO } from './date-utils';
@@ -377,6 +380,7 @@ formatDate: (date: Date, options?: Intl.DateTimeFormatOptions) =>
    ```
 
 2. **Replace date arithmetic** (Line 218):
+
    ```typescript
    // Before:
    const expectedDate = new Date(today);
@@ -400,6 +404,7 @@ formatDate: (date: Date, options?: Intl.DateTimeFormatOptions) =>
 **Changes**:
 
 1. **Replace 7-day calculation** (Lines 42-43):
+
    ```typescript
    // Before:
    const now = new Date();
@@ -411,6 +416,7 @@ formatDate: (date: Date, options?: Intl.DateTimeFormatOptions) =>
    ```
 
 2. **Replace date comparison** (Line 51):
+
    ```typescript
    // Before:
    return logDate >= oneWeekAgo;
@@ -421,6 +427,7 @@ formatDate: (date: Date, options?: Intl.DateTimeFormatOptions) =>
    ```
 
 3. **Replace 30-day calculation** (Lines 92-93):
+
    ```typescript
    // Before:
    const thirtyDaysAgo = new Date();
@@ -431,6 +438,7 @@ formatDate: (date: Date, options?: Intl.DateTimeFormatOptions) =>
    ```
 
 4. **Replace date formatting** (Lines 101-104):
+
    ```typescript
    // Before:
    const dateStr = new Date(log.brew_time).toLocaleDateString('en-US', {
@@ -468,10 +476,12 @@ const SESSION_DURATION = 24 * 60 * 60 * 1000;
 ### Step 3.1: Consolidate Puerto Rico Timezone Formatters
 
 **Remove duplicates in**:
+
 - `src/components/cafe/RecentLogs.astro` (Lines 14-24, 89-100)
 - `src/components/cafe/TodaysCoffeeCard.astro` (Lines 14-23, 124-135)
 
 **Replace with**:
+
 ```astro
 ---
 import { formatTimeInPR } from '@/lib/date-utils';
@@ -486,14 +496,14 @@ const brewTime = formatTimeInPR(log.brew_time, locale);
 
 <!-- Client-side script (if hydration needed) -->
 <script>
-import { formatTimeInPR } from '@/lib/date-utils';
+  import { formatTimeInPR } from '@/lib/date-utils';
 
-document.querySelectorAll('[data-brew-time]').forEach((el) => {
-  const isoTime = el.getAttribute('data-brew-time');
-  if (isoTime) {
-    el.textContent = formatTimeInPR(isoTime);
-  }
-});
+  document.querySelectorAll('[data-brew-time]').forEach((el) => {
+    const isoTime = el.getAttribute('data-brew-time');
+    if (isoTime) {
+      el.textContent = formatTimeInPR(isoTime);
+    }
+  });
 </script>
 ```
 
@@ -506,6 +516,7 @@ document.querySelectorAll('[data-brew-time]').forEach((el) => {
 **Location**: Lines 41-47
 
 **Before**:
+
 ```typescript
 const today = new Date();
 today.setHours(0, 0, 0, 0);
@@ -514,6 +525,7 @@ return logDate.getTime() === today.getTime();
 ```
 
 **After**:
+
 ```typescript
 import { getStartOfToday, isSameDay } from '@/lib/date-utils';
 const today = getStartOfToday();
@@ -528,6 +540,7 @@ return isSameDay(log.brew_time, today);
 **Location**: Lines 33-37
 
 **Before**:
+
 ```typescript
 const formattedDate = entry.data.pubDate.toLocaleDateString(locale, {
   year: 'numeric',
@@ -537,6 +550,7 @@ const formattedDate = entry.data.pubDate.toLocaleDateString(locale, {
 ```
 
 **After**:
+
 ```typescript
 const { formatDate } = useTranslations(locale); // Already uses date-utils!
 const formattedDate = formatDate(entry.data.pubDate, {
@@ -553,11 +567,13 @@ const formattedDate = formatDate(entry.data.pubDate, {
 **Location**: Line 171
 
 **Before**:
+
 ```typescript
 brew_time: new Date().toISOString(),
 ```
 
 **After**:
+
 ```typescript
 import dayjs from '@/lib/dayjs-config';
 brew_time: dayjs().toISOString(),
@@ -572,12 +588,14 @@ brew_time: dayjs().toISOString(),
 **Location**: Line 277-278
 
 **Before**:
+
 ```typescript
 const expires = new Date();
 expires.setFullYear(expires.getFullYear() + 1);
 ```
 
 **After**:
+
 ```typescript
 import dayjs from '@/lib/dayjs-config';
 const expires = dayjs().add(1, 'year').toDate();
@@ -595,6 +613,7 @@ const expires = dayjs().add(1, 'year').toDate();
 **Location**: Line 46
 
 **Before**:
+
 ```typescript
 roast_date: z
   .string()
@@ -602,6 +621,7 @@ roast_date: z
 ```
 
 **After**:
+
 ```typescript
 import { parseDate } from '@/lib/date-utils';
 
@@ -621,6 +641,7 @@ roast_date: z
 ### Step 4.2: Remove Duplicate Code
 
 **Delete**:
+
 1. `formatLocalDate()` in `src/lib/github-api.test.ts:10-14`
 2. Puerto Rico formatters in `RecentLogs.astro`
 3. Puerto Rico formatters in `TodaysCoffeeCard.astro`
@@ -632,6 +653,7 @@ roast_date: z
 ### Step 4.3: Update Tests
 
 **Files to modify**:
+
 - `src/lib/github-api.test.ts` - Use `formatDateISO` instead of duplicate
 - `src/lib/cafe-stats.test.ts` - Update date fixtures to use `getDaysAgo`
 - `src/pages/rss.xml.test.ts` - Verify date sorting still works
@@ -701,6 +723,7 @@ ls -lh dist/_astro/*.js | head -20
 ## 10. Migration Checklist
 
 ### Phase 1: Foundation ✅
+
 - [ ] Install `dayjs` dependency
 - [ ] Create `src/lib/dayjs-config.ts`
 - [ ] Create `src/lib/date-utils.ts`
@@ -708,6 +731,7 @@ ls -lh dist/_astro/*.js | head -20
 - [ ] Run `yarn test` - verify all pass
 
 ### Phase 2: Core Utilities ✅
+
 - [ ] Migrate `src/lib/i18n.ts` formatDate
 - [ ] Migrate `src/lib/github-api.ts` (formatLocalDate, date arithmetic)
 - [ ] Migrate `src/lib/cafe-stats.ts` (7-day, 30-day windows)
@@ -717,6 +741,7 @@ ls -lh dist/_astro/*.js | head -20
 - [ ] Run `yarn build` - verify no SSR errors
 
 ### Phase 3: Components & Pages ✅
+
 - [ ] Consolidate Puerto Rico timezone formatters
 - [ ] Migrate `src/components/cafe/RecentLogs.astro`
 - [ ] Migrate `src/components/cafe/TodaysCoffeeCard.astro`
@@ -729,6 +754,7 @@ ls -lh dist/_astro/*.js | head -20
 - [ ] Verify blog dates display correctly (ES/EN)
 
 ### Phase 4: Validation & Cleanup ✅
+
 - [ ] Enhance `src/lib/schemas/cafe.ts` roast_date validation
 - [ ] Delete duplicate `formatLocalDate` in test file
 - [ ] Delete inline Puerto Rico formatters (4 locations)
@@ -738,6 +764,7 @@ ls -lh dist/_astro/*.js | head -20
 - [ ] Update `CHANGELOG.md`
 
 ### Final Validation ✅
+
 - [ ] All tests passing (`yarn test`)
 - [ ] Build succeeds (`yarn build`)
 - [ ] Manual testing complete
@@ -752,6 +779,7 @@ ls -lh dist/_astro/*.js | head -20
 ### If Migration Fails
 
 **Immediate Rollback**:
+
 ```bash
 # Revert all changes
 git reset --hard HEAD
@@ -761,6 +789,7 @@ yarn remove dayjs
 ```
 
 **Partial Rollback** (keep Phase 1, revert Phase 2+):
+
 ```bash
 # Keep date-utils.ts for future use
 # Revert individual file changes
@@ -773,13 +802,13 @@ git checkout HEAD -- src/lib/github-api.ts
 
 ## 12. Common Issues & Solutions
 
-| Issue | Cause | Solution |
-|-------|-------|----------|
-| Timezone mismatch | Wrong plugin config | Check `dayjs.extend(timezone)` |
-| Test failures | Date mocking | Use `dayjs('2025-03-15')` in fixtures |
-| SSR build error | Client-only plugin | Ensure plugins loaded server-side |
-| Bundle size too large | Too many locales | Load locales conditionally |
-| Invalid date not caught | Missing validation | Use `parseDate()` with `.isValid()` |
+| Issue                   | Cause               | Solution                              |
+| ----------------------- | ------------------- | ------------------------------------- |
+| Timezone mismatch       | Wrong plugin config | Check `dayjs.extend(timezone)`        |
+| Test failures           | Date mocking        | Use `dayjs('2025-03-15')` in fixtures |
+| SSR build error         | Client-only plugin  | Ensure plugins loaded server-side     |
+| Bundle size too large   | Too many locales    | Load locales conditionally            |
+| Invalid date not caught | Missing validation  | Use `parseDate()` with `.isValid()`   |
 
 ---
 
@@ -787,16 +816,17 @@ git checkout HEAD -- src/lib/github-api.ts
 
 ### Before vs After
 
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| **Lines of code** | ~40 date operations | ~25 utility calls | 37% reduction |
-| **Duplicate formatters** | 4 (Puerto Rico) | 1 | 75% reduction |
-| **Manual math** | 5 instances | 0 | 100% elimination |
-| **Date mutations** | 8 instances | 0 | 100% elimination |
-| **Invalid date bugs** | Possible (regex only) | Prevented | Risk eliminated |
-| **Bundle size** | 0 KB | ~8 KB | Acceptable trade-off |
+| Metric                   | Before                | After             | Improvement          |
+| ------------------------ | --------------------- | ----------------- | -------------------- |
+| **Lines of code**        | ~40 date operations   | ~25 utility calls | 37% reduction        |
+| **Duplicate formatters** | 4 (Puerto Rico)       | 1                 | 75% reduction        |
+| **Manual math**          | 5 instances           | 0                 | 100% elimination     |
+| **Date mutations**       | 8 instances           | 0                 | 100% elimination     |
+| **Invalid date bugs**    | Possible (regex only) | Prevented         | Risk eliminated      |
+| **Bundle size**          | 0 KB                  | ~8 KB             | Acceptable trade-off |
 
 ### Maintainability Wins
+
 - ✅ Single source of truth for date formatting
 - ✅ Type-safe date operations
 - ✅ Immutable date handling (no mutations)
@@ -810,18 +840,21 @@ git checkout HEAD -- src/lib/github-api.ts
 Once day.js is established:
 
 1. **Relative Time Plugin** (`dayjs/plugin/relativeTime`)
+
    ```typescript
    // "2 hours ago", "hace 2 horas"
    dayjs(log.brew_time).from(dayjs());
    ```
 
 2. **Calendar Plugin** (`dayjs/plugin/calendar`)
+
    ```typescript
    // "Today at 3:30 PM", "Yesterday at 10:00 AM"
    dayjs(log.brew_time).calendar();
    ```
 
 3. **Week Plugin** (for GitHub contribution weeks)
+
    ```typescript
    dayjs().week(); // ISO week number
    ```
@@ -836,11 +869,13 @@ Once day.js is established:
 ## 15. Files Summary
 
 ### Files to Create (3)
+
 1. `src/lib/dayjs-config.ts` (~30 lines)
 2. `src/lib/date-utils.ts` (~120 lines)
 3. `src/lib/date-utils.test.ts` (~100 lines)
 
 ### Files to Modify (15)
+
 1. `package.json` - Add dayjs dependency
 2. `src/lib/i18n.ts` - Use date-utils
 3. `src/lib/github-api.ts` - Replace formatLocalDate, date arithmetic
@@ -858,6 +893,7 @@ Once day.js is established:
 15. `CHANGELOG.md` - Document migration
 
 ### Files to Keep As-Is (2)
+
 1. `src/lib/auth.ts` - Date.now() is optimal
 2. `src/lib/rate-limit.ts` - Timestamp logic is efficient
 
@@ -865,20 +901,22 @@ Once day.js is established:
 
 ## 16. Estimated Effort
 
-| Phase | Complexity | Time | Risk |
-|-------|-----------|------|------|
-| Phase 1: Foundation | Low | 2 hours | Low |
-| Phase 2: Core Utilities | Medium | 4 hours | Medium |
-| Phase 3: Components | High | 6 hours | Medium |
-| Phase 4: Cleanup | Low | 2 hours | Low |
-| **Total** | - | **14 hours** | **Medium** |
+| Phase                   | Complexity | Time         | Risk       |
+| ----------------------- | ---------- | ------------ | ---------- |
+| Phase 1: Foundation     | Low        | 2 hours      | Low        |
+| Phase 2: Core Utilities | Medium     | 4 hours      | Medium     |
+| Phase 3: Components     | High       | 6 hours      | Medium     |
+| Phase 4: Cleanup        | Low        | 2 hours      | Low        |
+| **Total**               | -          | **14 hours** | **Medium** |
 
 **Risks**:
+
 - Timezone edge cases (Puerto Rico DST)
 - SSR vs client-side hydration mismatches
 - Test fixture adjustments
 
 **Mitigation**:
+
 - Comprehensive testing at each phase
 - Manual smoke testing after each phase
 - Keep rollback plan ready

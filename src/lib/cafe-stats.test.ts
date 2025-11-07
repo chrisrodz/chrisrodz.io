@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { formatBrewRatio, calculateStats, getBrewMethodDistribution } from './cafe-stats';
 import type { CoffeeLogWithBean } from './schemas/cafe';
+import { getDaysAgo } from './date-utils';
 
 describe('formatBrewRatio', () => {
   it('should format ratio with both dose and yield', () => {
@@ -72,7 +73,7 @@ describe('calculateStats', () => {
 
   it('should count logs from this week correctly', () => {
     const today = new Date();
-    const tenDaysAgo = new Date(today.getTime() - 10 * 24 * 60 * 60 * 1000);
+    const tenDaysAgo = getDaysAgo(10).toDate();
 
     const mockLogs: CoffeeLogWithBean[] = [
       {

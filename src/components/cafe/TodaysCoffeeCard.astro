@@ -1,6 +1,7 @@
 ---
 import { useTranslations, type Locale } from '@/lib/i18n';
 import type { CoffeeLogWithBean } from '@/lib/schemas/cafe';
+import { formatTimeInPR } from '@/lib/date-utils';
 
 interface Props {
   todaysCoffee: CoffeeLogWithBean[];
@@ -9,18 +10,6 @@ interface Props {
 
 const { todaysCoffee, locale } = Astro.props;
 const { t } = useTranslations(locale);
-
-const localeWithRegion = locale === 'es' ? 'es-PR' : 'en-US';
-const puertoRicoTimeFormatter = new Intl.DateTimeFormat(localeWithRegion, {
-  hour: 'numeric',
-  minute: '2-digit',
-  hour12: true,
-  timeZone: 'America/Puerto_Rico',
-});
-
-function formatPuertoRicoTime(date: Date): string {
-  return puertoRicoTimeFormatter.format(date);
-}
 
 function calculateRatio(dose: number | null, yield_grams: number | null): string {
   if (!dose || !yield_grams) return '-';
@@ -49,7 +38,9 @@ function calculateRatio(dose: number | null, yield_grams: number | null): string
                 <header class="coffee-entry-header">
                   <span class="time-compare time-compare--badge" data-local-time={isoString}>
                     <span class="time-compare__zone">
-                      <span class="time-compare__value">{formatPuertoRicoTime(brewDate)}</span>
+                      <span class="time-compare__value">
+                        {formatTimeInPR(log.brew_time, locale)}
+                      </span>
                       <small class="time-compare__label">
                         {t('cafe.timeComparison.puertoRico')}
                       </small>

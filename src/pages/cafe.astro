@@ -11,6 +11,7 @@ import { supabase } from '../lib/supabase';
 import type { CoffeeLogWithBean } from '../lib/schemas/cafe';
 import { calculateStats, getBrewMethodDistribution } from '../lib/cafe-stats';
 import { getLocaleFromUrl, useTranslations } from '@/lib/i18n';
+import { isSameDay, getStartOfToday } from '@/lib/date-utils';
 
 const locale = getLocaleFromUrl(Astro.url);
 const { t } = useTranslations(locale);
@@ -38,12 +39,9 @@ if (!supabase) {
 }
 
 // Get today's coffee logs
-const today = new Date();
-today.setHours(0, 0, 0, 0);
+const today = getStartOfToday().toDate();
 const todaysCoffee = logs.filter((log) => {
-  const logDate = new Date(log.brew_time);
-  logDate.setHours(0, 0, 0, 0);
-  return logDate.getTime() === today.getTime();
+  return isSameDay(log.brew_time, today);
 });
 
 // Calculate statistics
