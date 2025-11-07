@@ -1,6 +1,11 @@
 import type { APIRoute } from 'astro';
 import { config } from '../../lib/config';
-import { fetchGitHubContributions, transformToActivityData } from '../../lib/github-api';
+import {
+  fetchGitHubContributions,
+  transformToActivityData,
+  calculateCurrentStreak,
+  calculateLongestStreak,
+} from '../../lib/github-api';
 
 /**
  * API endpoint to fetch GitHub contributions
@@ -40,11 +45,17 @@ export const GET: APIRoute = async () => {
     // Transform to format compatible with react-activity-calendar
     const activities = transformToActivityData(calendar);
 
+    // Calculate metrics
+    const currentStreak = calculateCurrentStreak(activities);
+    const longestStreak = calculateLongestStreak(activities);
+
     return new Response(
       JSON.stringify({
         data: {
           activities,
           totalContributions: calendar.totalContributions,
+          currentStreak,
+          longestStreak,
         },
       }),
       {

@@ -7,7 +7,7 @@
   "nav": {
     "home": "Home",
     "blog": "Blog",
-    "cafe": "Coffee Diary",
+    "cafe": "Coffee",
     "training": "Training",
     "stats": "Stats"
   },
@@ -143,13 +143,19 @@
     }
   },
   "stats": {
-    "title": "GitHub Stats",
-    "metaDescription": "GitHub contribution graph and activity",
-    "heading": "GitHub Stats",
+    "title": "My Personal Stats",
+    "metaDescription": "GitHub, Training, and Coffee Diary statistics",
+    "heading": "My Personal Stats",
+    "githubTitle": "GitHub Stats",
     "totalContributions": "total contributions in {year}",
     "errors": {
       "notConfigured": "GitHub stats are not available yet. Please configure your GitHub token and username.",
       "failed": "Failed to load GitHub stats"
+    },
+    "metrics": {
+      "currentStreak": "Current Streak",
+      "longestStreak": "Longest Streak",
+      "days": "days"
     },
     "months": {
       "jan": "Jan",
@@ -174,10 +180,16 @@
       "fri": "Fri",
       "sat": "Sat"
     },
-    "contributionTooltip": "{{count}} contributions in {{year}}",
+    "contributionTooltip": "{count} contributions in {year}",
     "legend": {
       "less": "Less",
       "more": "More"
+    },
+    "aria": {
+      "githubDescription": "Contribution activity and coding streak statistics",
+      "calendarRegion": "Contribution calendar visualization",
+      "calendarChart": "GitHub contribution calendar showing {count} contributions in {year} with a current streak of {currentStreak} days",
+      "metricsHeading": "Streak Metrics"
     }
   },
   "errors": {

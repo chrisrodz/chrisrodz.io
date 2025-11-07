@@ -10,6 +10,7 @@ interface GitHubContributionsChartProps {
   tooltipTemplate: string;
   legendLess: string;
   legendMore: string;
+  ariaLabel: string;
 }
 
 export default function GitHubContributionsChart({
@@ -19,40 +20,30 @@ export default function GitHubContributionsChart({
   tooltipTemplate,
   legendLess,
   legendMore,
+  ariaLabel,
 }: GitHubContributionsChartProps) {
   return (
-    <ActivityCalendar
-      data={data}
-      colorScheme="light"
-      theme={{
-        light: [
-          'var(--pico-muted-border-color)',
-          'var(--pico-primary-background)',
-          'var(--pico-primary)',
-          'var(--pico-primary-hover)',
-          'var(--pico-primary-focus)',
-        ],
-        dark: [
-          'var(--pico-muted-border-color)',
-          'var(--pico-primary-background)',
-          'var(--pico-primary)',
-          'var(--pico-primary-hover)',
-          'var(--pico-primary-focus)',
-        ],
-      }}
-      labels={{
-        months,
-        weekdays,
-        totalCount: tooltipTemplate,
-        legend: {
-          less: legendLess,
-          more: legendMore,
-        },
-      }}
-      showWeekdayLabels
-      blockSize={12}
-      blockMargin={4}
-      fontSize={14}
-    />
+    <div role="img" aria-label={ariaLabel}>
+      <ActivityCalendar
+        data={data}
+        colorScheme="light"
+        theme={{
+          light: ['var(--pico-muted-border-color)', 'var(--pico-primary-hover)'],
+        }}
+        labels={{
+          months,
+          weekdays,
+          totalCount: tooltipTemplate,
+          legend: {
+            less: legendLess,
+            more: legendMore,
+          },
+        }}
+        showWeekdayLabels
+        blockSize={12}
+        blockMargin={4}
+        fontSize={14}
+      />
+    </div>
   );
 }

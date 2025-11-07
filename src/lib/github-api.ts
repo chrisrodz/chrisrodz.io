@@ -175,3 +175,86 @@ function getContributionLevel(count: number): 0 | 1 | 2 | 3 | 4 {
   if (count < 10) return 3;
   return 4;
 }
+
+/**
+ * Calculate the current streak of consecutive days with contributions
+ * Counts backwards from most recent day
+ *
+ * @param activities - Array of activity data sorted by date
+ * @returns Number of consecutive days with contributions
+ */
+export function calculateCurrentStreak(activities: ActivityData[]): number {
+  if (activities.length === 0) return 0;
+
+  // Helper to format Date as YYYY-MM-DD string in local timezone
+  const formatLocalDate = (date: Date): string => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
+  // Sort by date descending (most recent first)
+  const sorted = [...activities].sort((a, b) => b.date.localeCompare(a.date));
+
+  let streak = 0;
+  const today = new Date();
+  const todayStr = formatLocalDate(today);
+
+  // Determine starting point: skip today if it has 0 contributions
+  let startOffset = 0;
+  if (sorted.length > 0) {
+    // If most recent day is today and has 0 contributions, start from yesterday
+    if (sorted[0].date === todayStr && sorted[0].count === 0) {
+      startOffset = 1;
+    }
+  }
+
+  for (let i = startOffset; i < sorted.length; i++) {
+    // Calculate the expected date for the current streak day
+    // We count backwards from today: day 0 is today, day 1 is yesterday, etc.
+    const daysBack = i - startOffset;
+    const expectedDate = new Date(today);
+    expectedDate.setDate(today.getDate() - daysBack);
+    const expectedDateStr = formatLocalDate(expectedDate);
+
+    // Check if activity date matches expected date and has contributions
+    if (sorted[i].date === expectedDateStr && sorted[i].count > 0) {
+      streak++;
+    } else {
+      // If date doesn't match or has no contributions, streak is broken
+      break;
+    }
+  }
+
+  return streak;
+}
+
+/**
+ * Calculate the longest streak of consecutive days with contributions
+ *
+ * @param activities - Array of activity data
+ * @returns Maximum number of consecutive days with contributions
+ */
+export function calculateLongestStreak(activities: ActivityData[]): number {
+  if (activities.length === 0) return 0;
+
+  // Sort by date ascending
+  const sorted = [...activities].sort((a, b) => a.date.localeCompare(b.date));
+
+  let longestStreak = 0;
+  let currentStreak = 0;
+
+  for (const activity of sorted) {
+    if (activity.count > 0) {
+      // Day has contributions, increment streak
+      currentStreak++;
+      longestStreak = Math.max(longestStreak, currentStreak);
+    } else {
+      // Day has 0 contributions, reset streak
+      currentStreak = 0;
+    }
+  }
+
+  return longestStreak;
+}
