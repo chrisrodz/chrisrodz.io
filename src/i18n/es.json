@@ -65,7 +65,7 @@
     },
     "why": {
       "text": "Documentando mi jornada de café para tener mejor data sobre la mejor preparación para cada taza.",
-      "beanOfMonth": "Cafe del mes: {beanName}",
+      "beanOfMonth": "Café del mes: {beanName}",
       "dialedIn": "Espresso Shot Calibrado",
       "dialingIn": "Calibrando Espresso"
     },
