@@ -54,6 +54,16 @@ const recentLogs = logs.slice(0, 30);
 // Calculate average dose for hero stats
 const avgDose =
   logs.length > 0 ? logs.reduce((sum, log) => sum + (log.dose_grams || 0), 0) / logs.length : 0;
+
+// Get current bean info (most recent brew's bean)
+const mostRecentLog = logs.length > 0 ? logs[0] : null;
+const currentBean = mostRecentLog?.bean?.bean_name || null;
+const currentBeanId = mostRecentLog?.bean_id || null;
+
+// Check if current bean has ever gotten a 5 rating
+const hasMaxRating = currentBeanId
+  ? logs.some((log) => log.bean_id === currentBeanId && log.quality_rating === 5)
+  : false;
 ---
 
 <Layout title={t('cafe.title')} description={t('cafe.metaDescription')}>
@@ -64,7 +74,7 @@ const avgDose =
       <EmptyState locale={locale} />
     ) : (
       <>
-        <WhyTracking locale={locale} />
+        <WhyTracking locale={locale} currentBean={currentBean} hasMaxRating={hasMaxRating} />
         <TodaysCoffeeCard todaysCoffee={todaysCoffee} locale={locale} />
         {stats && (
           <StatsCards

@@ -64,7 +64,10 @@
       "message": "La jornada del diario de café apenas comienza. ¡Vuelve pronto para actualizaciones!"
     },
     "why": {
-      "text": "Documentando mi jornada de café para tener mejor data sobre la mejor preparación para cada taza."
+      "text": "Documentando mi jornada de café para tener mejor data sobre la mejor preparación para cada taza.",
+      "beanOfMonth": "Café del mes: {beanName}",
+      "dialedIn": "Espresso Shot Calibrado",
+      "dialingIn": "Calibrando Espresso"
     },
     "todaysCoffee": {
       "heading": "Café de Hoy",

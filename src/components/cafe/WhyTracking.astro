@@ -3,14 +3,27 @@ import { useTranslations, type Locale } from '@/lib/i18n';
 
 interface Props {
   locale: Locale;
+  currentBean: string | null;
+  hasMaxRating: boolean;
 }
 
-const { locale } = Astro.props;
+const { locale, currentBean, hasMaxRating } = Astro.props;
 const { t } = useTranslations(locale);
 ---
 
 <section class="coffee-why-section">
-  <p class="coffee-why-text">{t('cafe.why.text')}</p>
+  <p class="coffee-why-text">
+    {t('cafe.why.text')}
+  </p>
+  {
+    currentBean && (
+      <p class="coffee-current-info">
+        <strong>{t('cafe.why.beanOfMonth').replace('{beanName}', currentBean)}</strong>
+        <br />
+        {hasMaxRating ? t('cafe.why.dialedIn') : t('cafe.why.dialingIn')}
+      </p>
+    )
+  }
 </section>
 
 <style>
@@ -23,11 +36,20 @@ const { t } = useTranslations(locale);
   .coffee-why-text {
     color: var(--pico-muted-color);
     line-height: 1.6;
-    margin: 0;
+    margin: 0 0 1rem 0;
     font-size: 0.9375rem;
     margin-left: auto;
     margin-right: auto;
     font-style: italic;
+  }
+
+  .coffee-current-info {
+    color: var(--pico-color);
+    line-height: 1.6;
+    margin: 0;
+    font-size: 0.9375rem;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   @media (max-width: 768px) {
@@ -36,6 +58,10 @@ const { t } = useTranslations(locale);
     }
 
     .coffee-why-text {
+      font-size: 0.875rem;
+    }
+
+    .coffee-current-info {
       font-size: 0.875rem;
     }
   }
