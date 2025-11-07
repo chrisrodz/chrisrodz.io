@@ -64,7 +64,10 @@
       "message": "The coffee diary journey is just beginning. Check back soon for updates!"
     },
     "why": {
-      "text": "Documenting my coffee journey to have better data about the best preparation for each cup."
+      "text": "Documenting my coffee journey to have better data about the best preparation for each cup.",
+      "beanOfMonth": "Bean of the month: {beanName}",
+      "dialedIn": "Espresso Shot Dialed In",
+      "dialingIn": "Dialing In Espresso"
     },
     "todaysCoffee": {
       "heading": "Today's Coffee",
