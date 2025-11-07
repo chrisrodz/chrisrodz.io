@@ -42,6 +42,7 @@ if (Astro.request.method === 'POST') {
           roaster: formData.get('roaster') || null,
           roast_date: formData.get('roast_date') || null,
           notes: formData.get('notes') || null,
+          url: formData.get('url') || null,
           is_active: true,
         };
 

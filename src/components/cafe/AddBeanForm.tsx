@@ -15,6 +15,7 @@ export default function AddBeanForm({ onBeanAdded }: AddBeanFormProps) {
   const [roaster, setRoaster] = useState('');
   const [roastDate, setRoastDate] = useState('');
   const [notes, setNotes] = useState('');
+  const [url, setUrl] = useState('');
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
@@ -27,6 +28,7 @@ export default function AddBeanForm({ onBeanAdded }: AddBeanFormProps) {
       if (roaster.trim()) formData.append('roaster', roaster.trim());
       if (roastDate) formData.append('roast_date', roastDate);
       if (notes.trim()) formData.append('notes', notes.trim());
+      if (url.trim()) formData.append('url', url.trim());
 
       const response = await fetch(window.location.pathname, {
         method: 'POST',
@@ -60,6 +62,7 @@ export default function AddBeanForm({ onBeanAdded }: AddBeanFormProps) {
         setRoaster('');
         setRoastDate('');
         setNotes('');
+        setUrl('');
       }
     } catch (err) {
       console.error('[AddBeanForm] Error:', err);
@@ -103,6 +106,18 @@ export default function AddBeanForm({ onBeanAdded }: AddBeanFormProps) {
           onChange={(e) => setRoaster(e.target.value)}
           maxLength={200}
           placeholder="e.g., Blue Bottle, Stumptown"
+        />
+      </label>
+
+      {/* URL */}
+      <label>
+        Product URL
+        <input
+          type="url"
+          id="url"
+          value={url}
+          onChange={(e) => setUrl(e.target.value)}
+          placeholder="https://example.com/coffee"
         />
       </label>
 

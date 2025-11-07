@@ -55,6 +55,14 @@ export const CoffeeBeanSchema = z.object({
     .nullable()
     .transform((val) => val || null),
 
+  url: z
+    .string()
+    .url('Invalid URL format')
+    .trim()
+    .optional()
+    .nullable()
+    .transform((val) => val || null),
+
   is_active: z.boolean().default(true),
 });
 
@@ -135,6 +143,7 @@ export interface CoffeeBeanRow {
   origin: string | null;
   roast_date: string | null;
   notes: string | null;
+  url: string | null;
   is_active: boolean;
 }
 

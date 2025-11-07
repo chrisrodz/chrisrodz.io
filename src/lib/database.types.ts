@@ -85,6 +85,7 @@ export type Database = {
           origin: string | null;
           roast_date: string | null;
           roaster: string | null;
+          url: string | null;
         };
         Insert: {
           bean_name: string;
@@ -95,6 +96,7 @@ export type Database = {
           origin?: string | null;
           roast_date?: string | null;
           roaster?: string | null;
+          url?: string | null;
         };
         Update: {
           bean_name?: string;
@@ -105,6 +107,7 @@ export type Database = {
           origin?: string | null;
           roast_date?: string | null;
           roaster?: string | null;
+          url?: string | null;
         };
         Relationships: [];
       };
