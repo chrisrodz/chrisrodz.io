@@ -6,6 +6,14 @@ import {
   calculateLongestStreak,
 } from './github-api';
 
+// Helper to format Date as YYYY-MM-DD string in local timezone (matching production code)
+const formatLocalDate = (date: Date): string => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+};
+
 describe('GitHub API Module', () => {
   describe('transformToActivityData', () => {
     it('should handle empty calendar', () => {
@@ -100,9 +108,9 @@ describe('GitHub API Module', () => {
       twoDaysAgo.setDate(today.getDate() - 2);
 
       const activities: ActivityData[] = [
-        { date: twoDaysAgo.toISOString().split('T')[0], count: 5, level: 2 },
-        { date: yesterday.toISOString().split('T')[0], count: 3, level: 2 },
-        { date: today.toISOString().split('T')[0], count: 2, level: 1 },
+        { date: formatLocalDate(twoDaysAgo), count: 5, level: 2 },
+        { date: formatLocalDate(yesterday), count: 3, level: 2 },
+        { date: formatLocalDate(today), count: 2, level: 1 },
       ];
 
       expect(calculateCurrentStreak(activities)).toBe(3);
@@ -118,10 +126,10 @@ describe('GitHub API Module', () => {
       threeDaysAgo.setDate(today.getDate() - 3);
 
       const activities: ActivityData[] = [
-        { date: threeDaysAgo.toISOString().split('T')[0], count: 5, level: 2 },
-        { date: twoDaysAgo.toISOString().split('T')[0], count: 4, level: 2 },
-        { date: yesterday.toISOString().split('T')[0], count: 3, level: 2 },
-        { date: today.toISOString().split('T')[0], count: 0, level: 0 },
+        { date: formatLocalDate(threeDaysAgo), count: 5, level: 2 },
+        { date: formatLocalDate(twoDaysAgo), count: 4, level: 2 },
+        { date: formatLocalDate(yesterday), count: 3, level: 2 },
+        { date: formatLocalDate(today), count: 0, level: 0 },
       ];
 
       // Current streak is 0 because today has 0 contributions
@@ -138,11 +146,11 @@ describe('GitHub API Module', () => {
       fourDaysAgo.setDate(today.getDate() - 4);
 
       const activities: ActivityData[] = [
-        { date: fourDaysAgo.toISOString().split('T')[0], count: 5, level: 2 },
+        { date: formatLocalDate(fourDaysAgo), count: 5, level: 2 },
         // Gap on day -3
-        { date: twoDaysAgo.toISOString().split('T')[0], count: 3, level: 2 },
-        { date: yesterday.toISOString().split('T')[0], count: 2, level: 1 },
-        { date: today.toISOString().split('T')[0], count: 1, level: 1 },
+        { date: formatLocalDate(twoDaysAgo), count: 3, level: 2 },
+        { date: formatLocalDate(yesterday), count: 2, level: 1 },
+        { date: formatLocalDate(today), count: 1, level: 1 },
       ];
 
       // Only last 3 days count
@@ -154,7 +162,7 @@ describe('GitHub API Module', () => {
       fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 5);
 
       const activities: ActivityData[] = [
-        { date: fiveDaysAgo.toISOString().split('T')[0], count: 5, level: 2 },
+        { date: formatLocalDate(fiveDaysAgo), count: 5, level: 2 },
       ];
 
       expect(calculateCurrentStreak(activities)).toBe(0);
@@ -168,7 +176,7 @@ describe('GitHub API Module', () => {
         const date = new Date(today);
         date.setDate(today.getDate() - i);
         activities.push({
-          date: date.toISOString().split('T')[0],
+          date: formatLocalDate(date),
           count: i + 1,
           level: 1,
         });
@@ -179,9 +187,7 @@ describe('GitHub API Module', () => {
 
     it('should handle single day with contribution', () => {
       const today = new Date();
-      const activities: ActivityData[] = [
-        { date: today.toISOString().split('T')[0], count: 5, level: 2 },
-      ];
+      const activities: ActivityData[] = [{ date: formatLocalDate(today), count: 5, level: 2 }];
 
       expect(calculateCurrentStreak(activities)).toBe(1);
     });

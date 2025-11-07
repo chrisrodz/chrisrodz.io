@@ -186,36 +186,40 @@ function getContributionLevel(count: number): 0 | 1 | 2 | 3 | 4 {
 export function calculateCurrentStreak(activities: ActivityData[]): number {
   if (activities.length === 0) return 0;
 
+  // Helper to format Date as YYYY-MM-DD string in local timezone
+  const formatLocalDate = (date: Date): string => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   // Sort by date descending (most recent first)
   const sorted = [...activities].sort((a, b) => b.date.localeCompare(a.date));
 
   let streak = 0;
   const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const todayStr = formatLocalDate(today);
 
   // Determine starting point: skip today if it has 0 contributions
   let startOffset = 0;
   if (sorted.length > 0) {
-    const mostRecentDate = new Date(sorted[0].date);
-    mostRecentDate.setHours(0, 0, 0, 0);
-    console.log('Most recent activity date:', mostRecentDate);
-    console.log('Today date:', today);
     // If most recent day is today and has 0 contributions, start from yesterday
-    if (mostRecentDate.getTime() === today.getTime() && sorted[0].count === 0) {
+    if (sorted[0].date === todayStr && sorted[0].count === 0) {
       startOffset = 1;
     }
   }
 
   for (let i = startOffset; i < sorted.length; i++) {
-    const activityDate = new Date(sorted[i].date);
-    activityDate.setHours(0, 0, 0, 0);
-
     // Calculate the expected date for the current streak day
+    // We count backwards from today: day 0 is today, day 1 is yesterday, etc.
+    const daysBack = i - startOffset;
     const expectedDate = new Date(today);
-    expectedDate.setDate(today.getDate() - i - 1);
+    expectedDate.setDate(today.getDate() - daysBack);
+    const expectedDateStr = formatLocalDate(expectedDate);
 
     // Check if activity date matches expected date and has contributions
-    if (activityDate.getTime() === expectedDate.getTime() && sorted[i].count > 0) {
+    if (sorted[i].date === expectedDateStr && sorted[i].count > 0) {
       streak++;
     } else {
       // If date doesn't match or has no contributions, streak is broken
