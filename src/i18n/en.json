@@ -7,7 +7,7 @@
   "nav": {
     "home": "Home",
     "blog": "Blog",
-    "cafe": "Coffee Diary",
+    "cafe": "Coffee",
     "training": "Training",
     "stats": "Stats"
   },
@@ -184,6 +184,12 @@
     "legend": {
       "less": "Less",
       "more": "More"
+    },
+    "aria": {
+      "githubDescription": "Contribution activity and coding streak statistics",
+      "calendarRegion": "Contribution calendar visualization",
+      "calendarChart": "GitHub contribution calendar showing {count} contributions in {year} with a current streak of {currentStreak} days",
+      "metricsHeading": "Streak Metrics"
     }
   },
   "errors": {

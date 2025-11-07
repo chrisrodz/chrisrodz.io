@@ -7,9 +7,9 @@
   "nav": {
     "home": "Inicio",
     "blog": "Blog",
-    "cafe": "Diario de Café",
+    "cafe": "Café",
     "training": "Entrenamiento",
-    "stats": "Estadísticas"
+    "stats": "Stats"
   },
   "footer": {
     "copyright": "© {year} Christian A. Rodríguez Encarnación",
@@ -184,6 +184,12 @@
     "legend": {
       "less": "Menos",
       "more": "Más"
+    },
+    "aria": {
+      "githubDescription": "Actividad de contribuciones y estadísticas de racha de código",
+      "calendarRegion": "Visualización de calendario de contribuciones",
+      "calendarChart": "Calendario de contribuciones de GitHub mostrando {count} contribuciones en {year} con una racha actual de {currentStreak} días",
+      "metricsHeading": "Métricas de Racha"
     }
   },
   "errors": {
