@@ -56,10 +56,10 @@ export function getStartOfToday(): Dayjs {
 }
 
 /**
- * Get date N days ago
+ * Get date N days ago in default timezone
  */
 export function getDaysAgo(days: number): Dayjs {
-  return dayjs().subtract(days, 'days');
+  return dayjs().tz(DEFAULT_TIMEZONE).subtract(days, 'days');
 }
 
 /**

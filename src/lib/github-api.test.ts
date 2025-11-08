@@ -95,7 +95,7 @@ describe('GitHub API Module', () => {
     });
 
     it('should count streak ending today with contributions', () => {
-      const today = dayjs();
+      const today = getDaysAgo(0);
       const yesterday = getDaysAgo(1);
       const twoDaysAgo = getDaysAgo(2);
 
@@ -109,7 +109,7 @@ describe('GitHub API Module', () => {
     });
 
     it('should break streak if today has 0 contributions', () => {
-      const today = dayjs();
+      const today = getDaysAgo(0);
       const yesterday = getDaysAgo(1);
       const twoDaysAgo = getDaysAgo(2);
       const threeDaysAgo = getDaysAgo(3);
@@ -126,7 +126,7 @@ describe('GitHub API Module', () => {
     });
 
     it('should handle streak broken by gap in middle', () => {
-      const today = dayjs();
+      const today = getDaysAgo(0);
       const yesterday = getDaysAgo(1);
       const twoDaysAgo = getDaysAgo(2);
       const fourDaysAgo = getDaysAgo(4);
@@ -169,7 +169,7 @@ describe('GitHub API Module', () => {
     });
 
     it('should handle single day with contribution', () => {
-      const today = dayjs();
+      const today = getDaysAgo(0);
       const activities: ActivityData[] = [{ date: formatLocalDate(today), count: 5, level: 2 }];
 
       expect(calculateCurrentStreak(activities)).toBe(1);
