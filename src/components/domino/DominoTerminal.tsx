@@ -5,6 +5,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { GameRunner } from '@/lib/domino/game-runner';
 
+// Import xterm CSS statically (processed at build time)
+import '@xterm/xterm/css/xterm.css';
+
 // Type-only imports (safe for SSR)
 import type { Terminal } from '@xterm/xterm';
 import type { FitAddon } from '@xterm/addon-fit';
@@ -48,10 +51,10 @@ export function DominoTerminal({ locale, translations }: DominoTerminalProps) {
 
       try {
         // Dynamically import xterm.js modules (client-side only)
+        // Note: CSS is imported statically at the top of this file
         const [{ Terminal }, { FitAddon }] = await Promise.all([
           import('@xterm/xterm'),
           import('@xterm/addon-fit'),
-          import('@xterm/xterm/css/xterm.css'), // Import CSS
         ]);
 
         if (!mounted) return; // Component unmounted during import
