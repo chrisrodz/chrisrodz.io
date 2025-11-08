@@ -147,6 +147,7 @@
     "metaDescription": "GitHub, Training, and Coffee Diary statistics",
     "heading": "My Personal Stats",
     "githubTitle": "GitHub Stats",
+    "coffeeTitle": "Coffee Diary Stats",
     "totalContributions": "total contributions in {year}",
     "errors": {
       "notConfigured": "GitHub stats are not available yet. Please configure your GitHub token and username.",
@@ -181,15 +182,20 @@
       "sat": "Sat"
     },
     "contributionTooltip": "{count} contributions in {year}",
+    "coffeeTooltip": "{count} coffees brewed in {year}",
     "legend": {
       "less": "Less",
       "more": "More"
     },
     "aria": {
       "githubDescription": "Contribution activity and coding streak statistics",
+      "coffeeDescription": "Coffee brewing activity and streak statistics",
       "calendarRegion": "Contribution calendar visualization",
+      "coffeeCalendarRegion": "Coffee brewing calendar visualization",
       "calendarChart": "GitHub contribution calendar showing {count} contributions in {year} with a current streak of {currentStreak} days",
-      "metricsHeading": "Streak Metrics"
+      "coffeeCalendarChart": "Coffee brewing calendar showing {count} coffees brewed in {year} with a current streak of {currentStreak} days",
+      "metricsHeading": "Streak Metrics",
+      "coffeeMetricsHeading": "Coffee Streak Metrics"
     }
   },
   "errors": {

@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import GitHubContributions from '@/components/stats/GitHubContributions.astro';
+import CoffeeContributions from '@/components/stats/CoffeeContributions.astro';
 import { config } from '@/lib/config';
 import { getLocaleFromUrl, useTranslations } from '@/lib/i18n';
 
@@ -31,5 +32,9 @@ const isConfigured = config.github.isConfigured();
         </article>
       )
     }
+
+    <article>
+      <CoffeeContributions locale={locale} />
+    </article>
   </main>
 </Layout>

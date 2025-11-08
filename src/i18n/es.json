@@ -147,6 +147,7 @@
     "metaDescription": "Github, Entrenamiento, y estadísticas del Diario de Café",
     "heading": "Mis Estadísticas Personales",
     "githubTitle": "Stats de GitHub",
+    "coffeeTitle": "Stats del Diario de Café",
     "totalContributions": "contribuciones totales en {year}",
     "errors": {
       "notConfigured": "Las estadísticas de GitHub aún no están disponibles. Por favor configura tu token de GitHub y nombre de usuario.",
@@ -181,15 +182,20 @@
       "sat": "Sáb"
     },
     "contributionTooltip": "{count} contribuciones en {year}",
+    "coffeeTooltip": "{count} cafés preparados en {year}",
     "legend": {
       "less": "Menos",
       "more": "Más"
     },
     "aria": {
       "githubDescription": "Actividad de contribuciones y estadísticas de racha de código",
+      "coffeeDescription": "Actividad de preparación de café y estadísticas de racha",
       "calendarRegion": "Visualización de calendario de contribuciones",
+      "coffeeCalendarRegion": "Visualización de calendario de preparación de café",
       "calendarChart": "Calendario de contribuciones de GitHub mostrando {count} contribuciones en {year} con una racha actual de {currentStreak} días",
-      "metricsHeading": "Métricas de Racha"
+      "coffeeCalendarChart": "Calendario de preparación de café mostrando {count} cafés preparados en {year} con una racha actual de {currentStreak} días",
+      "metricsHeading": "Métricas de Racha",
+      "coffeeMetricsHeading": "Métricas de Racha de Café"
     }
   },
   "errors": {

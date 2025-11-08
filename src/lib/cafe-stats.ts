@@ -154,3 +154,107 @@ export function formatBrewRatio(doseGrams: number, yieldGrams: number | null): s
   const ratio = (yieldGrams / doseGrams).toFixed(1);
   return `${doseGrams}g:${yieldGrams}g (1:${ratio})`;
 }
+
+/**
+ * Activity data point for the coffee calendar
+ */
+export interface CoffeeActivityData {
+  date: string; // YYYY-MM-DD format
+  count: number; // Number of coffees brewed that day
+  level: number; // 0-4 intensity level
+}
+
+/**
+ * Transform coffee logs to activity calendar format
+ * Compatible with react-activity-calendar library
+ */
+export function transformToActivityData(logs: CoffeeLogWithBean[]): CoffeeActivityData[] {
+  // Group logs by date
+  const byDate = logs.reduce(
+    (acc, log) => {
+      const date = dayjs(log.brew_time).format('YYYY-MM-DD');
+      acc[date] = (acc[date] || 0) + 1;
+      return acc;
+    },
+    {} as Record<string, number>
+  );
+
+  // Get date range for the last year
+  const today = dayjs();
+  const oneYearAgo = today.subtract(1, 'year');
+  const activities: CoffeeActivityData[] = [];
+
+  // Generate all dates in the range
+  let current = oneYearAgo;
+  while (current.isSameOrBefore(today, 'day')) {
+    const dateStr = current.format('YYYY-MM-DD');
+    const count = byDate[dateStr] || 0;
+
+    // Map count to intensity level (0-4)
+    // 0 coffees = level 0
+    // 1 coffee = level 1
+    // 2 coffees = level 2
+    // 3 coffees = level 3
+    // 4+ coffees = level 4
+    const level = Math.min(count, 4);
+
+    activities.push({
+      date: dateStr,
+      count,
+      level,
+    });
+
+    current = current.add(1, 'day');
+  }
+
+  return activities;
+}
+
+/**
+ * Calculate current coffee streak (consecutive days with at least one coffee)
+ */
+export function calculateCurrentStreak(activities: CoffeeActivityData[]): number {
+  const today = dayjs();
+  let streak = 0;
+  let current = today;
+
+  // Check if today has any coffee, if not start from yesterday
+  const todayActivity = activities.find((a) => a.date === today.format('YYYY-MM-DD'));
+  if (!todayActivity || todayActivity.count === 0) {
+    current = current.subtract(1, 'day');
+  }
+
+  // Count backwards while there are coffees
+  while (current.isAfter(dayjs().subtract(1, 'year'))) {
+    const dateStr = current.format('YYYY-MM-DD');
+    const activity = activities.find((a) => a.date === dateStr);
+
+    if (!activity || activity.count === 0) {
+      break;
+    }
+
+    streak++;
+    current = current.subtract(1, 'day');
+  }
+
+  return streak;
+}
+
+/**
+ * Calculate longest coffee streak in the entire history
+ */
+export function calculateLongestStreak(activities: CoffeeActivityData[]): number {
+  let longestStreak = 0;
+  let currentStreak = 0;
+
+  for (const activity of activities) {
+    if (activity.count > 0) {
+      currentStreak++;
+      longestStreak = Math.max(longestStreak, currentStreak);
+    } else {
+      currentStreak = 0;
+    }
+  }
+
+  return longestStreak;
+}
