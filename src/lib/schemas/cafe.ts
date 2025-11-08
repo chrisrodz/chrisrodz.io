@@ -45,7 +45,7 @@ export const CoffeeBeanSchema = z.object({
   roast_date: z
     .string()
     .regex(/^\d{4}-\d{2}-\d{2}$/, 'Invalid date format (use YYYY-MM-DD)')
-    .refine((val) => val === '' || parseDate(val) !== null, {
+    .refine((val) => parseDate(val) !== null, {
       message: 'Roast date must be a valid date',
     })
     .optional()
