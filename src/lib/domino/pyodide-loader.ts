@@ -26,7 +26,8 @@ export interface PyodideInterface {
   };
 }
 
-const PYODIDE_CDN = 'https://cdn.jsdelivr.net/pyodide/v0.26.4/full/';
+// Use latest stable Pyodide version from CDN
+const PYODIDE_CDN = 'https://cdn.jsdelivr.net/pyodide/v0.26.2/full/';
 
 let pyodideInstance: PyodideInterface | null = null;
 let pyodideLoadPromise: Promise<PyodideInterface> | null = null;
@@ -81,10 +82,33 @@ export async function loadPyodide(
 async function loadPyodideScript(): Promise<void> {
   return new Promise((resolve, reject) => {
     const script = document.createElement('script');
-    script.src = `${PYODIDE_CDN}pyodide.js`;
-    script.onload = () => resolve();
-    script.onerror = () => reject(new Error('Failed to load Pyodide script'));
+    const scriptUrl = `${PYODIDE_CDN}pyodide.js`;
+    script.src = scriptUrl;
+
+    // Add timeout to prevent hanging indefinitely
+    const timeout = setTimeout(() => {
+      document.head.removeChild(script);
+      reject(new Error(`Timeout loading Pyodide from ${scriptUrl}`));
+    }, 30000); // 30 second timeout
+
+    script.onload = () => {
+      clearTimeout(timeout);
+      console.log('Pyodide script loaded successfully from', scriptUrl);
+      resolve();
+    };
+
+    script.onerror = (error) => {
+      clearTimeout(timeout);
+      console.error('Failed to load Pyodide script from', scriptUrl, error);
+      reject(
+        new Error(
+          `Failed to load Pyodide script from ${scriptUrl}. Check network connection and browser console for details.`
+        )
+      );
+    };
+
     document.head.appendChild(script);
+    console.log('Loading Pyodide script from', scriptUrl);
   });
 }
 
