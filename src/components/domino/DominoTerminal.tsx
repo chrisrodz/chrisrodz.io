@@ -3,7 +3,6 @@
  */
 
 import { useEffect, useRef, useState } from 'react';
-import { isWebAssemblySupported } from '@/lib/domino/pyodide-loader';
 import { GameRunner } from '@/lib/domino/game-runner';
 
 // Type-only imports (safe for SSR)
@@ -42,13 +41,6 @@ export function DominoTerminal({ locale, translations }: DominoTerminalProps) {
 
     // Initialize terminal with dynamic imports
     async function initTerminal() {
-      // Check WebAssembly support
-      if (!isWebAssemblySupported()) {
-        setStatus('error');
-        setError(translations.browserNotSupported);
-        return;
-      }
-
       // Don't initialize if already initialized or ref not ready
       if (!terminalRef.current || terminal.current) {
         return;

@@ -119,19 +119,10 @@ export async function installPackages(
 
 /**
  * Check if WebAssembly is supported
+ * Note: This is a basic check. Pyodide will perform more thorough validation.
  */
 export function isWebAssemblySupported(): boolean {
-  try {
-    if (typeof WebAssembly === 'object' && typeof WebAssembly.instantiate === 'function') {
-      const module = new WebAssembly.Module(
-        Uint8Array.of(0x0, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00)
-      );
-      if (module instanceof WebAssembly.Module) {
-        return new WebAssembly.Instance(module) instanceof WebAssembly.Instance;
-      }
-    }
-    return false;
-  } catch {
-    return false;
-  }
+  // Simple check - just verify WebAssembly object exists and has key methods
+  // Pyodide will handle more detailed capability testing and give better error messages
+  return typeof WebAssembly === 'object' && typeof WebAssembly.instantiate === 'function';
 }
