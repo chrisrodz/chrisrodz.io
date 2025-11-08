@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import dayjs from './dayjs-config';
+import dayjs, { DEFAULT_TIMEZONE } from './dayjs-config';
 import {
   formatDateISO,
   formatDate,
@@ -88,13 +88,13 @@ describe('date-utils', () => {
   describe('getDaysAgo', () => {
     it('returns date 7 days ago', () => {
       const result = getDaysAgo(7);
-      const expected = dayjs().subtract(7, 'days');
+      const expected = dayjs().tz(DEFAULT_TIMEZONE).subtract(7, 'days');
       expect(result.format('YYYY-MM-DD')).toBe(expected.format('YYYY-MM-DD'));
     });
 
     it('returns date 30 days ago', () => {
       const result = getDaysAgo(30);
-      const expected = dayjs().subtract(30, 'days');
+      const expected = dayjs().tz(DEFAULT_TIMEZONE).subtract(30, 'days');
       expect(result.format('YYYY-MM-DD')).toBe(expected.format('YYYY-MM-DD'));
     });
   });
