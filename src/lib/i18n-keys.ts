@@ -37,6 +37,8 @@ export type TranslationKey =
   | 'blog.category'
   | 'blog.rssTitle'
   | 'blog.rssDescription'
+  | 'blog.subscribe'
+  | 'blog.subscribeDescription'
   | 'cafe.title'
   | 'cafe.metaDescription'
   | 'cafe.heading'

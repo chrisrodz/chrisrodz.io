@@ -14,7 +14,33 @@ const { formatDate, t } = useTranslations(locale);
 {
   posts.length > 0 && (
     <section>
-      <h2 class="posts-heading">{t('home.recentPosts')}</h2>
+      <div class="posts-header">
+        <h2 class="posts-heading">{t('home.recentPosts')}</h2>
+        <a
+          href={locale === 'en' ? '/en/rss.xml' : '/rss.xml'}
+          class="rss-subscribe-button"
+          aria-label={t('blog.subscribe')}
+          title={t('blog.subscribeDescription')}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M4 11a9 9 0 0 1 9 9" />
+            <path d="M4 4a16 16 0 0 1 16 16" />
+            <circle cx="5" cy="19" r="1" />
+          </svg>
+          <span>{t('blog.subscribe')}</span>
+        </a>
+      </div>
       <ul class="post-list">
         {posts.map((post) => (
           <li class="post-list-item">
@@ -37,13 +63,44 @@ const { formatDate, t } = useTranslations(locale);
 }
 
 <style>
+  .posts-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    margin-top: 3rem;
+    flex-wrap: wrap;
+  }
+
   .posts-heading {
     font-size: 1.75rem;
     font-weight: 600;
-    margin-bottom: 2rem;
-    margin-top: 3rem;
+    margin: 0;
     color: var(--pico-color);
     letter-spacing: -0.02em;
+  }
+
+  .rss-subscribe-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-decoration: none;
+    color: var(--pico-primary-inverse);
+    background-color: var(--pico-primary);
+    border-radius: var(--pico-border-radius);
+    transition: background-color 0.2s ease;
+  }
+
+  .rss-subscribe-button:hover {
+    background-color: var(--pico-primary-hover);
+  }
+
+  .rss-subscribe-button svg {
+    flex-shrink: 0;
   }
 
   .post-list {

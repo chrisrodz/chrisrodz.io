@@ -46,7 +46,9 @@
     "tags": "Tags",
     "category": "Category",
     "rssTitle": "Christian Rodriguez - Blog (English)",
-    "rssDescription": "Software engineering, life lessons, and thoughts worth sharing by Christian Rodriguez"
+    "rssDescription": "Software engineering, life lessons, and thoughts worth sharing by Christian Rodriguez",
+    "subscribe": "Subscribe via RSS",
+    "subscribeDescription": "Get updates when new posts are published"
   },
   "cafe": {
     "title": "Coffee Diary",
