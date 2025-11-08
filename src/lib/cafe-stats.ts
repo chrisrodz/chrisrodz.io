@@ -179,9 +179,9 @@ export function transformToActivityData(logs: CoffeeLogWithBean[]): CoffeeActivi
     {} as Record<string, number>
   );
 
-  // Get date range for the last year
+  // Get date range for the last 365 days
   const today = dayjs();
-  const oneYearAgo = today.subtract(1, 'year');
+  const oneYearAgo = today.subtract(365, 'day');
   const activities: CoffeeActivityData[] = [];
 
   // Generate all dates in the range
@@ -225,7 +225,7 @@ export function calculateCurrentStreak(activities: CoffeeActivityData[]): number
   }
 
   // Count backwards while there are coffees
-  while (current.isAfter(dayjs().subtract(1, 'year'))) {
+  while (current.isAfter(dayjs().subtract(365, 'day'))) {
     const dateStr = current.format('YYYY-MM-DD');
     const activity = activities.find((a) => a.date === dateStr);
 

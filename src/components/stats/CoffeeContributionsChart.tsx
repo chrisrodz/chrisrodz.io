@@ -28,7 +28,7 @@ export default function CoffeeContributionsChart({
         data={data}
         colorScheme="light"
         theme={{
-          light: ['#d4a574', '#5d4e37'], // Lightest brown to darkest brown
+          light: ['#f5e6d3', '#e5c89c', '#d4a574', '#a97c50', '#5d4e37'], // 5-level brown gradient
         }}
         labels={{
           months,

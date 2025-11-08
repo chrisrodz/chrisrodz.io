@@ -42,8 +42,8 @@ export const GET: APIRoute = async () => {
     // Transform to activity calendar format
     const activities = transformToActivityData(logs);
 
-    // Calculate metrics
-    const totalCoffees = logs.length;
+    // Calculate metrics (count only coffees in the displayed date range)
+    const totalCoffees = activities.reduce((sum, activity) => sum + activity.count, 0);
     const currentStreak = calculateCurrentStreak(activities);
     const longestStreak = calculateLongestStreak(activities);
 
