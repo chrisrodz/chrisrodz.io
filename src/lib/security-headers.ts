@@ -37,7 +37,12 @@ function buildContentSecurityPolicy(options: SecurityHeaderOptions): string {
 
   const directives: Record<string, Set<string>> = {
     'default-src': new Set(["'self'"]),
-    'script-src': new Set(["'self'", "'unsafe-inline'", ...VERCEL_SCRIPT_SOURCES]),
+    'script-src': new Set([
+      "'self'",
+      "'unsafe-inline'",
+      'https://cdn.jsdelivr.net', // Required for Pyodide (Python runtime in browser)
+      ...VERCEL_SCRIPT_SOURCES,
+    ]),
     'style-src': new Set([
       "'self'",
       "'unsafe-inline'",
