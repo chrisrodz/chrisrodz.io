@@ -60,7 +60,7 @@ if (supabase) {
               <tbody>
                 {activities.map((activity) => (
                   <tr>
-                    <td>{formatDate(new Date(activity.start_date))}</td>
+                    <td>{formatDate(activity.start_date)}</td>
                     <td>
                       <strong>{activity.type}</strong>
                       {activity.name && (

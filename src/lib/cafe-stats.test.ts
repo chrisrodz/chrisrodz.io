@@ -1,6 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import { formatBrewRatio, calculateStats, getBrewMethodDistribution } from './cafe-stats';
 import type { CoffeeLogWithBean } from './schemas/cafe';
+import { getDaysAgo } from './date-utils';
+import dayjs from './dayjs-config';
 
 describe('formatBrewRatio', () => {
   it('should format ratio with both dose and yield', () => {
@@ -38,27 +40,27 @@ describe('calculateStats', () => {
     const mockLogs: CoffeeLogWithBean[] = [
       {
         id: '1',
-        brew_time: new Date().toISOString(),
+        brew_time: dayjs().toISOString(),
         brew_method: 'Espresso',
         quality_rating: 4,
         dose_grams: 18,
         yield_grams: 36,
         grind_setting: 20,
         bean_id: '1',
-        created_at: new Date().toISOString(),
+        created_at: dayjs().toISOString(),
         notes: null,
         bean: null,
       },
       {
         id: '2',
-        brew_time: new Date().toISOString(),
+        brew_time: dayjs().toISOString(),
         brew_method: 'AeroPress',
         quality_rating: 5,
         dose_grams: 15,
         yield_grams: 250,
         grind_setting: 25,
         bean_id: '1',
-        created_at: new Date().toISOString(),
+        created_at: dayjs().toISOString(),
         notes: null,
         bean: null,
       },
@@ -71,8 +73,8 @@ describe('calculateStats', () => {
   });
 
   it('should count logs from this week correctly', () => {
-    const today = new Date();
-    const tenDaysAgo = new Date(today.getTime() - 10 * 24 * 60 * 60 * 1000);
+    const today = dayjs();
+    const tenDaysAgo = getDaysAgo(10).toDate();
 
     const mockLogs: CoffeeLogWithBean[] = [
       {
@@ -84,7 +86,7 @@ describe('calculateStats', () => {
         yield_grams: 36,
         grind_setting: 20,
         bean_id: '1',
-        created_at: new Date().toISOString(),
+        created_at: dayjs().toISOString(),
         notes: null,
         bean: null,
       },
@@ -97,7 +99,7 @@ describe('calculateStats', () => {
         yield_grams: 250,
         grind_setting: 25,
         bean_id: '1',
-        created_at: new Date().toISOString(),
+        created_at: dayjs().toISOString(),
         notes: null,
         bean: null,
       },
@@ -119,40 +121,40 @@ describe('getBrewMethodDistribution', () => {
     const mockLogs: CoffeeLogWithBean[] = [
       {
         id: '1',
-        brew_time: new Date().toISOString(),
+        brew_time: dayjs().toISOString(),
         brew_method: 'Espresso',
         quality_rating: 4,
         dose_grams: 18,
         yield_grams: 36,
         grind_setting: 20,
         bean_id: '1',
-        created_at: new Date().toISOString(),
+        created_at: dayjs().toISOString(),
         notes: null,
         bean: null,
       },
       {
         id: '2',
-        brew_time: new Date().toISOString(),
+        brew_time: dayjs().toISOString(),
         brew_method: 'Espresso',
         quality_rating: 5,
         dose_grams: 18,
         yield_grams: 36,
         grind_setting: 20,
         bean_id: '1',
-        created_at: new Date().toISOString(),
+        created_at: dayjs().toISOString(),
         notes: null,
         bean: null,
       },
       {
         id: '3',
-        brew_time: new Date().toISOString(),
+        brew_time: dayjs().toISOString(),
         brew_method: 'AeroPress',
         quality_rating: 4,
         dose_grams: 15,
         yield_grams: 250,
         grind_setting: 25,
         bean_id: '1',
-        created_at: new Date().toISOString(),
+        created_at: dayjs().toISOString(),
         notes: null,
         bean: null,
       },
@@ -176,53 +178,53 @@ describe('getBrewMethodDistribution', () => {
     const mockLogs: CoffeeLogWithBean[] = [
       {
         id: '1',
-        brew_time: new Date().toISOString(),
+        brew_time: dayjs().toISOString(),
         brew_method: 'AeroPress',
         quality_rating: 4,
         dose_grams: 15,
         yield_grams: 250,
         grind_setting: 25,
         bean_id: '1',
-        created_at: new Date().toISOString(),
+        created_at: dayjs().toISOString(),
         notes: null,
         bean: null,
       },
       {
         id: '2',
-        brew_time: new Date().toISOString(),
+        brew_time: dayjs().toISOString(),
         brew_method: 'Espresso',
         quality_rating: 5,
         dose_grams: 18,
         yield_grams: 36,
         grind_setting: 20,
         bean_id: '1',
-        created_at: new Date().toISOString(),
+        created_at: dayjs().toISOString(),
         notes: null,
         bean: null,
       },
       {
         id: '3',
-        brew_time: new Date().toISOString(),
+        brew_time: dayjs().toISOString(),
         brew_method: 'Espresso',
         quality_rating: 4,
         dose_grams: 18,
         yield_grams: 36,
         grind_setting: 20,
         bean_id: '1',
-        created_at: new Date().toISOString(),
+        created_at: dayjs().toISOString(),
         notes: null,
         bean: null,
       },
       {
         id: '4',
-        brew_time: new Date().toISOString(),
+        brew_time: dayjs().toISOString(),
         brew_method: 'Espresso',
         quality_rating: 5,
         dose_grams: 18,
         yield_grams: 36,
         grind_setting: 20,
         bean_id: '1',
-        created_at: new Date().toISOString(),
+        created_at: dayjs().toISOString(),
         notes: null,
         bean: null,
       },

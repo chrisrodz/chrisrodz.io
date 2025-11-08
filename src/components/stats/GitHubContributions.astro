@@ -3,6 +3,7 @@ import { useTranslations, type Locale } from '@/lib/i18n';
 import type { Activity } from 'react-activity-calendar';
 import GitHubContributionsChart from './GitHubContributionsChart';
 import StatsCard from './StatsCard';
+import dayjs from '@/lib/dayjs-config';
 
 interface Props {
   locale: Locale;
@@ -73,7 +74,7 @@ const weekdays = [
   t('stats.weekdays.sat'),
 ];
 
-const currentYear = new Date().getFullYear();
+const currentYear = dayjs().year();
 ---
 
 <div class="github-contributions">

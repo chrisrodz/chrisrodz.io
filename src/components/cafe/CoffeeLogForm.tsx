@@ -5,6 +5,7 @@ import StarRating from './StarRating';
 import AddBeanForm from './AddBeanForm';
 import type { CoffeeBeanRow } from '@/lib/schemas/cafe';
 import { BREW_METHODS } from '@/lib/schemas/cafe';
+import dayjs from '@/lib/dayjs-config';
 
 interface SmartDefaults {
   brew_method: (typeof BREW_METHODS)[number] | null;
@@ -168,7 +169,7 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
 
     try {
       // Use current time as brew time
-      const brewTimeISO = new Date().toISOString();
+      const brewTimeISO = dayjs().toISOString();
 
       const formData = new FormData();
       formData.append('action', 'log_coffee');

@@ -4,6 +4,7 @@ import Analytics from '@vercel/analytics/astro';
 import SpeedInsights from '@vercel/speed-insights/astro';
 import { getLocaleFromUrl, t, getAlternateUrl, type Locale } from '@/lib/i18n';
 import { checkAuth } from '@/lib/auth';
+import dayjs from '@/lib/dayjs-config';
 
 export interface Props {
   title: string;
@@ -34,7 +35,9 @@ const alternateFullUrl = new URL(alternateUrl, Astro.site || 'https://chrisrodz.
 
 // Format title with site name
 const fullTitle = t(locale, 'site.titleWithPage', { page: title });
-const currentYear = new Date().getFullYear().toString();
+const currentYear = dayjs().year().toString();
+// Cookie expiration (1 year from now)
+const cookieExpires = dayjs().add(1, 'year').toDate().toUTCString();
 ---
 
 <!doctype html>
@@ -269,14 +272,12 @@ const currentYear = new Date().getFullYear().toString();
     </script>
 
     <!-- Language switcher script -->
-    <script is:inline>
+    <script is:inline define:vars={{ cookieExpires }}>
       const langToggle = document.getElementById('lang-toggle');
 
       langToggle?.addEventListener('click', () => {
         const targetLang = langToggle.getAttribute('data-target-lang');
-        const expires = new Date();
-        expires.setFullYear(expires.getFullYear() + 1);
-        document.cookie = `preferred-lang=${targetLang}; path=/; expires=${expires.toUTCString()}; SameSite=Lax`;
+        document.cookie = `preferred-lang=${targetLang}; path=/; expires=${cookieExpires}; SameSite=Lax`;
       });
     </script>
 

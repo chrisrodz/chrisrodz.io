@@ -2,6 +2,8 @@
 import { useTranslations, type Locale } from '@/lib/i18n';
 import type { CoffeeLogWithBean } from '@/lib/schemas/cafe';
 import { formatBrewRatio } from '@/lib/cafe-stats';
+import { formatTimeInPR } from '@/lib/date-utils';
+import dayjs from '@/lib/dayjs-config';
 
 interface Props {
   logs: CoffeeLogWithBean[];
@@ -10,18 +12,6 @@ interface Props {
 
 const { logs, locale } = Astro.props;
 const { t, formatDate } = useTranslations(locale);
-
-const localeWithRegion = locale === 'es' ? 'es-PR' : 'en-US';
-const puertoRicoTimeFormatter = new Intl.DateTimeFormat(localeWithRegion, {
-  hour: 'numeric',
-  minute: '2-digit',
-  hour12: true,
-  timeZone: 'America/Puerto_Rico',
-});
-
-function formatPuertoRicoTime(date: Date): string {
-  return puertoRicoTimeFormatter.format(date);
-}
 ---
 
 <section>
@@ -29,8 +19,8 @@ function formatPuertoRicoTime(date: Date): string {
   <div class="grid">
     {
       logs.map((log) => {
-        const brewDate = new Date(log.brew_time);
-        const isoString = brewDate.toISOString();
+        const timestamp = dayjs(log.brew_time).valueOf();
+        const brewDate = dayjs(log.brew_time).toDate();
 
         return (
           <article>
@@ -42,9 +32,9 @@ function formatPuertoRicoTime(date: Date): string {
                     day: 'numeric',
                   })}
                 </strong>
-                <span class="time-compare" data-local-time={isoString}>
+                <span class="time-compare" data-local-time={timestamp}>
                   <span class="time-compare__zone">
-                    <span class="time-compare__value">{formatPuertoRicoTime(brewDate)}</span>
+                    <span class="time-compare__value">{formatTimeInPR(log.brew_time, locale)}</span>
                     <small class="time-compare__label">{t('cafe.timeComparison.puertoRico')}</small>
                   </span>
                   <span class="time-compare__zone time-compare__zone--local">
@@ -100,14 +90,14 @@ function formatPuertoRicoTime(date: Date): string {
       });
 
       document.querySelectorAll('[data-local-time]').forEach((element) => {
-        const iso = element.getAttribute('data-local-time');
-        if (!iso) return;
+        const timestampStr = element.getAttribute('data-local-time');
+        if (!timestampStr) return;
 
-        const date = new Date(iso);
-        if (Number.isNaN(date.getTime())) return;
+        const timestamp = Number(timestampStr);
+        if (Number.isNaN(timestamp)) return;
 
-        const localTime = localFormatter.format(date);
-        const prTime = prFormatter.format(date);
+        const localTime = localFormatter.format(timestamp);
+        const prTime = prFormatter.format(timestamp);
 
         // Update local time display
         element.querySelectorAll('[data-local-time-display]').forEach((target) => {

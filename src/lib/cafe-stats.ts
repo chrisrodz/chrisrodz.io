@@ -1,4 +1,6 @@
 import type { CoffeeLogWithBean, CoffeeBeanRow } from './schemas/cafe';
+import { getDaysAgo, formatDate } from './date-utils';
+import dayjs from './dayjs-config';
 
 /**
  * Return type for calculateStats function
@@ -39,16 +41,15 @@ export interface BeanUsage {
  * Calculate statistics from coffee logs
  */
 export function calculateStats(logs: CoffeeLogWithBean[]): CafeStats {
-  const now = new Date();
-  const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+  const oneWeekAgo = getDaysAgo(7);
 
   // Total logs
   const totalLogs = logs.length;
 
   // Logs this week
   const logsThisWeek = logs.filter((log) => {
-    const logDate = new Date(log.brew_time);
-    return logDate >= oneWeekAgo;
+    const logDate = dayjs(log.brew_time);
+    return logDate.isSameOrAfter(oneWeekAgo);
   }).length;
 
   // Average rating
@@ -89,16 +90,15 @@ export function getBrewMethodDistribution(logs: CoffeeLogWithBean[]): BrewMethod
  * Get quality ratings over time (last 30 days)
  */
 export function getQualityOverTime(logs: CoffeeLogWithBean[]): QualityDataPoint[] {
-  const thirtyDaysAgo = new Date();
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  const thirtyDaysAgo = getDaysAgo(30);
 
   // Filter to last 30 days
-  const recentLogs = logs.filter((log) => new Date(log.brew_time) >= thirtyDaysAgo);
+  const recentLogs = logs.filter((log) => dayjs(log.brew_time).isSameOrAfter(thirtyDaysAgo));
 
   // Group by date
   const byDate = recentLogs.reduce(
     (acc, log) => {
-      const date = new Date(log.brew_time).toLocaleDateString('en-US', {
+      const date = formatDate(log.brew_time, 'en', {
         month: 'short',
         day: 'numeric',
       });
