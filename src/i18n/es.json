@@ -9,7 +9,8 @@
     "blog": "Blog",
     "cafe": "Café",
     "training": "Entrenamiento",
-    "stats": "Stats"
+    "stats": "Stats",
+    "domino": "Dominó"
   },
   "footer": {
     "copyright": "© {year} Christian A. Rodríguez Encarnación",
@@ -209,5 +210,29 @@
   "languageSwitch": {
     "tooltipEs": "Haz click para cambiar a Español",
     "tooltipEn": "Click for English"
+  },
+  "domino": {
+    "title": "Juego de Dominó",
+    "metaTitle": "Juega Dominó Caribeño",
+    "metaDescription": "Juega Dominó Caribeño directamente en tu navegador - un juego clásico de terminal ejecutándose en vivo desde GitHub",
+    "heading": "Dominó Caribeño",
+    "subtitle": "El clásico juego CLI, ejecutándose en vivo desde GitHub",
+    "loading": "Cargando entorno de Python...",
+    "loadingGame": "Obteniendo juego desde GitHub...",
+    "installingDeps": "Instalando dependencias...",
+    "ready": "Iniciando juego...",
+    "error": "Error al cargar el juego",
+    "about": {
+      "heading": "Acerca de este Juego",
+      "description": "Esto ejecuta el código Python real del repositorio domino-game-cli. ¡Las actualizaciones al repositorio se reflejan en vivo!",
+      "sourceCode": "Ver código fuente en GitHub",
+      "controls": "Controles: Usa las flechas o j/k para navegar, Enter para seleccionar, escribe para ingresar texto"
+    },
+    "browserNotSupported": "Tu navegador no soporta WebAssembly. Por favor usa un navegador moderno como Chrome, Firefox, Safari o Edge.",
+    "errorMessages": {
+      "networkError": "Error al obtener el código del juego. Por favor verifica tu conexión a internet.",
+      "pyodideError": "Error al cargar el entorno de Python. Por favor intenta refrescar la página.",
+      "gameError": "Ocurrió un error al ejecutar el juego."
+    }
   }
 }

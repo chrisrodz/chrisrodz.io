@@ -9,7 +9,8 @@
     "blog": "Blog",
     "cafe": "Coffee",
     "training": "Training",
-    "stats": "Stats"
+    "stats": "Stats",
+    "domino": "Domino"
   },
   "footer": {
     "copyright": "© {year} Christian A. Rodríguez Encarnación",
@@ -209,5 +210,29 @@
   "languageSwitch": {
     "tooltipEs": "Haz click para cambiar a Español",
     "tooltipEn": "Click for English"
+  },
+  "domino": {
+    "title": "Domino Game",
+    "metaTitle": "Play Caribbean Dominoes",
+    "metaDescription": "Play Caribbean Dominoes directly in your browser - a classic terminal-based game running live from GitHub",
+    "heading": "Caribbean Dominoes",
+    "subtitle": "The classic CLI game, running live from GitHub",
+    "loading": "Loading Python runtime...",
+    "loadingGame": "Fetching game from GitHub...",
+    "installingDeps": "Installing dependencies...",
+    "ready": "Starting game...",
+    "error": "Failed to load game",
+    "about": {
+      "heading": "About This Game",
+      "description": "This runs the actual Python code from the domino-game-cli repository. Updates to the repo are reflected live!",
+      "sourceCode": "View source code on GitHub",
+      "controls": "Controls: Use arrow keys or j/k to navigate, Enter to select, type to input"
+    },
+    "browserNotSupported": "Your browser doesn't support WebAssembly. Please use a modern browser like Chrome, Firefox, Safari, or Edge.",
+    "errorMessages": {
+      "networkError": "Failed to fetch game code. Please check your internet connection.",
+      "pyodideError": "Failed to load Python runtime. Please try refreshing the page.",
+      "gameError": "An error occurred while running the game."
+    }
   }
 }

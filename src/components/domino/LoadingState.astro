@@ -1,0 +1,48 @@
+---
+/**
+ * LoadingState - Loading indicator for the domino game
+ */
+
+interface Props {
+  message: string;
+}
+
+const { message } = Astro.props;
+---
+
+<div class="loading-state" role="status" aria-live="polite">
+  <div class="loading-spinner" aria-hidden="true"></div>
+  <p>{message}</p>
+</div>
+
+<style>
+  .loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1rem;
+    text-align: center;
+  }
+
+  .loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid var(--pico-muted-border-color);
+    border-top-color: var(--pico-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  p {
+    margin: 0;
+    color: var(--pico-muted-color);
+  }
+</style>

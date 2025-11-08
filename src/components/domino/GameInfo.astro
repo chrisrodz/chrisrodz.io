@@ -1,0 +1,45 @@
+---
+/**
+ * GameInfo - Information card about the domino game
+ */
+
+import { getRepositoryUrl } from '@/lib/domino/github-fetcher';
+
+interface Props {
+  locale: 'en' | 'es';
+  translations: {
+    heading: string;
+    description: string;
+    sourceCode: string;
+    controls: string;
+  };
+}
+
+const { locale, translations } = Astro.props;
+const repoUrl = getRepositoryUrl();
+---
+
+<article>
+  <header>
+    <h3>{translations.heading}</h3>
+  </header>
+  <p>{translations.description}</p>
+  <p>
+    <strong>{translations.controls}</strong>
+  </p>
+  <footer>
+    <a href={repoUrl} target="_blank" rel="noopener noreferrer" role="button">
+      {translations.sourceCode} →
+    </a>
+  </footer>
+</article>
+
+<style>
+  article {
+    margin-top: 2rem;
+  }
+
+  footer {
+    margin-top: 1rem;
+  }
+</style>

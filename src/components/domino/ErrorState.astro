@@ -1,0 +1,33 @@
+---
+/**
+ * ErrorState - Error display for the domino game
+ */
+
+interface Props {
+  message: string;
+}
+
+const { message } = Astro.props;
+---
+
+<article class="error-state" role="alert">
+  <header>
+    <h3>❌ Error</h3>
+  </header>
+  <p>{message}</p>
+</article>
+
+<style>
+  .error-state {
+    margin: 2rem 0;
+    border-left: 4px solid var(--pico-del-color);
+  }
+
+  .error-state header {
+    color: var(--pico-del-color);
+  }
+
+  .error-state p {
+    color: var(--pico-color);
+  }
+</style>

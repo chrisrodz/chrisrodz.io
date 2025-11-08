@@ -1,0 +1,94 @@
+---
+/**
+ * Domino game page (English)
+ */
+
+import Layout from '../../layouts/Layout.astro';
+import { DominoTerminal } from '@/components/domino/DominoTerminal';
+import GameInfo from '@/components/domino/GameInfo.astro';
+import { getLocaleFromUrl, useTranslations } from '@/lib/i18n';
+
+const locale = getLocaleFromUrl(Astro.url);
+const { t } = useTranslations(locale);
+
+// Get translations for the DominoTerminal component
+const dominoTranslations = {
+  loading: t('domino.loading'),
+  loadingGame: t('domino.loadingGame'),
+  installingDeps: t('domino.installingDeps'),
+  ready: t('domino.ready'),
+  error: t('domino.error'),
+  browserNotSupported: t('domino.browserNotSupported'),
+  errorMessages: {
+    networkError: t('domino.errorMessages.networkError'),
+    pyodideError: t('domino.errorMessages.pyodideError'),
+    gameError: t('domino.errorMessages.gameError'),
+  },
+};
+
+const gameInfoTranslations = {
+  heading: t('domino.about.heading'),
+  description: t('domino.about.description'),
+  sourceCode: t('domino.about.sourceCode'),
+  controls: t('domino.about.controls'),
+};
+---
+
+<Layout title={t('domino.title')} description={t('domino.metaDescription')}>
+  <main class="container">
+    <hgroup>
+      <h1>{t('domino.heading')}</h1>
+      <p>{t('domino.subtitle')}</p>
+    </hgroup>
+
+    <section class="domino-game-section">
+      <DominoTerminal client:load locale={locale} translations={dominoTranslations} />
+    </section>
+
+    <GameInfo locale={locale} translations={gameInfoTranslations} />
+  </main>
+</Layout>
+
+<style>
+  .domino-game-section {
+    margin: 2rem 0;
+  }
+
+  :global(.domino-terminal-container) {
+    position: relative;
+  }
+
+  :global(.domino-terminal) {
+    width: 100%;
+    height: 600px;
+    background-color: var(--pico-background-color);
+    border: 1px solid var(--pico-muted-border-color);
+    border-radius: var(--pico-border-radius);
+    padding: 1rem;
+    overflow: hidden;
+  }
+
+  :global(.domino-status) {
+    padding: 1rem;
+    text-align: center;
+    color: var(--pico-muted-color);
+  }
+
+  :global(.domino-error) {
+    padding: 1rem;
+    background-color: var(--pico-card-background-color);
+    border-left: 4px solid var(--pico-del-color);
+    border-radius: var(--pico-border-radius);
+    margin-bottom: 1rem;
+  }
+
+  :global(.domino-error strong) {
+    color: var(--pico-del-color);
+  }
+
+  @media (max-width: 768px) {
+    :global(.domino-terminal) {
+      height: 400px;
+    }
+  }
+</style>
