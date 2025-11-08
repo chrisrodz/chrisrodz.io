@@ -66,7 +66,7 @@ export function getDaysAgo(days: number): Dayjs {
  * Check if date is same day as another date
  */
 export function isSameDay(date1: Date | string, date2: Date | string): boolean {
-  return dayjs(date1).isSame(dayjs(date2), 'day');
+  return dayjs(date1).utc().isSame(dayjs(date2).utc(), 'day');
 }
 
 /**

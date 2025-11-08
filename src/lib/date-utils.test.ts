@@ -42,7 +42,7 @@ describe('date-utils', () => {
     });
 
     it('formats date with full format', () => {
-      const date = new Date('2025-03-15');
+      const date = dayjs('2025-03-15');
       const result = formatDate(date, 'en', {
         year: 'numeric',
         month: 'long',
