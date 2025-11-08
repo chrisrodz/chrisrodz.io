@@ -147,8 +147,7 @@ export function checkAuth(cookies: AstroCookies): boolean {
     return false;
   }
 
-  if (!sessionId) return false;
-  const session = sessions.get(sessionId);
+  const session = sessions.get(sessionId!);
   return session?.authenticated === true;
 }
 

@@ -22,6 +22,32 @@ interface CoffeeLogFormProps {
 
 const NEW_BEAN_VALUE = '__new_bean__';
 
+// SessionStorage keys
+const STORAGE_KEYS = {
+  LAST_BREW_METHOD: 'cafe_last_brew_method',
+  LAST_GRIND_SETTING: 'cafe_last_grind_setting',
+  LAST_DOSE_GRAMS: 'cafe_last_dose_grams',
+  LAST_YIELD_GRAMS: 'cafe_last_yield_grams',
+  LAST_BEAN_ID: 'cafe_last_bean_id',
+  DRAFT: 'cafe_draft',
+} as const;
+
+// Input constraints
+const INPUT_CONSTRAINTS = {
+  DOSE: { MIN: 1, MAX: 100 },
+  YIELD: { MIN: 1, MAX: 200 },
+  GRIND: { MIN: 1, MAX: 40 },
+} as const;
+
+// Time constants (in milliseconds)
+const ONE_HOUR_MS = 60 * 60 * 1000;
+
+// Grind scale thresholds
+const GRIND_THRESHOLDS = {
+  FINE: 15,
+  MEDIUM: 25,
+} as const;
+
 export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogFormProps) {
   // Use Nano Store for beans (will update when AddBeanForm adds a new bean)
   const beansFromStore = useStore(beansStore);
@@ -76,38 +102,39 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
   // Cache smart defaults in sessionStorage for fallback
   useEffect(() => {
     if (smartDefaults.brew_method) {
-      sessionStorage.setItem('cafe_last_brew_method', smartDefaults.brew_method);
+      sessionStorage.setItem(STORAGE_KEYS.LAST_BREW_METHOD, smartDefaults.brew_method);
     }
     if (smartDefaults.grind_setting) {
-      sessionStorage.setItem('cafe_last_grind_setting', smartDefaults.grind_setting.toString());
+      sessionStorage.setItem(STORAGE_KEYS.LAST_GRIND_SETTING, smartDefaults.grind_setting.toString());
     }
     if (smartDefaults.dose_grams) {
-      sessionStorage.setItem('cafe_last_dose_grams', smartDefaults.dose_grams.toString());
+      sessionStorage.setItem(STORAGE_KEYS.LAST_DOSE_GRAMS, smartDefaults.dose_grams.toString());
     }
     if (smartDefaults.yield_grams) {
-      sessionStorage.setItem('cafe_last_yield_grams', smartDefaults.yield_grams.toString());
+      sessionStorage.setItem(STORAGE_KEYS.LAST_YIELD_GRAMS, smartDefaults.yield_grams.toString());
     }
     if (smartDefaults.bean_id) {
-      sessionStorage.setItem('cafe_last_bean_id', smartDefaults.bean_id);
+      sessionStorage.setItem(STORAGE_KEYS.LAST_BEAN_ID, smartDefaults.bean_id);
     }
   }, [smartDefaults]);
 
   // Check for saved draft on mount
   useEffect(() => {
-    const draftStr = sessionStorage.getItem('cafe_draft');
+    const draftStr = sessionStorage.getItem(STORAGE_KEYS.DRAFT);
     if (draftStr) {
       try {
         const draft = JSON.parse(draftStr);
         // Check if draft is less than 1 hour old
-        if (Date.now() - draft.timestamp < 60 * 60 * 1000) {
+        if (Date.now() - draft.timestamp < ONE_HOUR_MS) {
           setShowDraftRestore(true);
         } else {
           // Remove stale draft
-          sessionStorage.removeItem('cafe_draft');
+          sessionStorage.removeItem(STORAGE_KEYS.DRAFT);
         }
-      } catch (e) {
-        console.error('Failed to parse draft', e);
-        sessionStorage.removeItem('cafe_draft');
+      } catch (e: unknown) {
+        const message = e instanceof Error ? e.message : String(e);
+        console.error('Failed to parse draft:', message);
+        sessionStorage.removeItem(STORAGE_KEYS.DRAFT);
       }
     }
   }, []);
@@ -130,7 +157,7 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
         notes,
         timestamp: Date.now(),
       };
-      sessionStorage.setItem('cafe_draft', JSON.stringify(formState));
+      sessionStorage.setItem(STORAGE_KEYS.DRAFT, JSON.stringify(formState));
     }, 2000);
 
     return () => clearInterval(interval);
@@ -138,7 +165,7 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
 
   // Restore draft function
   const restoreDraft = () => {
-    const draftStr = sessionStorage.getItem('cafe_draft');
+    const draftStr = sessionStorage.getItem(STORAGE_KEYS.DRAFT);
     if (draftStr) {
       try {
         const draft = JSON.parse(draftStr);
@@ -150,15 +177,16 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
         setRating(draft.rating);
         setNotes(draft.notes);
         setShowDraftRestore(false);
-      } catch (e) {
-        console.error('Failed to restore draft', e);
+      } catch (e: unknown) {
+        const message = e instanceof Error ? e.message : String(e);
+        console.error('Failed to restore draft:', message);
       }
     }
   };
 
   // Dismiss draft
   const dismissDraft = () => {
-    sessionStorage.removeItem('cafe_draft');
+    sessionStorage.removeItem(STORAGE_KEYS.DRAFT);
     setShowDraftRestore(false);
   };
 
@@ -213,7 +241,7 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
       });
 
       // Clear draft on successful submission
-      sessionStorage.removeItem('cafe_draft');
+      sessionStorage.removeItem(STORAGE_KEYS.DRAFT);
 
       // Reset form but keep smart defaults
       setRating(0);
@@ -317,8 +345,8 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
                 value={doseGrams}
                 onChange={(e) => setDoseGrams(Number(e.target.value) || 0)}
                 onFocus={(e) => e.target.select()}
-                min="1"
-                max="100"
+                min={INPUT_CONSTRAINTS.DOSE.MIN}
+                max={INPUT_CONSTRAINTS.DOSE.MAX}
                 step="1"
                 required
               />
@@ -326,7 +354,7 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
                 <button
                   type="button"
                   className="number-btn"
-                  onClick={() => setDoseGrams(Math.max(1, doseGrams - 1))}
+                  onClick={() => setDoseGrams(Math.max(INPUT_CONSTRAINTS.DOSE.MIN, doseGrams - 1))}
                   aria-label="Decrease dose"
                 >
                   −
@@ -334,7 +362,7 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
                 <button
                   type="button"
                   className="number-btn"
-                  onClick={() => setDoseGrams(Math.min(100, doseGrams + 1))}
+                  onClick={() => setDoseGrams(Math.min(INPUT_CONSTRAINTS.DOSE.MAX, doseGrams + 1))}
                   aria-label="Increase dose"
                 >
                   +
@@ -354,8 +382,8 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
                 value={yieldGrams}
                 onChange={(e) => setYieldGrams(Number(e.target.value) || 0)}
                 onFocus={(e) => e.target.select()}
-                min="1"
-                max="200"
+                min={INPUT_CONSTRAINTS.YIELD.MIN}
+                max={INPUT_CONSTRAINTS.YIELD.MAX}
                 step="1"
                 placeholder={brewMethod === 'Espresso' ? 'Peso de salida' : 'Agua agregada'}
               />
@@ -371,7 +399,7 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
                 <button
                   type="button"
                   className="number-btn"
-                  onClick={() => setYieldGrams(Math.min(200, yieldGrams + 1))}
+                  onClick={() => setYieldGrams(Math.min(INPUT_CONSTRAINTS.YIELD.MAX, yieldGrams + 1))}
                   aria-label="Increase yield"
                 >
                   +
@@ -382,7 +410,7 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
 
           {/* Grind Setting */}
           <label>
-            Molienda (1-40) *
+            Molienda ({INPUT_CONSTRAINTS.GRIND.MIN}-{INPUT_CONSTRAINTS.GRIND.MAX}) *
             <div className="number-input-wrapper">
               <input
                 type="number"
@@ -391,8 +419,8 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
                 value={grindSetting}
                 onChange={(e) => setGrindSetting(Number(e.target.value) || 0)}
                 onFocus={(e) => e.target.select()}
-                min="1"
-                max="40"
+                min={INPUT_CONSTRAINTS.GRIND.MIN}
+                max={INPUT_CONSTRAINTS.GRIND.MAX}
                 step="1"
                 required
               />
@@ -400,7 +428,7 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
                 <button
                   type="button"
                   className="number-btn"
-                  onClick={() => setGrindSetting(Math.max(1, grindSetting - 1))}
+                  onClick={() => setGrindSetting(Math.max(INPUT_CONSTRAINTS.GRIND.MIN, grindSetting - 1))}
                   aria-label="Decrease grind setting"
                 >
                   −
@@ -408,7 +436,7 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
                 <button
                   type="button"
                   className="number-btn"
-                  onClick={() => setGrindSetting(Math.min(40, grindSetting + 1))}
+                  onClick={() => setGrindSetting(Math.min(INPUT_CONSTRAINTS.GRIND.MAX, grindSetting + 1))}
                   aria-label="Increase grind setting"
                 >
                   +
@@ -422,9 +450,9 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults }: CoffeeLogF
                 marginTop: '0.25rem',
               }}
             >
-              {grindSetting < 15
+              {grindSetting < GRIND_THRESHOLDS.FINE
                 ? 'Molienda fina'
-                : grindSetting < 25
+                : grindSetting < GRIND_THRESHOLDS.MEDIUM
                   ? 'Molienda media'
                   : 'Molienda gruesa'}
             </small>
