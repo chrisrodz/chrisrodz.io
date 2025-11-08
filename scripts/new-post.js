@@ -3,6 +3,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import dayjs from 'dayjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -36,12 +37,12 @@ const urlSlug = postTitle
   .trim('-');
 
 // Generate folder name (translation key)
-const now = new Date();
-const year = now.getFullYear();
+const now = dayjs();
+const year = now.year();
 const translationKey = `${urlSlug}-${year}`;
 
 // Get current date
-const pubDate = now.toISOString().split('T')[0];
+const pubDate = now.format('YYYY-MM-DD');
 
 // Create the frontmatter template
 const createFrontmatter = (lang, title, slug) => `---

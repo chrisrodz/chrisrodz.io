@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { XMLParser } from 'fast-xml-parser';
+import dayjs from '@/lib/dayjs-config';
 
 // Mock blog post data
 const mockBlogPosts = [
@@ -8,7 +9,7 @@ const mockBlogPosts = [
     data: {
       title: 'Welcome Post',
       description: 'A short description',
-      pubDate: new Date('2025-01-01'),
+      pubDate: dayjs('2025-01-01').toDate(),
       locale: 'es',
       category: 'tech',
     },

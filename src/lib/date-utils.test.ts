@@ -14,7 +14,7 @@ import {
 describe('date-utils', () => {
   describe('formatDateISO', () => {
     it('formats Date object as YYYY-MM-DD', () => {
-      const date = new Date('2025-03-15T14:30:00Z');
+      const date = dayjs('2025-03-15T14:30:00Z').toDate();
       expect(formatDateISO(date)).toBe('2025-03-15');
     });
 
@@ -30,13 +30,13 @@ describe('date-utils', () => {
 
   describe('formatDate', () => {
     it('formats date with Spanish locale and short month', () => {
-      const date = new Date('2025-03-15');
+      const date = dayjs('2025-03-15').toDate();
       const result = formatDate(date, 'es', { month: 'short', day: 'numeric' });
       expect(result).toContain('mar'); // Spanish abbreviation
     });
 
     it('formats date with English locale and long month', () => {
-      const date = new Date('2025-03-15');
+      const date = dayjs('2025-03-15').toDate();
       const result = formatDate(date, 'en', { month: 'long', day: 'numeric' });
       expect(result).toContain('March');
     });
@@ -54,7 +54,7 @@ describe('date-utils', () => {
     });
 
     it('uses default format when no options provided', () => {
-      const date = new Date('2025-03-15');
+      const date = dayjs('2025-03-15').toDate();
       const result = formatDate(date, 'en');
       expect(result).toBeTruthy();
     });
@@ -113,8 +113,8 @@ describe('date-utils', () => {
     });
 
     it('works with Date objects', () => {
-      const date1 = new Date('2025-03-15T10:00:00Z');
-      const date2 = new Date('2025-03-15T18:00:00Z');
+      const date1 = dayjs('2025-03-15T10:00:00Z').toDate();
+      const date2 = dayjs('2025-03-15T18:00:00Z').toDate();
       expect(isSameDay(date1, date2)).toBe(true);
     });
   });

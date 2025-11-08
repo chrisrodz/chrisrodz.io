@@ -3,6 +3,7 @@ import { useTranslations, type Locale } from '@/lib/i18n';
 import type { CoffeeLogWithBean } from '@/lib/schemas/cafe';
 import { formatBrewRatio } from '@/lib/cafe-stats';
 import { formatTimeInPR } from '@/lib/date-utils';
+import dayjs from '@/lib/dayjs-config';
 
 interface Props {
   logs: CoffeeLogWithBean[];
@@ -18,8 +19,8 @@ const { t, formatDate } = useTranslations(locale);
   <div class="grid">
     {
       logs.map((log) => {
-        const brewDate = new Date(log.brew_time);
-        const isoString = brewDate.toISOString();
+        const timestamp = dayjs(log.brew_time).valueOf();
+        const brewDate = dayjs(log.brew_time).toDate();
 
         return (
           <article>
@@ -31,7 +32,7 @@ const { t, formatDate } = useTranslations(locale);
                     day: 'numeric',
                   })}
                 </strong>
-                <span class="time-compare" data-local-time={isoString}>
+                <span class="time-compare" data-local-time={timestamp}>
                   <span class="time-compare__zone">
                     <span class="time-compare__value">{formatTimeInPR(log.brew_time, locale)}</span>
                     <small class="time-compare__label">{t('cafe.timeComparison.puertoRico')}</small>
@@ -89,14 +90,14 @@ const { t, formatDate } = useTranslations(locale);
       });
 
       document.querySelectorAll('[data-local-time]').forEach((element) => {
-        const iso = element.getAttribute('data-local-time');
-        if (!iso) return;
+        const timestampStr = element.getAttribute('data-local-time');
+        if (!timestampStr) return;
 
-        const date = new Date(iso);
-        if (Number.isNaN(date.getTime())) return;
+        const timestamp = Number(timestampStr);
+        if (Number.isNaN(timestamp)) return;
 
-        const localTime = localFormatter.format(date);
-        const prTime = prFormatter.format(date);
+        const localTime = localFormatter.format(timestamp);
+        const prTime = prFormatter.format(timestamp);
 
         // Update local time display
         element.querySelectorAll('[data-local-time-display]').forEach((target) => {

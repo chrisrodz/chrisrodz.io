@@ -5,7 +5,8 @@ import {
   calculateCurrentStreak,
   calculateLongestStreak,
 } from './github-api';
-import { formatDateISO as formatLocalDate } from './date-utils';
+import { formatDateISO as formatLocalDate, getDaysAgo } from './date-utils';
+import dayjs from './dayjs-config';
 
 describe('GitHub API Module', () => {
   describe('transformToActivityData', () => {
@@ -94,11 +95,9 @@ describe('GitHub API Module', () => {
     });
 
     it('should count streak ending today with contributions', () => {
-      const today = new Date();
-      const yesterday = new Date(today);
-      yesterday.setDate(today.getDate() - 1);
-      const twoDaysAgo = new Date(today);
-      twoDaysAgo.setDate(today.getDate() - 2);
+      const today = dayjs();
+      const yesterday = getDaysAgo(1);
+      const twoDaysAgo = getDaysAgo(2);
 
       const activities: ActivityData[] = [
         { date: formatLocalDate(twoDaysAgo), count: 5, level: 2 },
@@ -110,13 +109,10 @@ describe('GitHub API Module', () => {
     });
 
     it('should break streak if today has 0 contributions', () => {
-      const today = new Date();
-      const yesterday = new Date(today);
-      yesterday.setDate(today.getDate() - 1);
-      const twoDaysAgo = new Date(today);
-      twoDaysAgo.setDate(today.getDate() - 2);
-      const threeDaysAgo = new Date(today);
-      threeDaysAgo.setDate(today.getDate() - 3);
+      const today = dayjs();
+      const yesterday = getDaysAgo(1);
+      const twoDaysAgo = getDaysAgo(2);
+      const threeDaysAgo = getDaysAgo(3);
 
       const activities: ActivityData[] = [
         { date: formatLocalDate(threeDaysAgo), count: 5, level: 2 },
@@ -130,13 +126,10 @@ describe('GitHub API Module', () => {
     });
 
     it('should handle streak broken by gap in middle', () => {
-      const today = new Date();
-      const yesterday = new Date(today);
-      yesterday.setDate(today.getDate() - 1);
-      const twoDaysAgo = new Date(today);
-      twoDaysAgo.setDate(today.getDate() - 2);
-      const fourDaysAgo = new Date(today);
-      fourDaysAgo.setDate(today.getDate() - 4);
+      const today = dayjs();
+      const yesterday = getDaysAgo(1);
+      const twoDaysAgo = getDaysAgo(2);
+      const fourDaysAgo = getDaysAgo(4);
 
       const activities: ActivityData[] = [
         { date: formatLocalDate(fourDaysAgo), count: 5, level: 2 },
@@ -151,8 +144,7 @@ describe('GitHub API Module', () => {
     });
 
     it('should return 0 if no recent contributions', () => {
-      const fiveDaysAgo = new Date();
-      fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 5);
+      const fiveDaysAgo = getDaysAgo(5);
 
       const activities: ActivityData[] = [
         { date: formatLocalDate(fiveDaysAgo), count: 5, level: 2 },
@@ -162,12 +154,10 @@ describe('GitHub API Module', () => {
     });
 
     it('should handle all days having contributions', () => {
-      const today = new Date();
       const activities: ActivityData[] = [];
 
       for (let i = 0; i < 10; i++) {
-        const date = new Date(today);
-        date.setDate(today.getDate() - i);
+        const date = getDaysAgo(i);
         activities.push({
           date: formatLocalDate(date),
           count: i + 1,
@@ -179,7 +169,7 @@ describe('GitHub API Module', () => {
     });
 
     it('should handle single day with contribution', () => {
-      const today = new Date();
+      const today = dayjs();
       const activities: ActivityData[] = [{ date: formatLocalDate(today), count: 5, level: 2 }];
 
       expect(calculateCurrentStreak(activities)).toBe(1);
