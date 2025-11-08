@@ -33,12 +33,11 @@ export function getLocaleFromUrl(url: URL): Locale {
  */
 export function t(locale: Locale, key: TranslationKey, vars?: Record<string, string>): string {
   const keys = key.split('.');
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let value: any = translations[locale];
+  let value: unknown = translations[locale];
 
   for (const k of keys) {
     if (value && typeof value === 'object' && k in value) {
-      value = value[k];
+      value = (value as Record<string, unknown>)[k];
     } else {
       console.warn(`Translation key not found: ${key} for locale ${locale}`);
       return key;

@@ -7,11 +7,14 @@ interface StarRatingProps {
   className?: string;
 }
 
+// Rating scale constants
+const RATING_MIN = 1;
+const RATING_MAX = 5;
+const RATINGS = [1, 2, 3, 4, 5] as const;
+
 export default function StarRating({ value, onChange, className = '' }: StarRatingProps) {
   const [hoverValue, setHoverValue] = useState<number | null>(null);
   const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
-
-  const ratings = [1, 2, 3, 4, 5];
 
   const handleKeyDown = (e: KeyboardEvent<HTMLButtonElement>, currentRating: number) => {
     let newRating = currentRating;
@@ -20,20 +23,20 @@ export default function StarRating({ value, onChange, className = '' }: StarRati
       case 'ArrowRight':
       case 'ArrowUp':
         e.preventDefault();
-        newRating = Math.min(5, currentRating + 1);
+        newRating = Math.min(RATING_MAX, currentRating + 1);
         break;
       case 'ArrowLeft':
       case 'ArrowDown':
         e.preventDefault();
-        newRating = Math.max(1, currentRating - 1);
+        newRating = Math.max(RATING_MIN, currentRating - 1);
         break;
       case 'Home':
         e.preventDefault();
-        newRating = 1;
+        newRating = RATING_MIN;
         break;
       case 'End':
         e.preventDefault();
-        newRating = 5;
+        newRating = RATING_MAX;
         break;
       default:
         return;
@@ -46,7 +49,7 @@ export default function StarRating({ value, onChange, className = '' }: StarRati
 
   return (
     <div className={`star-rating ${className}`} role="radiogroup" aria-label="Quality rating">
-      {ratings.map((rating) => {
+      {RATINGS.map((rating) => {
         const isFilled = hoverValue !== null ? rating <= hoverValue : rating <= value;
         const isSelected = rating === value;
 
@@ -73,7 +76,7 @@ export default function StarRating({ value, onChange, className = '' }: StarRati
         );
       })}
       <small style={{ alignSelf: 'center', marginLeft: '0.5rem' }} aria-live="polite">
-        {value > 0 ? `${value} / 5` : 'Not rated'}
+        {value > 0 ? `${value} / ${RATING_MAX}` : 'Not rated'}
       </small>
     </div>
   );

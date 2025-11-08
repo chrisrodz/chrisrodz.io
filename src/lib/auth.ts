@@ -51,7 +51,7 @@ export function createSession(): string {
   return sessionId;
 }
 
-export function validateSession(sessionId: string | undefined): boolean {
+export function validateSession(sessionId: string | undefined): sessionId is string {
   if (!sessionId) return false;
 
   const session = sessions.get(sessionId);
@@ -147,7 +147,6 @@ export function checkAuth(cookies: AstroCookies): boolean {
     return false;
   }
 
-  if (!sessionId) return false;
   const session = sessions.get(sessionId);
   return session?.authenticated === true;
 }
