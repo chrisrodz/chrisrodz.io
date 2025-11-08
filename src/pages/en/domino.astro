@@ -42,7 +42,7 @@ const gameInfoTranslations = {
     </hgroup>
 
     <section class="domino-game-section">
-      <DominoTerminal client:load locale={locale} translations={dominoTranslations} />
+      <DominoTerminal client:only="react" locale={locale} translations={dominoTranslations} />
     </section>
 
     <GameInfo locale={locale} translations={gameInfoTranslations} />

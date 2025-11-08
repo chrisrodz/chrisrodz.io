@@ -3,11 +3,12 @@
  */
 
 import { useEffect, useRef, useState } from 'react';
-import { Terminal } from '@xterm/xterm';
-import { FitAddon } from '@xterm/addon-fit';
-import '@xterm/xterm/css/xterm.css';
 import { isWebAssemblySupported } from '@/lib/domino/pyodide-loader';
 import { GameRunner } from '@/lib/domino/game-runner';
+
+// Type-only imports (safe for SSR)
+import type { Terminal } from '@xterm/xterm';
+import type { FitAddon } from '@xterm/addon-fit';
 
 interface DominoTerminalProps {
   locale: 'en' | 'es';
@@ -37,69 +38,108 @@ export function DominoTerminal({ locale, translations }: DominoTerminalProps) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Check WebAssembly support
-    if (!isWebAssemblySupported()) {
-      setStatus('error');
-      setError(translations.browserNotSupported);
-      return;
+    let mounted = true;
+
+    // Initialize terminal with dynamic imports
+    async function initTerminal() {
+      // Check WebAssembly support
+      if (!isWebAssemblySupported()) {
+        setStatus('error');
+        setError(translations.browserNotSupported);
+        return;
+      }
+
+      // Don't initialize if already initialized or ref not ready
+      if (!terminalRef.current || terminal.current) {
+        return;
+      }
+
+      try {
+        // Dynamically import xterm.js modules (client-side only)
+        const [{ Terminal }, { FitAddon }] = await Promise.all([
+          import('@xterm/xterm'),
+          import('@xterm/addon-fit'),
+          import('@xterm/xterm/css/xterm.css'), // Import CSS
+        ]);
+
+        if (!mounted) return; // Component unmounted during import
+
+        // Create terminal instance
+        const term = new Terminal({
+          cursorBlink: true,
+          fontSize: 14,
+          fontFamily: 'Menlo, Monaco, "Courier New", monospace',
+          theme: {
+            background:
+              getComputedStyle(document.documentElement)
+                .getPropertyValue('--pico-background-color')
+                .trim() || '#000000',
+            foreground:
+              getComputedStyle(document.documentElement)
+                .getPropertyValue('--pico-color')
+                .trim() || '#ffffff',
+            cursor:
+              getComputedStyle(document.documentElement)
+                .getPropertyValue('--pico-primary')
+                .trim() || '#00ff00',
+          },
+          rows: 30,
+          cols: 100,
+        });
+
+        // Add fit addon
+        const fit = new FitAddon();
+        term.loadAddon(fit);
+
+        // Open terminal
+        if (terminalRef.current) {
+          term.open(terminalRef.current);
+          fit.fit();
+        }
+
+        terminal.current = term;
+        fitAddon.current = fit;
+
+        // Handle window resize
+        const handleResize = () => {
+          fit.fit();
+        };
+        window.addEventListener('resize', handleResize);
+
+        // Welcome message
+        term.writeln('\x1b[1;32m╔═══════════════════════════════════════════╗\x1b[0m');
+        term.writeln('\x1b[1;32m║     Caribbean Dominoes - Browser CLI     ║\x1b[0m');
+        term.writeln('\x1b[1;32m╚═══════════════════════════════════════════╝\x1b[0m');
+        term.writeln('');
+
+        // Start game
+        await startGame(term);
+
+        // Cleanup function for resize listener
+        return () => {
+          window.removeEventListener('resize', handleResize);
+        };
+      } catch (err) {
+        console.error('Failed to initialize terminal:', err);
+        if (mounted) {
+          setStatus('error');
+          setError(
+            err instanceof Error
+              ? err.message
+              : 'Failed to load terminal. Please refresh the page.',
+          );
+        }
+      }
     }
 
-    // Initialize terminal
-    if (!terminalRef.current || terminal.current) {
-      return;
-    }
-
-    // Create terminal instance
-    const term = new Terminal({
-      cursorBlink: true,
-      fontSize: 14,
-      fontFamily: 'Menlo, Monaco, "Courier New", monospace',
-      theme: {
-        background: getComputedStyle(document.documentElement)
-          .getPropertyValue('--pico-background-color')
-          .trim() || '#000000',
-        foreground: getComputedStyle(document.documentElement)
-          .getPropertyValue('--pico-color')
-          .trim() || '#ffffff',
-        cursor: getComputedStyle(document.documentElement)
-          .getPropertyValue('--pico-primary')
-          .trim() || '#00ff00',
-      },
-      rows: 30,
-      cols: 100,
-    });
-
-    // Add fit addon
-    const fit = new FitAddon();
-    term.loadAddon(fit);
-
-    // Open terminal
-    term.open(terminalRef.current);
-    fit.fit();
-
-    terminal.current = term;
-    fitAddon.current = fit;
-
-    // Handle window resize
-    const handleResize = () => {
-      fit.fit();
-    };
-    window.addEventListener('resize', handleResize);
-
-    // Welcome message
-    term.writeln('\x1b[1;32m╔═══════════════════════════════════════════╗\x1b[0m');
-    term.writeln('\x1b[1;32m║     Caribbean Dominoes - Browser CLI     ║\x1b[0m');
-    term.writeln('\x1b[1;32m╚═══════════════════════════════════════════╝\x1b[0m');
-    term.writeln('');
-
-    // Start game
-    startGame(term);
+    const cleanupPromise = initTerminal();
 
     // Cleanup
     return () => {
-      window.removeEventListener('resize', handleResize);
+      mounted = false;
+      cleanupPromise.then((cleanup) => cleanup?.());
       gameRunner.current?.stop();
-      term.dispose();
+      terminal.current?.dispose();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
