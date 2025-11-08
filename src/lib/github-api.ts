@@ -3,7 +3,7 @@
  */
 
 import { formatDateISO } from './date-utils';
-import dayjs from './dayjs-config';
+import dayjs, { DEFAULT_TIMEZONE } from './dayjs-config';
 
 /**
  * Contribution day data from GitHub API
@@ -193,7 +193,7 @@ export function calculateCurrentStreak(activities: ActivityData[]): number {
   const sorted = [...activities].sort((a, b) => b.date.localeCompare(a.date));
 
   let streak = 0;
-  const today = dayjs();
+  const today = dayjs().tz(DEFAULT_TIMEZONE);
   const todayStr = formatDateISO(today);
 
   // Determine starting point: skip today if it has 0 contributions
