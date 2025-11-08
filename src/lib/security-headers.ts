@@ -40,6 +40,7 @@ function buildContentSecurityPolicy(options: SecurityHeaderOptions): string {
     'script-src': new Set([
       "'self'",
       "'unsafe-inline'",
+      "'unsafe-eval'", // Required for WebAssembly (Pyodide uses WASM for Python runtime)
       'https://cdn.jsdelivr.net', // Required for Pyodide (Python runtime in browser)
       ...VERCEL_SCRIPT_SOURCES,
     ]),
