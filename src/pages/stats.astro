@@ -17,7 +17,9 @@ const isConfigured = config.github.isConfigured();
     <hgroup>
       <h1>{t('stats.heading')}</h1>
     </hgroup>
-
+    <article>
+      <CoffeeIntake locale={locale} />
+    </article>
     {
       !isConfigured ? (
         <article>
@@ -32,9 +34,5 @@ const isConfigured = config.github.isConfigured();
         </article>
       )
     }
-
-    <article>
-      <CoffeeIntake locale={locale} />
-    </article>
   </main>
 </Layout>
