@@ -147,15 +147,27 @@
     "metaDescription": "Github, Entrenamiento, y estadísticas del Diario de Café",
     "heading": "Mis Estadísticas Personales",
     "githubTitle": "Stats de GitHub",
+    "coffeeTitle": "Consumo de Café",
+    "coffeeDescription": "Tazas registradas diariamente en mi diario de café",
     "totalContributions": "contribuciones totales en {year}",
+    "coffeeTooltip": "{count} cafés en los últimos {days} días",
     "errors": {
       "notConfigured": "Las estadísticas de GitHub aún no están disponibles. Por favor configura tu token de GitHub y nombre de usuario.",
       "failed": "Error al cargar estadísticas de GitHub"
+    },
+    "coffeeErrors": {
+      "notConfigured": "Las estadísticas de café aún no están disponibles.",
+      "failed": "Error al cargar las estadísticas de café"
     },
     "metrics": {
       "currentStreak": "Racha Actual",
       "longestStreak": "Racha Más Larga",
       "days": "días"
+    },
+    "coffeeMetrics": {
+      "totalCoffees": "Cafés totales",
+      "currentStreak": "Racha de café",
+      "longestStreak": "Racha más larga"
     },
     "months": {
       "jan": "Ene",
@@ -189,7 +201,11 @@
       "githubDescription": "Actividad de contribuciones y estadísticas de racha de código",
       "calendarRegion": "Visualización de calendario de contribuciones",
       "calendarChart": "Calendario de contribuciones de GitHub mostrando {count} contribuciones en {year} con una racha actual de {currentStreak} días",
-      "metricsHeading": "Métricas de Racha"
+      "metricsHeading": "Métricas de Racha",
+      "coffeeDescription": "Visualización del consumo de café y estadísticas de racha",
+      "coffeeCalendarRegion": "Visualización del calendario de consumo de café",
+      "coffeeCalendarChart": "Calendario de consumo de café mostrando {count} cafés en los últimos {days} días con una racha actual de {currentStreak} días",
+      "coffeeMetricsHeading": "Métricas de café"
     }
   },
   "errors": {

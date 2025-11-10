@@ -1,0 +1,207 @@
+---
+import { useTranslations, type Locale } from '@/lib/i18n';
+import { supabase } from '@/lib/supabase';
+import dayjs, { DEFAULT_TIMEZONE } from '@/lib/dayjs-config';
+import StatsCard from './StatsCard';
+import CoffeeIntakeCalendar from './CoffeeIntakeCalendar';
+import {
+  buildCoffeeActivity,
+  getCoffeeActivityMetrics,
+  COFFEE_ACTIVITY_DAYS,
+  type CoffeeActivityMetrics,
+} from '@/lib/coffee-activity';
+import type { CoffeeLogRow } from '@/lib/schemas/cafe';
+import type { ActivityData } from '@/lib/github-api';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const { t, formatNumber } = useTranslations(locale);
+
+let activities: ActivityData[] = [];
+let metrics: CoffeeActivityMetrics | null = null;
+let error: string | null = null;
+
+const months = [
+  t('stats.months.jan'),
+  t('stats.months.feb'),
+  t('stats.months.mar'),
+  t('stats.months.apr'),
+  t('stats.months.may'),
+  t('stats.months.jun'),
+  t('stats.months.jul'),
+  t('stats.months.aug'),
+  t('stats.months.sep'),
+  t('stats.months.oct'),
+  t('stats.months.nov'),
+  t('stats.months.dec'),
+];
+
+const weekdays = [
+  t('stats.weekdays.sun'),
+  t('stats.weekdays.mon'),
+  t('stats.weekdays.tue'),
+  t('stats.weekdays.wed'),
+  t('stats.weekdays.thu'),
+  t('stats.weekdays.fri'),
+  t('stats.weekdays.sat'),
+];
+
+if (!supabase) {
+  error = t('stats.coffeeErrors.notConfigured');
+} else {
+  try {
+    const today = dayjs().tz(DEFAULT_TIMEZONE).endOf('day');
+    const startRange = today
+      .subtract(COFFEE_ACTIVITY_DAYS - 1, 'day')
+      .startOf('day')
+      .toISOString();
+    const endRange = today.toISOString();
+
+    const { data, error: fetchError } = await supabase
+      .from('coffee_logs')
+      .select('brew_time')
+      .gte('brew_time', startRange)
+      .lte('brew_time', endRange)
+      .order('brew_time', { ascending: true });
+
+    if (fetchError) throw fetchError;
+
+    activities = buildCoffeeActivity(
+      (data || []) as Array<Pick<CoffeeLogRow, 'brew_time'>>,
+      COFFEE_ACTIVITY_DAYS
+    );
+    metrics = getCoffeeActivityMetrics(activities);
+  } catch (err) {
+    console.error('Failed to load coffee intake activity:', err);
+    error = t('stats.coffeeErrors.failed');
+  }
+}
+
+const totalCountLabel = metrics
+  ? t('stats.coffeeTooltip', {
+      count: formatNumber(metrics.totalCoffees),
+      days: COFFEE_ACTIVITY_DAYS.toString(),
+    })
+  : t('stats.coffeeTooltip', { count: '0', days: COFFEE_ACTIVITY_DAYS.toString() });
+
+const calendarAriaLabel = metrics
+  ? t('stats.aria.coffeeCalendarChart', {
+      count: formatNumber(metrics.totalCoffees),
+      days: COFFEE_ACTIVITY_DAYS.toString(),
+      currentStreak: metrics.currentStreak.toString(),
+    })
+  : t('stats.aria.coffeeCalendarChart', {
+      count: '0',
+      days: COFFEE_ACTIVITY_DAYS.toString(),
+      currentStreak: '0',
+    });
+---
+
+<section aria-labelledby="coffee-stats-heading" class="coffee-intake">
+  <hgroup class="contributions-summary">
+    <h2 id="coffee-stats-heading">{t('stats.coffeeTitle')}</h2>
+    <p>{t('stats.coffeeDescription')}</p>
+  </hgroup>
+
+  {
+    error ? (
+      <div role="alert" class="error-container">
+        <p>
+          <strong>{t('common.error')}:</strong> {error}
+        </p>
+      </div>
+    ) : metrics ? (
+      <>
+        <div
+          class="calendar-container"
+          role="region"
+          aria-label={t('stats.aria.coffeeCalendarRegion')}
+        >
+          <CoffeeIntakeCalendar
+            client:only="react"
+            data={activities}
+            months={months}
+            weekdays={weekdays}
+            tooltipTemplate={totalCountLabel}
+            legendLess={t('stats.legend.less')}
+            legendMore={t('stats.legend.more')}
+            ariaLabel={calendarAriaLabel}
+          />
+        </div>
+
+        <div class="metrics-grid grid" aria-labelledby="coffee-metrics-heading">
+          <h3 id="coffee-metrics-heading" class="visually-hidden">
+            {t('stats.aria.coffeeMetricsHeading')}
+          </h3>
+          <StatsCard
+            client:only="react"
+            label={t('stats.coffeeMetrics.totalCoffees')}
+            value={formatNumber(metrics.totalCoffees)}
+          />
+          <StatsCard
+            client:only="react"
+            label={t('stats.coffeeMetrics.currentStreak')}
+            value={`${metrics.currentStreak} ${t('stats.metrics.days')}`}
+          />
+          <StatsCard
+            client:only="react"
+            label={t('stats.coffeeMetrics.longestStreak')}
+            value={`${metrics.longestStreak} ${t('stats.metrics.days')}`}
+          />
+        </div>
+      </>
+    ) : (
+      <div class="loading-container" aria-live="polite" aria-busy="true">
+        <p>{t('common.loading')}</p>
+      </div>
+    )
+  }
+</section>
+
+<style>
+  .coffee-intake {
+    width: 100%;
+  }
+
+  .error-container,
+  .loading-container {
+    text-align: center;
+    padding: 2rem 0;
+  }
+
+  .contributions-summary {
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .calendar-container {
+    display: flex;
+    justify-content: center;
+    overflow-x: auto;
+    padding: 0 1rem;
+  }
+
+  .metrics-grid {
+    margin-bottom: 2rem;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+  }
+
+  @media (max-width: 768px) {
+    .calendar-container {
+      justify-content: flex-start;
+    }
+  }
+</style>

@@ -147,15 +147,27 @@
     "metaDescription": "GitHub, Training, and Coffee Diary statistics",
     "heading": "My Personal Stats",
     "githubTitle": "GitHub Stats",
+    "coffeeTitle": "Coffee Intake",
+    "coffeeDescription": "Daily cups logged in my coffee tracker",
     "totalContributions": "total contributions in {year}",
+    "coffeeTooltip": "{count} coffees logged in the last {days} days",
     "errors": {
       "notConfigured": "GitHub stats are not available yet. Please configure your GitHub token and username.",
       "failed": "Failed to load GitHub stats"
+    },
+    "coffeeErrors": {
+      "notConfigured": "Coffee stats are not available yet",
+      "failed": "Failed to load coffee stats"
     },
     "metrics": {
       "currentStreak": "Current Streak",
       "longestStreak": "Longest Streak",
       "days": "days"
+    },
+    "coffeeMetrics": {
+      "totalCoffees": "Total coffees (last year)",
+      "currentStreak": "Coffee streak",
+      "longestStreak": "Longest streak"
     },
     "months": {
       "jan": "Jan",
@@ -189,7 +201,11 @@
       "githubDescription": "Contribution activity and coding streak statistics",
       "calendarRegion": "Contribution calendar visualization",
       "calendarChart": "GitHub contribution calendar showing {count} contributions in {year} with a current streak of {currentStreak} days",
-      "metricsHeading": "Streak Metrics"
+      "metricsHeading": "Streak Metrics",
+      "coffeeDescription": "Coffee intake calendar and brewing streak statistics",
+      "coffeeCalendarRegion": "Coffee intake calendar visualization",
+      "coffeeCalendarChart": "Coffee intake calendar showing {count} coffees in the last {days} days with a current streak of {currentStreak} days",
+      "coffeeMetricsHeading": "Coffee intake metrics"
     }
   },
   "errors": {
