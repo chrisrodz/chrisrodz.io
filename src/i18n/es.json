@@ -118,6 +118,11 @@
       "ratio": "Proporción",
       "grind": "Molienda",
       "rating": "Calificación"
+    },
+    "grind": {
+      "fine": "Molienda fina",
+      "medium": "Molienda media",
+      "coarse": "Molienda gruesa"
     }
   },
   "training": {

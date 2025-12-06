@@ -118,6 +118,11 @@
       "ratio": "Ratio",
       "grind": "Grind",
       "rating": "Rating"
+    },
+    "grind": {
+      "fine": "Fine grind",
+      "medium": "Medium grind",
+      "coarse": "Coarse grind"
     }
   },
   "training": {

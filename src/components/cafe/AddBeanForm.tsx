@@ -4,9 +4,10 @@ import type { CoffeeBeanRow } from '@/lib/schemas/cafe';
 
 interface AddBeanFormProps {
   onBeanAdded?: (beanId: string) => void;
+  onCancel?: () => void;
 }
 
-export default function AddBeanForm({ onBeanAdded }: AddBeanFormProps) {
+export default function AddBeanForm({ onBeanAdded, onCancel }: AddBeanFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -130,17 +131,24 @@ export default function AddBeanForm({ onBeanAdded }: AddBeanFormProps) {
         />
       </label>
 
-      {/* Submit Button */}
-      <button
-        type="button"
-        onClick={handleSubmit}
-        disabled={isSubmitting || !beanName.trim()}
-        className="full-width"
-        data-variant="success"
-        aria-busy={isSubmitting}
-      >
-        {isSubmitting ? 'Adding Bean...' : 'Add Bean'}
-      </button>
+      {/* Action Buttons */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
+        {onCancel && (
+          <button type="button" onClick={onCancel} disabled={isSubmitting} className="secondary">
+            Cancel
+          </button>
+        )}
+        <button
+          type="button"
+          onClick={handleSubmit}
+          disabled={isSubmitting || !beanName.trim()}
+          data-variant="success"
+          aria-busy={isSubmitting}
+          style={!onCancel ? { gridColumn: '1 / -1' } : undefined}
+        >
+          {isSubmitting ? 'Adding Bean...' : 'Add Bean'}
+        </button>
+      </div>
     </article>
   );
 }

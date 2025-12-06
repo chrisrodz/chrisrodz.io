@@ -70,7 +70,9 @@ describe('CoffeeLogForm Component', () => {
 
   describe('Form Validation', () => {
     it('should disable submit button when rating is 0', () => {
-      render(<CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} />);
+      render(
+        <CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} locale="es" />
+      );
 
       const submitButton = screen.getByRole('button', { name: 'Registrar Café' });
       expect(submitButton).toBeDisabled();
@@ -78,14 +80,18 @@ describe('CoffeeLogForm Component', () => {
 
     it('should disable submit button when no bean is selected', () => {
       const noDefaultsSelected = { ...mockSmartDefaults, bean_id: null };
-      render(<CoffeeLogForm activeBeans={mockBeans} smartDefaults={noDefaultsSelected} />);
+      render(
+        <CoffeeLogForm activeBeans={mockBeans} smartDefaults={noDefaultsSelected} locale="es" />
+      );
 
       const submitButton = screen.getByRole('button', { name: 'Registrar Café' });
       expect(submitButton).toBeDisabled();
     });
 
     it('should enable submit button when rating is set and bean is selected', async () => {
-      render(<CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} />);
+      render(
+        <CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} locale="es" />
+      );
 
       // Set rating
       const fourthStar = screen.getByLabelText('Rate 4 out of 5');
@@ -98,7 +104,9 @@ describe('CoffeeLogForm Component', () => {
     });
 
     it('should show validation message when rating is 0', () => {
-      render(<CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} />);
+      render(
+        <CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} locale="es" />
+      );
 
       expect(screen.getByText('Por favor selecciona una calificación')).toBeInTheDocument();
     });
@@ -106,7 +114,9 @@ describe('CoffeeLogForm Component', () => {
 
   describe('Form Interaction', () => {
     it('should change brew method when button is clicked', () => {
-      render(<CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} />);
+      render(
+        <CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} locale="es" />
+      );
 
       const aeroPressButton = screen.getByRole('radio', { name: 'AeroPress' });
       fireEvent.click(aeroPressButton);
@@ -119,7 +129,9 @@ describe('CoffeeLogForm Component', () => {
     });
 
     it('should decrement dose when - button is clicked', () => {
-      render(<CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} />);
+      render(
+        <CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} locale="es" />
+      );
 
       const decreaseButton = screen.getByLabelText('Decrease dose');
       fireEvent.click(decreaseButton);
@@ -131,7 +143,9 @@ describe('CoffeeLogForm Component', () => {
 
   describe('Add Bean Form Integration', () => {
     it('should show AddBeanForm when "Add New Bean" is selected', async () => {
-      render(<CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} />);
+      render(
+        <CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} locale="es" />
+      );
 
       const beanSelect = screen.getByLabelText('Grano de Café *');
       await userEvent.selectOptions(beanSelect, '__new_bean__');
@@ -143,7 +157,7 @@ describe('CoffeeLogForm Component', () => {
 
     it('should auto-select newly added bean from store', async () => {
       const { rerender } = render(
-        <CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} />
+        <CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} locale="es" />
       );
 
       const newBean: CoffeeBeanRow = {
@@ -164,7 +178,9 @@ describe('CoffeeLogForm Component', () => {
       });
 
       // Force a rerender to trigger the useEffect
-      rerender(<CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} />);
+      rerender(
+        <CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} locale="es" />
+      );
 
       await waitFor(() => {
         const beanSelect = screen.getByLabelText('Grano de Café *') as HTMLSelectElement;
@@ -181,14 +197,18 @@ describe('CoffeeLogForm Component', () => {
         text: async () => '<div>Success</div>',
       });
 
-      render(<CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} />);
+      render(
+        <CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} locale="es" />
+      );
 
       // Set rating
       const fourthStar = screen.getByLabelText('Rate 4 out of 5');
       fireEvent.click(fourthStar);
 
       // Add notes
-      const notesTextarea = screen.getByLabelText('Notas (opcional)');
+      const notesTextarea = screen.getByPlaceholderText(
+        'Agrega cualquier nota sobre esta preparación...'
+      );
       await userEvent.type(notesTextarea, 'Excellent coffee!');
 
       // Submit form
@@ -226,7 +246,9 @@ describe('CoffeeLogForm Component', () => {
         text: async () => '<div>Success</div>',
       });
 
-      render(<CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} />);
+      render(
+        <CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} locale="es" />
+      );
 
       // Set rating
       const fourthStar = screen.getByLabelText('Rate 4 out of 5');
@@ -248,7 +270,9 @@ describe('CoffeeLogForm Component', () => {
         text: async () => '<div class="error-message">Database error</div>',
       });
 
-      render(<CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} />);
+      render(
+        <CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} locale="es" />
+      );
 
       // Set rating
       const fourthStar = screen.getByLabelText('Rate 4 out of 5');
@@ -275,7 +299,9 @@ describe('CoffeeLogForm Component', () => {
         text: async () => '<html></html>',
       });
 
-      render(<CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} />);
+      render(
+        <CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} locale="es" />
+      );
 
       // Set rating
       const fourthStar = screen.getByLabelText('Rate 4 out of 5');
@@ -306,7 +332,9 @@ describe('CoffeeLogForm Component', () => {
           )
       );
 
-      render(<CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} />);
+      render(
+        <CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} locale="es" />
+      );
 
       // Set rating
       const fourthStar = screen.getByLabelText('Rate 4 out of 5');
@@ -330,13 +358,17 @@ describe('CoffeeLogForm Component', () => {
         text: async () => '<div>Success</div>',
       });
 
-      render(<CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} />);
+      render(
+        <CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} locale="es" />
+      );
 
       // Set rating and notes
       const fourthStar = screen.getByLabelText('Rate 4 out of 5');
       fireEvent.click(fourthStar);
 
-      const notesTextarea = screen.getByLabelText('Notas (opcional)');
+      const notesTextarea = screen.getByPlaceholderText(
+        'Agrega cualquier nota sobre esta preparación...'
+      );
       await userEvent.type(notesTextarea, 'Test notes');
 
       // Submit form
@@ -353,7 +385,9 @@ describe('CoffeeLogForm Component', () => {
 
       // Form should be reset
       await waitFor(() => {
-        const notesAfter = screen.getByLabelText('Notas (opcional)') as HTMLTextAreaElement;
+        const notesAfter = screen.getByPlaceholderText(
+          'Agrega cualquier nota sobre esta preparación...'
+        ) as HTMLTextAreaElement;
         expect(notesAfter.value).toBe('');
       });
 
@@ -378,7 +412,9 @@ describe('CoffeeLogForm Component', () => {
 
       sessionStorage.setItem('cafe_draft', JSON.stringify(draftData));
 
-      render(<CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} />);
+      render(
+        <CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} locale="es" />
+      );
 
       expect(
         screen.getByText('Se encontró un borrador guardado. ¿Quieres restaurarlo?')
@@ -401,7 +437,9 @@ describe('CoffeeLogForm Component', () => {
 
       sessionStorage.setItem('cafe_draft', JSON.stringify(draftData));
 
-      render(<CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} />);
+      render(
+        <CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} locale="es" />
+      );
 
       expect(
         screen.queryByText('Se encontró un borrador guardado. ¿Quieres restaurarlo?')
@@ -422,7 +460,9 @@ describe('CoffeeLogForm Component', () => {
 
       sessionStorage.setItem('cafe_draft', JSON.stringify(draftData));
 
-      render(<CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} />);
+      render(
+        <CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} locale="es" />
+      );
 
       const restoreButton = screen.getByRole('button', { name: 'Restaurar' });
       fireEvent.click(restoreButton);
@@ -437,7 +477,9 @@ describe('CoffeeLogForm Component', () => {
       const doseInput = screen.getByRole('spinbutton', { name: /dosis/i }) as HTMLInputElement;
       expect(doseInput).toHaveValue(20);
 
-      const notesTextarea = screen.getByLabelText('Notas (opcional)') as HTMLTextAreaElement;
+      const notesTextarea = screen.getByPlaceholderText(
+        'Agrega cualquier nota sobre esta preparación...'
+      ) as HTMLTextAreaElement;
       expect(notesTextarea.value).toBe('Restored notes');
     });
 
@@ -455,7 +497,9 @@ describe('CoffeeLogForm Component', () => {
 
       sessionStorage.setItem('cafe_draft', JSON.stringify(draftData));
 
-      render(<CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} />);
+      render(
+        <CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} locale="es" />
+      );
 
       const dismissButton = screen.getByRole('button', { name: 'Descartar' });
       fireEvent.click(dismissButton);
@@ -489,7 +533,9 @@ describe('CoffeeLogForm Component', () => {
       sessionStorage.setItem('cafe_draft', JSON.stringify(draftData));
       expect(sessionStorage.getItem('cafe_draft')).not.toBeNull();
 
-      render(<CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} />);
+      render(
+        <CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} locale="es" />
+      );
 
       // Set rating to enable submit
       const fourthStar = screen.getByLabelText('Rate 4 out of 5');
@@ -506,6 +552,186 @@ describe('CoffeeLogForm Component', () => {
 
       // Draft should be cleared
       expect(sessionStorage.getItem('cafe_draft')).toBeNull();
+    });
+  });
+
+  describe('Bug Fixes - Input Validation', () => {
+    it('should enforce minimum value on dose input blur', async () => {
+      render(
+        <CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} locale="es" />
+      );
+
+      const doseInput = screen.getByRole('spinbutton', { name: /dosis/i }) as HTMLInputElement;
+
+      // Try to set invalid value
+      fireEvent.change(doseInput, { target: { value: '0' } });
+      expect(doseInput.value).toBe('0');
+
+      // Blur should enforce minimum
+      fireEvent.blur(doseInput);
+
+      await waitFor(() => {
+        expect(doseInput.value).toBe('1');
+      });
+    });
+
+    it('should not allow yield decrement below minimum', () => {
+      render(
+        <CoffeeLogForm
+          activeBeans={mockBeans}
+          smartDefaults={{ ...mockSmartDefaults, yield_grams: 2 }}
+          locale="es"
+        />
+      );
+
+      const decreaseButton = screen.getByLabelText('Decrease yield');
+      const yieldInput = screen.getByPlaceholderText(/peso de salida/i) as HTMLInputElement;
+
+      // Decrement once (from 2 to 1)
+      fireEvent.click(decreaseButton);
+      expect(yieldInput.value).toBe('1');
+
+      // Try to decrement again (should stay at 1)
+      fireEvent.click(decreaseButton);
+      expect(yieldInput.value).toBe('1');
+    });
+
+    it('should enforce minimum value on grind input blur', async () => {
+      render(
+        <CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} locale="es" />
+      );
+
+      const grindInput = screen.getByRole('spinbutton', { name: /molienda/i }) as HTMLInputElement;
+
+      // Try to set invalid value
+      fireEvent.change(grindInput, { target: { value: '0' } });
+      expect(grindInput.value).toBe('0');
+
+      // Blur should enforce minimum
+      fireEvent.blur(grindInput);
+
+      await waitFor(() => {
+        expect(grindInput.value).toBe('1');
+      });
+    });
+  });
+
+  describe('Bug Fixes - SessionStorage Safety', () => {
+    it('should handle sessionStorage unavailable gracefully', () => {
+      // Mock sessionStorage to throw
+      const originalSetItem = Storage.prototype.setItem;
+      Storage.prototype.setItem = vi.fn(() => {
+        throw new Error('QuotaExceededError');
+      });
+
+      // Should not crash
+      expect(() => {
+        render(
+          <CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} locale="es" />
+        );
+      }).not.toThrow();
+
+      // Restore
+      Storage.prototype.setItem = originalSetItem;
+    });
+  });
+
+  describe('Bug Fixes - Network Error Handling', () => {
+    it('should show timeout error message', async () => {
+      // Mock fetch to timeout
+      mockFetch.mockImplementation(() => {
+        return new Promise((_, reject) => {
+          setTimeout(() => {
+            const error = new Error('Timeout');
+            error.name = 'AbortError';
+            reject(error);
+          }, 100);
+        });
+      });
+
+      render(
+        <CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} locale="es" />
+      );
+
+      // Set rating and submit
+      const fourthStar = screen.getByLabelText('Rate 4 out of 5');
+      fireEvent.click(fourthStar);
+
+      const submitButton = screen.getByRole('button', { name: 'Registrar Café' });
+      fireEvent.click(submitButton);
+
+      await waitFor(() => {
+        expect(screen.getByText(/tardó demasiado/i)).toBeInTheDocument();
+      });
+    });
+  });
+
+  describe('Bug Fixes - Draft Validation', () => {
+    it('should validate bean exists when restoring draft', () => {
+      const draftData = {
+        brewMethod: 'AeroPress',
+        beanId: 'non-existent-bean',
+        doseGrams: 20,
+        yieldGrams: 250,
+        grindSetting: 25,
+        rating: 5,
+        notes: 'Draft with invalid bean',
+        timestamp: Date.now(),
+      };
+
+      sessionStorage.setItem('cafe_draft', JSON.stringify(draftData));
+
+      render(
+        <CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} locale="es" />
+      );
+
+      const restoreButton = screen.getByRole('button', { name: 'Restaurar' });
+      fireEvent.click(restoreButton);
+
+      // Bean should be cleared because it doesn't exist
+      const beanSelect = screen.getByLabelText('Grano de Café *') as HTMLSelectElement;
+      expect(beanSelect.value).toBe('');
+    });
+  });
+
+  describe('Bug Fixes - Accessibility', () => {
+    it('should have ARIA live region on success message', async () => {
+      mockFetch.mockResolvedValueOnce({
+        ok: true,
+        redirected: false,
+        text: async () => '<div>Success</div>',
+      });
+
+      render(
+        <CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} locale="es" />
+      );
+
+      const fourthStar = screen.getByLabelText('Rate 4 out of 5');
+      fireEvent.click(fourthStar);
+
+      const submitButton = screen.getByRole('button', { name: 'Registrar Café' });
+      fireEvent.click(submitButton);
+
+      await waitFor(() => {
+        const successMessage = screen.getByText('¡Café registrado exitosamente!');
+        const container = successMessage.closest('[role="alert"]');
+        expect(container).toHaveAttribute('aria-live', 'polite');
+      });
+    });
+
+    it('should show character counter for notes', () => {
+      render(
+        <CoffeeLogForm activeBeans={mockBeans} smartDefaults={mockSmartDefaults} locale="es" />
+      );
+
+      expect(screen.getByText('0 / 500')).toBeInTheDocument();
+
+      const notesTextarea = screen.getByPlaceholderText(
+        'Agrega cualquier nota sobre esta preparación...'
+      );
+      fireEvent.change(notesTextarea, { target: { value: 'Test' } });
+
+      expect(screen.getByText('4 / 500')).toBeInTheDocument();
     });
   });
 });
