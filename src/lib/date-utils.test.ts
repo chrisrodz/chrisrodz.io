@@ -7,7 +7,6 @@ import {
   getStartOfToday,
   getDaysAgo,
   isSameDay,
-  isWithinRange,
   parseDate,
 } from './date-utils';
 
@@ -116,43 +115,6 @@ describe('date-utils', () => {
       const date1 = dayjs('2025-03-15T10:00:00Z').toDate();
       const date2 = dayjs('2025-03-15T18:00:00Z').toDate();
       expect(isSameDay(date1, date2)).toBe(true);
-    });
-  });
-
-  describe('isWithinRange', () => {
-    it('returns true for date within range', () => {
-      const date = '2025-03-15';
-      const start = '2025-03-10';
-      const end = '2025-03-20';
-      expect(isWithinRange(date, start, end)).toBe(true);
-    });
-
-    it('returns false for date before range', () => {
-      const date = '2025-03-05';
-      const start = '2025-03-10';
-      const end = '2025-03-20';
-      expect(isWithinRange(date, start, end)).toBe(false);
-    });
-
-    it('returns false for date after range', () => {
-      const date = '2025-03-25';
-      const start = '2025-03-10';
-      const end = '2025-03-20';
-      expect(isWithinRange(date, start, end)).toBe(false);
-    });
-
-    it('returns true for date at start boundary', () => {
-      const date = '2025-03-10';
-      const start = '2025-03-10';
-      const end = '2025-03-20';
-      expect(isWithinRange(date, start, end)).toBe(true);
-    });
-
-    it('returns true for date at end boundary', () => {
-      const date = '2025-03-20';
-      const start = '2025-03-10';
-      const end = '2025-03-20';
-      expect(isWithinRange(date, start, end)).toBe(true);
     });
   });
 

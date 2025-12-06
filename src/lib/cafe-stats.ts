@@ -1,5 +1,5 @@
-import type { CoffeeLogWithBean, CoffeeBeanRow } from './schemas/cafe';
-import { getDaysAgo, formatDate } from './date-utils';
+import type { CoffeeLogWithBean } from './schemas/cafe';
+import { getDaysAgo } from './date-utils';
 import dayjs from './dayjs-config';
 
 /**
@@ -18,23 +18,6 @@ export interface BrewMethodData {
   method: string;
   count: number;
   percentage: number;
-}
-
-/**
- * Quality rating data point over time
- */
-export interface QualityDataPoint {
-  date: string;
-  avgRating: number;
-  count: number;
-}
-
-/**
- * Bean usage statistics
- */
-export interface BeanUsage {
-  bean: CoffeeBeanRow;
-  count: number;
 }
 
 /**
@@ -84,66 +67,6 @@ export function getBrewMethodDistribution(logs: CoffeeLogWithBean[]): BrewMethod
       percentage: total > 0 ? Math.round((count / total) * 100) : 0,
     }))
     .sort((a, b) => b.count - a.count);
-}
-
-/**
- * Get quality ratings over time (last 30 days)
- */
-export function getQualityOverTime(logs: CoffeeLogWithBean[]): QualityDataPoint[] {
-  const thirtyDaysAgo = getDaysAgo(30);
-
-  // Filter to last 30 days
-  const recentLogs = logs.filter((log) => dayjs(log.brew_time).isSameOrAfter(thirtyDaysAgo));
-
-  // Group by date
-  const byDate = recentLogs.reduce(
-    (acc, log) => {
-      const date = formatDate(log.brew_time, 'en', {
-        month: 'short',
-        day: 'numeric',
-      });
-      if (!acc[date]) {
-        acc[date] = [];
-      }
-      acc[date].push(log.quality_rating);
-      return acc;
-    },
-    {} as Record<string, number[]>
-  );
-
-  // Calculate average rating per date
-  return Object.entries(byDate)
-    .map(([date, ratings]) => ({
-      date,
-      avgRating: ratings.reduce((sum, r) => sum + r, 0) / ratings.length,
-      count: ratings.length,
-    }))
-    .slice(-14); // Last 14 data points for readability
-}
-
-/**
- * Get most used beans
- */
-export function getMostUsedBeans(logs: CoffeeLogWithBean[]): BeanUsage[] {
-  // Count by bean
-  const beanCounts = logs.reduce(
-    (acc, log) => {
-      if (log.bean?.bean_name) {
-        const key = log.bean.bean_name;
-        if (!acc[key]) {
-          acc[key] = { bean: log.bean, count: 0 };
-        }
-        acc[key].count += 1;
-      }
-      return acc;
-    },
-    {} as Record<string, { bean: NonNullable<CoffeeLogWithBean['bean']>; count: number }>
-  );
-
-  // Convert to array and sort
-  return Object.values(beanCounts)
-    .sort((a, b) => b.count - a.count)
-    .slice(0, 5); // Top 5
 }
 
 /**

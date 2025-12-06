@@ -70,18 +70,6 @@ export function isSameDay(date1: Date | string, date2: Date | string): boolean {
 }
 
 /**
- * Check if date is within range
- */
-export function isWithinRange(
-  date: Date | string,
-  start: Date | string,
-  end: Date | string
-): boolean {
-  const d = dayjs(date);
-  return d.isSameOrAfter(dayjs(start)) && d.isSameOrBefore(dayjs(end));
-}
-
-/**
  * Parse YYYY-MM-DD string strictly
  */
 export function parseDate(dateString: string): Dayjs | null {
