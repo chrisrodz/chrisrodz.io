@@ -150,9 +150,9 @@ describe('CoffeeLogForm Component', () => {
       const beanSelect = screen.getByLabelText('Grano de Café *');
       await userEvent.selectOptions(beanSelect, '__new_bean__');
 
-      // AddBeanForm should be visible
-      expect(screen.getByText('Add New Bean')).toBeInTheDocument();
-      expect(screen.getByLabelText('Bean Name *')).toBeInTheDocument();
+      // AddBeanForm should be visible (Spanish labels)
+      expect(screen.getByText('Agregar Nuevo Grano')).toBeInTheDocument();
+      expect(screen.getByLabelText('Nombre del Grano *')).toBeInTheDocument();
     });
 
     it('should auto-select newly added bean from store', async () => {
@@ -379,8 +379,8 @@ describe('CoffeeLogForm Component', () => {
         expect(screen.getByText('¡Café registrado exitosamente!')).toBeInTheDocument();
       });
 
-      // Click "Log Another Coffee"
-      const logAnotherButton = screen.getByRole('button', { name: 'Log Another Coffee' });
+      // Click "Log Another Coffee" (Spanish: "Registrar Otro Café")
+      const logAnotherButton = screen.getByRole('button', { name: 'Registrar Otro Café' });
       fireEvent.click(logAnotherButton);
 
       // Form should be reset

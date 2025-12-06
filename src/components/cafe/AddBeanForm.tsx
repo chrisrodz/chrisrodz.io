@@ -1,13 +1,16 @@
 import { useState } from 'react';
 import { addBean } from '@/stores/beansStore';
 import type { CoffeeBeanRow } from '@/lib/schemas/cafe';
+import { useTranslations, type Locale } from '@/lib/i18n';
 
 interface AddBeanFormProps {
   onBeanAdded?: (beanId: string) => void;
   onCancel?: () => void;
+  locale: Locale;
 }
 
-export default function AddBeanForm({ onBeanAdded, onCancel }: AddBeanFormProps) {
+export default function AddBeanForm({ onBeanAdded, onCancel, locale }: AddBeanFormProps) {
+  const { t } = useTranslations(locale);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -64,7 +67,7 @@ export default function AddBeanForm({ onBeanAdded, onCancel }: AddBeanFormProps)
       }
     } catch (err) {
       console.error('[AddBeanForm] Error:', err);
-      setError(err instanceof Error ? err.message : 'Failed to add bean');
+      setError(err instanceof Error ? err.message : t('cafe.addBean.errorFailed'));
     } finally {
       setIsSubmitting(false);
     }
@@ -72,7 +75,7 @@ export default function AddBeanForm({ onBeanAdded, onCancel }: AddBeanFormProps)
 
   return (
     <article className="inline-form">
-      <header>Add New Bean</header>
+      <header>{t('cafe.addBean.header')}</header>
 
       {error && (
         <div className="notice-box" data-variant="error">
@@ -82,7 +85,7 @@ export default function AddBeanForm({ onBeanAdded, onCancel }: AddBeanFormProps)
 
       {/* Bean Name */}
       <label>
-        Bean Name *
+        {t('cafe.addBean.beanName')} *
         <input
           type="text"
           id="bean_name"
@@ -90,26 +93,26 @@ export default function AddBeanForm({ onBeanAdded, onCancel }: AddBeanFormProps)
           onChange={(e) => setBeanName(e.target.value)}
           required
           maxLength={200}
-          placeholder="e.g., Ethiopia Yirgacheffe"
+          placeholder={t('cafe.addBean.beanNamePlaceholder')}
         />
       </label>
 
       {/* Roaster */}
       <label>
-        Roaster
+        {t('cafe.addBean.roaster')}
         <input
           type="text"
           id="roaster"
           value={roaster}
           onChange={(e) => setRoaster(e.target.value)}
           maxLength={200}
-          placeholder="e.g., Blue Bottle, Stumptown"
+          placeholder={t('cafe.addBean.roasterPlaceholder')}
         />
       </label>
 
       {/* Roast Date */}
       <label>
-        Roast Date
+        {t('cafe.addBean.roastDate')}
         <input
           type="date"
           id="roast_date"
@@ -120,14 +123,14 @@ export default function AddBeanForm({ onBeanAdded, onCancel }: AddBeanFormProps)
 
       {/* Notes */}
       <label>
-        Notes
+        {t('cafe.addBean.notes')}
         <textarea
           id="bean_notes"
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
           rows={2}
           maxLength={500}
-          placeholder="Tasting notes, origin details, etc."
+          placeholder={t('cafe.addBean.notesPlaceholder')}
         />
       </label>
 
@@ -135,7 +138,7 @@ export default function AddBeanForm({ onBeanAdded, onCancel }: AddBeanFormProps)
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem' }}>
         {onCancel && (
           <button type="button" onClick={onCancel} disabled={isSubmitting} className="secondary">
-            Cancel
+            {t('cafe.addBean.cancel')}
           </button>
         )}
         <button
@@ -146,7 +149,7 @@ export default function AddBeanForm({ onBeanAdded, onCancel }: AddBeanFormProps)
           aria-busy={isSubmitting}
           style={!onCancel ? { gridColumn: '1 / -1' } : undefined}
         >
-          {isSubmitting ? 'Adding Bean...' : 'Add Bean'}
+          {isSubmitting ? t('cafe.addBean.adding') : t('cafe.addBean.add')}
         </button>
       </div>
     </article>

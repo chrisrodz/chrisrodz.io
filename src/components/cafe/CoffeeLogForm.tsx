@@ -263,7 +263,7 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults, locale }: Co
       if (response.redirected) {
         setSubmitStatus({
           type: 'success',
-          message: 'Redirigiendo...',
+          message: t('cafe.form.redirecting'),
         });
         window.location.href = response.url;
         return;
@@ -283,7 +283,7 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults, locale }: Co
 
       setSubmitStatus({
         type: 'success',
-        message: '¡Café registrado exitosamente!',
+        message: t('cafe.form.success'),
       });
 
       // Clear auto-save interval
@@ -299,16 +299,16 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults, locale }: Co
       setNotes('');
       setHasUserChanges(false);
     } catch (error) {
-      let message = 'Ocurrió un error';
+      let message = t('cafe.form.errorGeneric');
 
       if (error instanceof Error) {
         if (error.name === 'AbortError') {
-          message = 'La solicitud tardó demasiado. Verifica tu conexión.';
+          message = t('cafe.form.errorTimeout');
         } else {
           message = error.message;
         }
       } else if (!navigator.onLine) {
-        message = 'Sin conexión a internet. Por favor intenta de nuevo.';
+        message = t('cafe.form.errorOffline');
       }
 
       setSubmitStatus({
@@ -338,7 +338,7 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults, locale }: Co
         <ins className="message-card" role="alert" aria-live="polite">
           <h2>{submitStatus.message}</h2>
           <button type="button" onClick={resetForm}>
-            Log Another Coffee
+            {t('cafe.form.logAnother')}
           </button>
         </ins>
       ) : (
@@ -346,13 +346,13 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults, locale }: Co
           {/* Draft Restore Notification */}
           {showDraftRestore && (
             <div className="notice-box" data-variant="info">
-              <p>Se encontró un borrador guardado. ¿Quieres restaurarlo?</p>
+              <p>{t('cafe.form.draftFound')}</p>
               <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
                 <button type="button" onClick={restoreDraft}>
-                  Restaurar
+                  {t('cafe.form.restore')}
                 </button>
                 <button type="button" onClick={dismissDraft} className="secondary">
-                  Descartar
+                  {t('cafe.form.discard')}
                 </button>
               </div>
             </div>
@@ -366,7 +366,7 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults, locale }: Co
 
           {/* Brew Method */}
           <fieldset>
-            <legend>Método de Preparación *</legend>
+            <legend>{t('cafe.form.brewMethod')} *</legend>
             <div className="grid-3" role="radiogroup">
               {BREW_METHODS.map((method) => (
                 <button
@@ -386,31 +386,35 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults, locale }: Co
 
           {/* Bean Selection */}
           <label>
-            Grano de Café *
+            {t('cafe.form.coffeeBean')} *
             <select
               id="bean_id"
               value={showAddBeanForm ? NEW_BEAN_VALUE : beanId}
               onChange={handleBeanChange}
               required
             >
-              <option value="">Selecciona un grano...</option>
+              <option value="">{t('cafe.form.selectBean')}</option>
               {beans.map((bean) => (
                 <option key={bean.id} value={bean.id}>
                   {bean.bean_name}
                   {bean.roaster && ` (${bean.roaster})`}
                 </option>
               ))}
-              <option value={NEW_BEAN_VALUE}>+ Agregar Nuevo Grano...</option>
+              <option value={NEW_BEAN_VALUE}>{t('cafe.form.addNewBean')}</option>
             </select>
             {/* Inline Add Bean Form */}
             {showAddBeanForm && (
-              <AddBeanForm onBeanAdded={handleBeanAdded} onCancel={handleCancelAddBean} />
+              <AddBeanForm
+                onBeanAdded={handleBeanAdded}
+                onCancel={handleCancelAddBean}
+                locale={locale}
+              />
             )}
           </label>
 
           {/* Dose */}
           <label>
-            Dosis de Café (gramos) *
+            {t('cafe.form.dose')} *
             <div className="number-input-wrapper">
               <input
                 type="number"
@@ -453,7 +457,7 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults, locale }: Co
 
           {/* Water/Yield */}
           <label>
-            {brewMethod === 'Espresso' ? 'Rendimiento (gramos)' : 'Agua (gramos)'}
+            {brewMethod === 'Espresso' ? t('cafe.form.yieldEspresso') : t('cafe.form.yieldOther')}
             <div className="number-input-wrapper">
               <input
                 type="number"
@@ -471,7 +475,11 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults, locale }: Co
                 min={INPUT_CONSTRAINTS.YIELD.MIN}
                 max={INPUT_CONSTRAINTS.YIELD.MAX}
                 step="1"
-                placeholder={brewMethod === 'Espresso' ? 'Peso de salida' : 'Agua agregada'}
+                placeholder={
+                  brewMethod === 'Espresso'
+                    ? t('cafe.form.yieldPlaceholderEspresso')
+                    : t('cafe.form.yieldPlaceholderOther')
+                }
               />
               <div className="number-btn-group">
                 <button
@@ -500,7 +508,8 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults, locale }: Co
 
           {/* Grind Setting */}
           <label>
-            Molienda ({INPUT_CONSTRAINTS.GRIND.MIN}-{INPUT_CONSTRAINTS.GRIND.MAX}) *
+            {t('cafe.form.grindSetting')} ({INPUT_CONSTRAINTS.GRIND.MIN}-
+            {INPUT_CONSTRAINTS.GRIND.MAX}) *
             <div className="number-input-wrapper">
               <input
                 type="number"
@@ -560,7 +569,7 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults, locale }: Co
 
           {/* Quality Rating */}
           <div>
-            <label>Calificación de Calidad *</label>
+            <label>{t('cafe.form.qualityRating')} *</label>
             <StarRating value={rating} onChange={setRating} />
             {rating === 0 && (
               <p
@@ -571,21 +580,21 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults, locale }: Co
                 }}
                 role="alert"
               >
-                Por favor selecciona una calificación
+                {t('cafe.form.selectRating')}
               </p>
             )}
           </div>
 
           {/* Notes */}
           <label>
-            Notas (opcional)
+            {t('cafe.form.notes')}
             <textarea
               id="notes"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               rows={4}
               maxLength={500}
-              placeholder="Agrega cualquier nota sobre esta preparación..."
+              placeholder={t('cafe.form.notesPlaceholder')}
             />
             <small style={{ color: 'var(--pico-muted-color)' }}>{notes.length} / 500</small>
           </label>
@@ -597,7 +606,7 @@ export default function CoffeeLogForm({ activeBeans, smartDefaults, locale }: Co
             className="full-width"
             aria-busy={isSubmitting}
           >
-            {isSubmitting ? 'Registrando...' : 'Registrar Café'}
+            {isSubmitting ? t('cafe.form.submitting') : t('cafe.form.submit')}
           </button>
         </form>
       )}

@@ -3,6 +3,9 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import AddBeanForm from './AddBeanForm';
 import { beansStore, lastAddedBeanIdStore } from '@/stores/beansStore';
 
+// Default locale for tests
+const TEST_LOCALE = 'en' as const;
+
 // Mock fetch globally
 const mockFetch = vi.fn();
 global.fetch = mockFetch;
@@ -46,14 +49,14 @@ describe('AddBeanForm Component', () => {
 
   describe('Form Validation', () => {
     it('should disable submit button when bean name is empty', () => {
-      render(<AddBeanForm onBeanAdded={mockOnBeanAdded} />);
+      render(<AddBeanForm onBeanAdded={mockOnBeanAdded} locale={TEST_LOCALE} />);
 
       const submitButton = screen.getByRole('button', { name: 'Add Bean' });
       expect(submitButton).toBeDisabled();
     });
 
     it('should enable submit button when bean name is filled', async () => {
-      render(<AddBeanForm onBeanAdded={mockOnBeanAdded} />);
+      render(<AddBeanForm onBeanAdded={mockOnBeanAdded} locale={TEST_LOCALE} />);
 
       const beanNameInput = screen.getByLabelText('Bean Name *');
       fireEvent.change(beanNameInput, { target: { value: 'Ethiopia Yirgacheffe' } });
@@ -63,7 +66,7 @@ describe('AddBeanForm Component', () => {
     });
 
     it('should disable submit button when bean name is only whitespace', () => {
-      render(<AddBeanForm onBeanAdded={mockOnBeanAdded} />);
+      render(<AddBeanForm onBeanAdded={mockOnBeanAdded} locale={TEST_LOCALE} />);
 
       const beanNameInput = screen.getByLabelText('Bean Name *');
       fireEvent.change(beanNameInput, { target: { value: '   ' } });
@@ -91,7 +94,7 @@ describe('AddBeanForm Component', () => {
         json: async () => ({ bean: mockBean }),
       });
 
-      render(<AddBeanForm onBeanAdded={mockOnBeanAdded} />);
+      render(<AddBeanForm onBeanAdded={mockOnBeanAdded} locale={TEST_LOCALE} />);
 
       // Fill out form
       fireEvent.change(screen.getByLabelText('Bean Name *'), {
@@ -148,7 +151,7 @@ describe('AddBeanForm Component', () => {
         json: async () => ({ bean: mockBean }),
       });
 
-      render(<AddBeanForm onBeanAdded={mockOnBeanAdded} />);
+      render(<AddBeanForm onBeanAdded={mockOnBeanAdded} locale={TEST_LOCALE} />);
 
       fireEvent.change(screen.getByLabelText('Bean Name *'), { target: { value: 'Test Bean' } });
 
@@ -180,7 +183,7 @@ describe('AddBeanForm Component', () => {
         json: async () => ({ bean: mockBean }),
       });
 
-      render(<AddBeanForm onBeanAdded={mockOnBeanAdded} />);
+      render(<AddBeanForm onBeanAdded={mockOnBeanAdded} locale={TEST_LOCALE} />);
 
       fireEvent.change(screen.getByLabelText('Bean Name *'), {
         target: { value: 'Store Test Bean' },
@@ -217,7 +220,7 @@ describe('AddBeanForm Component', () => {
         json: async () => ({ bean: mockBean }),
       });
 
-      render(<AddBeanForm onBeanAdded={mockOnBeanAdded} />);
+      render(<AddBeanForm onBeanAdded={mockOnBeanAdded} locale={TEST_LOCALE} />);
 
       // Fill out form
       fireEvent.change(screen.getByLabelText('Bean Name *'), { target: { value: 'Test Bean' } });
@@ -248,7 +251,7 @@ describe('AddBeanForm Component', () => {
         json: async () => ({ error: 'Database connection failed' }),
       });
 
-      render(<AddBeanForm onBeanAdded={mockOnBeanAdded} />);
+      render(<AddBeanForm onBeanAdded={mockOnBeanAdded} locale={TEST_LOCALE} />);
 
       fireEvent.change(screen.getByLabelText('Bean Name *'), { target: { value: 'Test Bean' } });
 
@@ -269,7 +272,7 @@ describe('AddBeanForm Component', () => {
         json: async () => ({ error: 'Bean name already exists' }),
       });
 
-      render(<AddBeanForm onBeanAdded={mockOnBeanAdded} />);
+      render(<AddBeanForm onBeanAdded={mockOnBeanAdded} locale={TEST_LOCALE} />);
 
       fireEvent.change(screen.getByLabelText('Bean Name *'), {
         target: { value: 'Duplicate Bean' },
@@ -291,7 +294,7 @@ describe('AddBeanForm Component', () => {
 
       mockFetch.mockRejectedValueOnce(new Error('Network error'));
 
-      render(<AddBeanForm onBeanAdded={mockOnBeanAdded} />);
+      render(<AddBeanForm onBeanAdded={mockOnBeanAdded} locale={TEST_LOCALE} />);
 
       fireEvent.change(screen.getByLabelText('Bean Name *'), { target: { value: 'Test Bean' } });
 
@@ -328,7 +331,7 @@ describe('AddBeanForm Component', () => {
           )
       );
 
-      render(<AddBeanForm onBeanAdded={mockOnBeanAdded} />);
+      render(<AddBeanForm onBeanAdded={mockOnBeanAdded} locale={TEST_LOCALE} />);
 
       fireEvent.change(screen.getByLabelText('Bean Name *'), { target: { value: 'Test Bean' } });
 
@@ -351,7 +354,7 @@ describe('AddBeanForm Component', () => {
         json: async () => ({ error: 'Failed to add bean' }),
       });
 
-      render(<AddBeanForm onBeanAdded={mockOnBeanAdded} />);
+      render(<AddBeanForm onBeanAdded={mockOnBeanAdded} locale={TEST_LOCALE} />);
 
       fireEvent.change(screen.getByLabelText('Bean Name *'), { target: { value: 'Test Bean' } });
 
