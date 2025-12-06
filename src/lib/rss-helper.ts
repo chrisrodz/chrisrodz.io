@@ -1,6 +1,7 @@
 import rss from '@astrojs/rss';
 import { getCollection } from 'astro:content';
-import { getBlogPostUrl, type Locale, useTranslations } from '@/lib/i18n';
+import { type Locale, useTranslations } from '@/lib/i18n';
+import { getBlogPostUrl } from '@/lib/i18n-server';
 import type { APIContext } from 'astro';
 import MarkdownIt from 'markdown-it';
 import sanitizeHtml from 'sanitize-html';

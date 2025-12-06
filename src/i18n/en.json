@@ -118,6 +118,52 @@
       "ratio": "Ratio",
       "grind": "Grind",
       "rating": "Rating"
+    },
+    "grind": {
+      "fine": "Fine grind",
+      "medium": "Medium grind",
+      "coarse": "Coarse grind"
+    },
+    "form": {
+      "success": "Coffee logged successfully!",
+      "redirecting": "Redirecting...",
+      "errorGeneric": "An error occurred",
+      "errorTimeout": "Request took too long. Check your connection.",
+      "errorOffline": "No internet connection. Please try again.",
+      "logAnother": "Log Another Coffee",
+      "draftFound": "A saved draft was found. Would you like to restore it?",
+      "restore": "Restore",
+      "discard": "Discard",
+      "brewMethod": "Brew Method",
+      "coffeeBean": "Coffee Bean",
+      "selectBean": "Select a bean...",
+      "addNewBean": "+ Add New Bean...",
+      "dose": "Coffee Dose (grams)",
+      "yieldEspresso": "Yield (grams)",
+      "yieldOther": "Water (grams)",
+      "yieldPlaceholderEspresso": "Output weight",
+      "yieldPlaceholderOther": "Water added",
+      "grindSetting": "Grind Setting",
+      "qualityRating": "Quality Rating",
+      "selectRating": "Please select a rating",
+      "notes": "Notes (optional)",
+      "notesPlaceholder": "Add any notes about this brew...",
+      "submitting": "Logging...",
+      "submit": "Log Coffee"
+    },
+    "addBean": {
+      "header": "Add New Bean",
+      "beanName": "Bean Name",
+      "beanNamePlaceholder": "e.g., Ethiopia Yirgacheffe",
+      "roaster": "Roaster",
+      "roasterPlaceholder": "e.g., Blue Bottle, Stumptown",
+      "roastDate": "Roast Date",
+      "notes": "Notes",
+      "notesPlaceholder": "Tasting notes, origin details, etc.",
+      "cancel": "Cancel",
+      "adding": "Adding Bean...",
+      "add": "Add Bean",
+      "errorFailed": "Failed to add bean"
     }
   },
   "training": {
