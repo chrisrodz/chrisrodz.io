@@ -1,7 +1,8 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
-import { getTranslatedPost, getBlogPostUrl, getLocaleFromUrl, useTranslations } from '@/lib/i18n';
+import { getLocaleFromUrl, useTranslations } from '@/lib/i18n';
+import { getTranslatedPost, getBlogPostUrl } from '@/lib/i18n-server';
 
 const locale = getLocaleFromUrl(Astro.url);
 const { t, formatDate } = useTranslations(locale);
