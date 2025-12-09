@@ -1,8 +1,8 @@
 import { defineConfig } from 'astro/config';
 import vercel from '@astrojs/vercel';
 import react from '@astrojs/react';
-
 import sitemap from '@astrojs/sitemap';
+import sentry from '@sentry/astro';
 
 export default defineConfig({
   site: 'https://chrisrodz.io',
@@ -11,6 +11,13 @@ export default defineConfig({
   prefetch: true,
   integrations: [
     react(),
+    sentry({
+      sourceMapsUploadOptions: {
+        project: process.env.SENTRY_PROJECT,
+        org: process.env.SENTRY_ORG,
+        authToken: process.env.SENTRY_AUTH_TOKEN,
+      },
+    }),
     sitemap({
       filter: (page) => {
         // Exclude admin pages from sitemap

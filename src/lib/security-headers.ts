@@ -10,6 +10,8 @@ const VERCEL_SCRIPT_SOURCES = [
   'https://analytics.vercel.app',
 ];
 
+const SENTRY_SOURCES = ['https://*.sentry.io', 'https://*.ingest.sentry.io'];
+
 const SUPABASE_WILDCARD_SOURCES = [
   'https://*.supabase.co',
   'https://*.supabase.in',
@@ -37,7 +39,12 @@ function buildContentSecurityPolicy(options: SecurityHeaderOptions): string {
 
   const directives: Record<string, Set<string>> = {
     'default-src': new Set(["'self'"]),
-    'script-src': new Set(["'self'", "'unsafe-inline'", ...VERCEL_SCRIPT_SOURCES]),
+    'script-src': new Set([
+      "'self'",
+      "'unsafe-inline'",
+      ...VERCEL_SCRIPT_SOURCES,
+      ...SENTRY_SOURCES,
+    ]),
     'style-src': new Set([
       "'self'",
       "'unsafe-inline'",
@@ -54,6 +61,7 @@ function buildContentSecurityPolicy(options: SecurityHeaderOptions): string {
     'connect-src': new Set([
       "'self'",
       ...VERCEL_SCRIPT_SOURCES,
+      ...SENTRY_SOURCES,
       'https://cdn.jsdelivr.net',
       ...SUPABASE_WILDCARD_SOURCES,
       ...supabaseSources,
