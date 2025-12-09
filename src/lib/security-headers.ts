@@ -10,7 +10,12 @@ const VERCEL_SCRIPT_SOURCES = [
   'https://analytics.vercel.app',
 ];
 
-const SENTRY_SOURCES = ['https://*.sentry.io', 'https://*.ingest.sentry.io'];
+const SENTRY_SOURCES = [
+  'https://*.sentry.io',
+  'https://*.ingest.sentry.io',
+  'https://*.ingest.us.sentry.io',
+  'https://*.ingest.de.sentry.io',
+];
 
 const SUPABASE_WILDCARD_SOURCES = [
   'https://*.supabase.co',
