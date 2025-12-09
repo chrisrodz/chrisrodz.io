@@ -34,7 +34,7 @@
     "@astrojs/react": "^4.4.0",
     "@astrojs/rss": "^4.0.13",
     "@astrojs/sitemap": "^3.6.0",
-    "@astrojs/vercel": "^8.2.8",
+    "@astrojs/vercel": "^9.0.2",
     "@nanostores/react": "^1.0.0",
     "@picocss/pico": "^2.1.1",
     "@sentry/astro": "^10.29.0",
