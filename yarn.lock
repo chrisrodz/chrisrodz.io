@@ -2256,12 +2256,12 @@
   dependencies:
     "@types/unist" "*"
 
-"@types/node@*", "@types/node@^24.7.0":
-  version "24.7.0"
-  resolved "https://registry.npmjs.org/@types/node/-/node-24.7.0.tgz"
-  integrity sha512-IbKooQVqUBrlzWTi79E8Fw78l8k1RNtlDDNWsFZs7XonuQSJ8oNYfEeclhprUldXISRMLzBpILuKgPlIxm+/Yw==
+"@types/node@*", "@types/node@^24.10.2":
+  version "24.10.2"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-24.10.2.tgz#82a57476a19647d8f2c7750d0924788245e39b26"
+  integrity sha512-WOhQTZ4G8xZ1tjJTvKOpyEVSGgOTvJAfDK3FNFgELyaTpzhdgHVHeqW8V+UJvzF5BT+/B54T/1S2K6gd9c7bbA==
   dependencies:
-    undici-types "~7.14.0"
+    undici-types "~7.16.0"
 
 "@types/node@^17.0.5":
   version "17.0.45"
@@ -4044,10 +4044,10 @@ fast-uri@^3.0.1:
   resolved "https://registry.npmjs.org/fast-uri/-/fast-uri-3.1.0.tgz"
   integrity sha512-iPeeDKJSWf4IEOasVVrknXpaBV0IApz/gp7S2bb7Z4Lljbl2MGJRqInZiUrQwV16cpzw/D3S5j5Julj/gT52AA==
 
-fast-xml-parser@^5.3.0:
-  version "5.3.0"
-  resolved "https://registry.npmjs.org/fast-xml-parser/-/fast-xml-parser-5.3.0.tgz"
-  integrity sha512-gkWGshjYcQCF+6qtlrqBqELqNqnt4CxruY6UVAWWnqb3DQ6qaNFEIKqzYep1XzHLM/QtrHVCxyPOtTk4LTQ7Aw==
+fast-xml-parser@^5.3.0, fast-xml-parser@^5.3.2:
+  version "5.3.2"
+  resolved "https://registry.yarnpkg.com/fast-xml-parser/-/fast-xml-parser-5.3.2.tgz#78a51945fbf7312e1ff6726cb173f515b4ea11d8"
+  integrity sha512-n8v8b6p4Z1sMgqRmqLJm3awW4NX7NkaKPfb3uJIBTSH7Pdvufi3PQ3/lJLQrvxcMYl7JI2jnDO90siPEpD8JBA==
   dependencies:
     strnum "^2.1.0"
 
@@ -5973,10 +5973,10 @@ nanoid@^5.1.6:
   resolved "https://registry.npmjs.org/nanoid/-/nanoid-5.1.6.tgz"
   integrity sha512-c7+7RQ+dMB5dPwwCp4ee1/iV/q2P6aK1mTZcfr1BTuVlyW9hJYiMPybJCcnBlQtuSmTIWNeazm/zqNoZSSElBg==
 
-nanostores@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.npmjs.org/nanostores/-/nanostores-1.0.1.tgz"
-  integrity sha512-kNZ9xnoJYKg/AfxjrVL4SS0fKX++4awQReGqWnwTRHxeHGZ1FJFVgTqr/eMrNQdp0Tz7M7tG/TDaX8QfHDwVCw==
+nanostores@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/nanostores/-/nanostores-1.1.0.tgz#29eb39795042682a24dc85eeb24f92618ad6066b"
+  integrity sha512-yJBmDJr18xy47dbNVlHcgdPrulSn1nhSE6Ns9vTG+Nx9VPT6iV1MD6aQFp/t52zpf82FhLLTXAXr30NuCnxvwA==
 
 natural-compare@^1.4.0:
   version "1.4.0"
@@ -8016,10 +8016,10 @@ undici-types@~6.21.0:
   resolved "https://registry.npmjs.org/undici-types/-/undici-types-6.21.0.tgz"
   integrity sha512-iwDZqg0QAGrg9Rav5H4n0M64c3mkR59cJ6wQp+7C4nI0gsmExaedaYLNO44eT4AtBBwjbTiGPMlt2Md0T9H9JQ==
 
-undici-types@~7.14.0:
-  version "7.14.0"
-  resolved "https://registry.npmjs.org/undici-types/-/undici-types-7.14.0.tgz"
-  integrity sha512-QQiYxHuyZ9gQUIrmPo3IA+hUl4KYk8uSA7cHrcKd/l3p1OTpZcM0Tbp9x7FAtXdAYhlasd60ncPpgu6ihG6TOA==
+undici-types@~7.16.0:
+  version "7.16.0"
+  resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-7.16.0.tgz#ffccdff36aea4884cbfce9a750a0580224f58a46"
+  integrity sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==
 
 unicode-emoji-modifier-base@^1.0.0:
   version "1.0.0"
@@ -8753,10 +8753,10 @@ zod@^3.25.76:
   resolved "https://registry.npmjs.org/zod/-/zod-3.25.76.tgz"
   integrity sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==
 
-zod@^4.1.12:
-  version "4.1.12"
-  resolved "https://registry.npmjs.org/zod/-/zod-4.1.12.tgz"
-  integrity sha512-JInaHOamG8pt5+Ey8kGmdcAcg3OL9reK8ltczgHTAwNhMys/6ThXHityHxVV2p3fkw/c+MAvBHFVYHFZDmjMCQ==
+zod@^4.1.13:
+  version "4.1.13"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-4.1.13.tgz#93699a8afe937ba96badbb0ce8be6033c0a4b6b1"
+  integrity sha512-AvvthqfqrAhNH9dnfmrfKzX5upOdjUVJYFqNSlkmGf64gRaTzlPwz99IHYnVs28qYAybvAlBV+H7pn0saFY4Ig==
 
 zwitch@^2.0.0, zwitch@^2.0.4:
   version "2.0.4"
