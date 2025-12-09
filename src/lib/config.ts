@@ -49,6 +49,13 @@ const envSchema = z.object({
   // GitHub (optional - enables stats page)
   GH_PERSONAL_TOKEN: z.string().optional().or(z.literal('')),
   GITHUB_USERNAME: z.string().optional().or(z.literal('')),
+
+  // Sentry (optional - enables error tracking)
+  SENTRY_DSN: z.string().url().optional().or(z.literal('')),
+  PUBLIC_SENTRY_DSN: z.string().url().optional().or(z.literal('')),
+  SENTRY_AUTH_TOKEN: z.string().optional().or(z.literal('')),
+  SENTRY_ORG: z.string().optional().or(z.literal('')),
+  SENTRY_PROJECT: z.string().optional().or(z.literal('')),
 });
 
 /**
@@ -68,6 +75,11 @@ function parseEnv() {
       STRAVA_REFRESH_TOKEN: import.meta.env.STRAVA_REFRESH_TOKEN,
       GH_PERSONAL_TOKEN: import.meta.env.GH_PERSONAL_TOKEN,
       GITHUB_USERNAME: import.meta.env.GITHUB_USERNAME,
+      SENTRY_DSN: import.meta.env.SENTRY_DSN,
+      PUBLIC_SENTRY_DSN: import.meta.env.PUBLIC_SENTRY_DSN,
+      SENTRY_AUTH_TOKEN: import.meta.env.SENTRY_AUTH_TOKEN,
+      SENTRY_ORG: import.meta.env.SENTRY_ORG,
+      SENTRY_PROJECT: import.meta.env.SENTRY_PROJECT,
     };
 
     return envSchema.parse(env);
@@ -179,6 +191,24 @@ export const config = {
      */
     isConfigured(): boolean {
       return !!(this.token && this.token.trim() && this.username && this.username.trim());
+    },
+  },
+
+  /**
+   * Sentry error tracking configuration (optional)
+   */
+  sentry: {
+    dsn: env.SENTRY_DSN,
+    publicDsn: env.PUBLIC_SENTRY_DSN,
+    authToken: env.SENTRY_AUTH_TOKEN,
+    org: env.SENTRY_ORG,
+    project: env.SENTRY_PROJECT,
+
+    /**
+     * Check if Sentry is properly configured
+     */
+    isConfigured(): boolean {
+      return !!(this.dsn && this.dsn.trim());
     },
   },
 } as const;
