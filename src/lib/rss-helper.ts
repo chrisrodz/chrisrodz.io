@@ -26,6 +26,7 @@ export async function generateRssFeed(locale: Locale, context: APIContext) {
 
   // Determine the language tag for the RSS feed
   const languageTag = locale === 'en' ? 'en-us' : locale;
+  const disclaimer = locale === 'en' ? `${t('blog.aiDisclaimer.rss')}\n\n` : '';
 
   return rss({
     title: t('blog.rssTitle'),
@@ -37,7 +38,7 @@ export async function generateRssFeed(locale: Locale, context: APIContext) {
       description: post.data.description,
       link: getBlogPostUrl(post),
       categories: post.data.category ? [post.data.category] : undefined,
-      content: sanitizeHtml(parser.render(post.body || ''), {
+      content: sanitizeHtml(parser.render(`${disclaimer}${post.body ?? ''}`), {
         allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
         allowedAttributes: {
           ...sanitizeHtml.defaults.allowedAttributes,

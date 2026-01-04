@@ -45,6 +45,13 @@
     "backToHome": "Back to home",
     "tags": "Tags",
     "category": "Category",
+    "readingTime": "{minutes} min read",
+    "aiDisclaimer": {
+      "prefix": "I write my blog posts in Spanish, the English version is courtesy of AI auto translation and proof-reading on my end. If you can read Spanish I encourage you to check out the",
+      "linkText": "Spanish version",
+      "suffix": "to get the full experience.",
+      "rss": "I write my blog posts in Spanish, the English version is courtesy of AI auto translation and proof-reading on my end. If you can read Spanish I encourage you to check out that version to get the full experience."
+    },
     "rssTitle": "Christian Rodriguez - Blog (English)",
     "rssDescription": "Software engineering, life lessons, and thoughts worth sharing by Christian Rodriguez"
   },
