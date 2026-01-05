@@ -45,6 +45,13 @@
     "backToHome": "Volver al inicio",
     "tags": "Etiquetas",
     "category": "Categoría",
+    "readingTime": "{minutes} min de lectura",
+    "aiDisclaimer": {
+      "prefix": "",
+      "linkText": "",
+      "suffix": "",
+      "rss": ""
+    },
     "rssTitle": "Christian Rodriguez - Blog (Español)",
     "rssDescription": "Ingeniería de software, lecciones de vida y pensamientos que vale la pena compartir"
   },

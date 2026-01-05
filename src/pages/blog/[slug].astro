@@ -3,6 +3,7 @@ import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import { getLocaleFromUrl, useTranslations } from '@/lib/i18n';
 import { getTranslatedPost, getBlogPostUrl } from '@/lib/i18n-server';
+import { getReadingTime } from '@/lib/reading-time';
 
 const locale = getLocaleFromUrl(Astro.url);
 const { t, formatDate } = useTranslations(locale);
@@ -37,6 +38,9 @@ const formattedDate = formatDate(post.data.pubDate, {
   day: 'numeric',
 });
 
+// Calculate reading time
+const readingTimeMinutes = getReadingTime(entry.body ?? '');
+
 // Structured data for SEO
 const structuredData = {
   '@context': 'https://schema.org',
@@ -66,6 +70,9 @@ const structuredData = {
 ---
 
 <Layout title={post.data.title} description={post.data.description} alternateUrl={alternateUrl}>
+  <!-- Reading Progress Bar -->
+  <div class="reading-progress" id="reading-progress" style="transform: scaleX(0);"></div>
+
   <!-- Structured Data -->
   <script type="application/ld+json" is:inline set:html={JSON.stringify(structuredData)} />
   <article style="max-width: 70ch; margin: 0 auto;">
@@ -91,6 +98,7 @@ const structuredData = {
         <time datetime={post.data.pubDate.toISOString()}>
           {formattedDate}
         </time>
+        <span>{t('blog.readingTime', { minutes: readingTimeMinutes.toString() })}</span>
       </div>
 
       {
@@ -101,6 +109,22 @@ const structuredData = {
         )
       }
     </header>
+
+    {
+      locale === 'en' && alternateUrl && (
+        <aside class="notice-box" data-variant="info" role="note">
+          <p>
+            <small>
+              {`${t('blog.aiDisclaimer.prefix')} `}
+              <a href={alternateUrl} hreflang="es">
+                {t('blog.aiDisclaimer.linkText')}
+              </a>
+              {` ${t('blog.aiDisclaimer.suffix')}`}
+            </small>
+          </p>
+        </aside>
+      )
+    }
 
     <div class="prose">
       <Content />
@@ -115,4 +139,19 @@ const structuredData = {
       </a>
     </nav>
   </div>
+
+  <script>
+    const progressBar = document.getElementById('reading-progress');
+    if (progressBar) {
+      const updateProgress = () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = docHeight > 0 ? Math.min(scrollTop / docHeight, 1) : 0;
+        progressBar.style.transform = `scaleX(${progress})`;
+      };
+
+      window.addEventListener('scroll', updateProgress, { passive: true });
+      updateProgress();
+    }
+  </script>
 </Layout>
