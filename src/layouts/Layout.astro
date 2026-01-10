@@ -129,22 +129,35 @@ const cookieExpires = dayjs().add(1, 'year').toDate().toUTCString();
           >
         </li>
         <li>
-          <a href="https://parranda.app" target="_blank" rel="noopener noreferrer"
-            >{t(locale, 'nav.parranda')}</a
+          <a
+            href="https://parranda.app"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="nav-icon"
+            data-tooltip={t(locale, 'nav.parranda')}
+            data-placement="bottom"
+            aria-label={t(locale, 'nav.parranda')}
+            ><span aria-hidden="true">🎄</span></a
           >
         </li>
         <li>
           <a
             href={locale === 'en' ? '/en/cafe' : '/cafe'}
-            class={currentPath === '/cafe' || currentPath === '/en/cafe' ? 'active' : ''}
-            >{t(locale, 'nav.cafe')}</a
+            class={`nav-icon ${currentPath === '/cafe' || currentPath === '/en/cafe' ? 'active' : ''}`}
+            data-tooltip={t(locale, 'nav.cafe')}
+            data-placement="bottom"
+            aria-label={t(locale, 'nav.cafe')}
+            ><span aria-hidden="true">☕</span></a
           >
         </li>
         <li>
           <a
             href={locale === 'en' ? '/en/stats' : '/stats'}
-            class={currentPath === '/stats' || currentPath === '/en/stats' ? 'active' : ''}
-            >{t(locale, 'nav.stats')}</a
+            class={`nav-icon ${currentPath === '/stats' || currentPath === '/en/stats' ? 'active' : ''}`}
+            data-tooltip={t(locale, 'nav.stats')}
+            data-placement="bottom"
+            aria-label={t(locale, 'nav.stats')}
+            ><span aria-hidden="true">📊</span></a
           >
         </li>
       </ul>

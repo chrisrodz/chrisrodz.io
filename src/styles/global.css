@@ -245,6 +245,23 @@ nav.main-nav ul:first-child a.active {
   color: var(--pico-primary);
 }
 
+/* Icon-style nav links */
+nav.main-nav a.nav-icon {
+  font-size: 1.25rem;
+  line-height: 1;
+  padding: 0.25rem;
+  text-decoration: none;
+}
+
+nav.main-nav a.nav-icon:hover {
+  transform: scale(1.15);
+  transition: transform 0.15s ease;
+}
+
+nav.main-nav a.nav-icon.active {
+  transform: scale(1.1);
+}
+
 /* Increase touch target for theme toggle */
 nav.main-nav .icon-button {
   min-width: 44px;
