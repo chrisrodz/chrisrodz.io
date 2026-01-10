@@ -1,0 +1,16 @@
+---
+const appleStoreUrl = 'https://apps.apple.com/us/app/dobleseis/id1635254549';
+const playStoreUrl =
+  'https://play.google.com/store/apps/details?id=com.care.DobleSeis&pcampaignid=web_share';
+
+// Get user agent from request headers
+const userAgent = Astro.request.headers.get('user-agent') || '';
+
+// Check if Apple device (iOS, iPadOS, or macOS)
+const isApple = /iPad|iPhone|iPod|Macintosh|Mac OS X/i.test(userAgent);
+
+// Redirect to appropriate store
+const targetUrl = isApple ? appleStoreUrl : playStoreUrl;
+
+return Astro.redirect(targetUrl, 302);
+---

@@ -11,6 +11,7 @@ export type TranslationKey =
   | 'nav.training'
   | 'nav.stats'
   | 'nav.parranda'
+  | 'nav.dobleseis'
   | 'footer.copyright'
   | 'footer.rss'
   | 'footer.email'
