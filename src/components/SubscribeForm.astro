@@ -7,12 +7,11 @@ interface Props {
 
 const { variant = 'full' } = Astro.props;
 const locale = getLocaleFromUrl(Astro.url);
-const formId = `subscribe-form-${Math.random().toString(36).slice(2, 9)}`;
-const alreadySubscribedText = t(locale, 'subscribe.alreadySubscribed');
+const actionUrl = 'https://follow.it/christian-rodriguez-blog-espa-ol';
 ---
 
-<div class={`subscribe-form subscribe-form--${variant}`} data-form-id={formId}>
-  <form id={formId} class="subscribe-form__form">
+<div class={`subscribe-form subscribe-form--${variant}`}>
+  <form action={actionUrl} method="POST" target="_blank" class="subscribe-form__form">
     {variant === 'full' && <p class="subscribe-form__text">{t(locale, 'subscribe.cta')}</p>}
     <div class="subscribe-form__input-group">
       <input
@@ -24,19 +23,11 @@ const alreadySubscribedText = t(locale, 'subscribe.alreadySubscribed');
         aria-label={t(locale, 'subscribe.placeholder')}
       />
       <button type="submit" class="subscribe-form__button">
-        <span class="subscribe-form__button-text">{t(locale, 'subscribe.button')}</span>
-        <span class="subscribe-form__button-loading" style="display: none;"
-          >{t(locale, 'subscribe.loading')}</span
-        >
+        {t(locale, 'subscribe.button')}
       </button>
     </div>
+    <p class="subscribe-form__hint">{t(locale, 'subscribe.hint')}</p>
   </form>
-  <div class="subscribe-form__success" style="display: none;">
-    <p>{t(locale, 'subscribe.success')}</p>
-  </div>
-  <div class="subscribe-form__error" style="display: none;">
-    <p>{t(locale, 'subscribe.error')}</p>
-  </div>
 </div>
 
 <style>
@@ -77,17 +68,11 @@ const alreadySubscribedText = t(locale, 'subscribe.alreadySubscribed');
     white-space: nowrap;
   }
 
-  .subscribe-form__success {
-    color: var(--pico-ins-color, #2e7d32);
-  }
-
-  .subscribe-form__error {
-    color: var(--pico-del-color, #c62828);
-  }
-
-  .subscribe-form__success p,
-  .subscribe-form__error p {
-    margin: 0;
+  .subscribe-form__hint {
+    margin-top: 0.5rem;
+    margin-bottom: 0;
+    font-size: 0.875rem;
+    color: var(--pico-muted-color);
   }
 
   @media (max-width: 576px) {
@@ -104,64 +89,3 @@ const alreadySubscribedText = t(locale, 'subscribe.alreadySubscribed');
     }
   }
 </style>
-
-<script is:inline define:vars={{ alreadySubscribedText }}>
-  document.addEventListener('DOMContentLoaded', () => {
-    const forms = document.querySelectorAll('.subscribe-form');
-
-    forms.forEach((container) => {
-      const form = container.querySelector('form');
-      const successEl = container.querySelector('.subscribe-form__success');
-      const errorEl = container.querySelector('.subscribe-form__error');
-      const buttonText = container.querySelector('.subscribe-form__button-text');
-      const buttonLoading = container.querySelector('.subscribe-form__button-loading');
-      const button = container.querySelector('.subscribe-form__button');
-
-      if (!form) return;
-
-      // Check if already subscribed
-      if (localStorage.getItem('subscribed') === 'true') {
-        form.style.display = 'none';
-        successEl.style.display = 'block';
-        successEl.querySelector('p').textContent = alreadySubscribedText;
-        return;
-      }
-
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-
-        const email = form.querySelector('input[name="email"]').value;
-
-        // Show loading state
-        buttonText.style.display = 'none';
-        buttonLoading.style.display = 'inline';
-        button.disabled = true;
-        errorEl.style.display = 'none';
-
-        try {
-          // Submit to follow.it
-          const response = await fetch('https://follow.it/christian-rodriguez-blog-espa-ol', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: new URLSearchParams({ email }),
-            mode: 'no-cors', // follow.it doesn't support CORS
-          });
-
-          // Since mode is no-cors, we can't read the response
-          // Assume success if no error thrown
-          form.style.display = 'none';
-          successEl.style.display = 'block';
-          localStorage.setItem('subscribed', 'true');
-        } catch (err) {
-          // Show error
-          buttonText.style.display = 'inline';
-          buttonLoading.style.display = 'none';
-          button.disabled = false;
-          errorEl.style.display = 'block';
-        }
-      });
-    });
-  });
-</script>

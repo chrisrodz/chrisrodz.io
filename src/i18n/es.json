@@ -285,9 +285,6 @@
     "cta": "Suscríbete si quieres recibir mis próximos blog posts",
     "placeholder": "tu@email.com",
     "button": "Suscribirse",
-    "loading": "Suscribiendo...",
-    "success": "¡Listo! Revisa tu email para confirmar",
-    "error": "Algo salió mal, intenta de nuevo",
-    "alreadySubscribed": "Ya suscrito ✓"
+    "hint": "Se abre en una nueva pestaña para confirmar"
   }
 }

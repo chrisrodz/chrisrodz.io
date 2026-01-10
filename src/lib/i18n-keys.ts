@@ -209,7 +209,4 @@ export type TranslationKey =
   | 'subscribe.cta'
   | 'subscribe.placeholder'
   | 'subscribe.button'
-  | 'subscribe.loading'
-  | 'subscribe.success'
-  | 'subscribe.error'
-  | 'subscribe.alreadySubscribed';
+  | 'subscribe.hint';
