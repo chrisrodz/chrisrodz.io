@@ -191,16 +191,14 @@ const cookieExpires = dayjs().add(1, 'year').toDate().toUTCString();
           <button
             id="theme-toggle"
             aria-label={t(locale, 'accessibility.toggleTheme')}
-            class="contrast icon-button"
             title={t(locale, 'accessibility.toggleThemeTitle')}
-            style="background: none; border: none; cursor: pointer; padding: 0; font-size: 1.25rem;"
+            style="background: none; border: none; cursor: pointer; padding: 0; font-size: 1rem; line-height: 1; display: inline-flex; align-items: center;"
           >
             <span id="theme-icon" aria-hidden="true">🌕</span>
           </button>
           <a
             id="lang-toggle"
             href={alternateUrl}
-            class="lang-toggle"
             data-target-lang={locale === 'es' ? 'en' : 'es'}
             data-tooltip={t(
               locale,
@@ -211,10 +209,10 @@ const cookieExpires = dayjs().add(1, 'year').toDate().toUTCString();
               locale,
               locale === 'es' ? 'accessibility.switchToEnglish' : 'accessibility.switchToSpanish'
             )}
-            style="color: var(--pico-muted-color); text-decoration: none;"
+            style="color: var(--pico-muted-color); text-decoration: none; display: inline-flex; align-items: center; gap: 0.25rem;"
           >
-            <span class="lang-icon" aria-hidden="true">{locale === 'es' ? '🇺🇸' : '🇵🇷'}</span>
-            <span class="lang-text">{locale === 'es' ? 'EN' : 'ES'}</span>
+            <span aria-hidden="true">{locale === 'es' ? '🇺🇸' : '🇵🇷'}</span>
+            <span>{locale === 'es' ? 'EN' : 'ES'}</span>
           </a>
           {
             isAdmin && (
