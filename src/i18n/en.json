@@ -10,7 +10,11 @@
     "cafe": "Coffee",
     "training": "Training",
     "stats": "Stats",
-    "parranda": "Parranda"
+    "parranda": "Parranda",
+    "dobleseis": "DobleSeis"
+  },
+  "dobleseis": {
+    "redirecting": "Redirecting to app store..."
   },
   "footer": {
     "copyright": "© {year} Christian A. Rodríguez Encarnación",

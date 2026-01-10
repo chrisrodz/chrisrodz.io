@@ -134,6 +134,9 @@ const cookieExpires = dayjs().add(1, 'year').toDate().toUTCString();
           >
         </li>
         <li>
+          <a href="/dobleseis">{t(locale, 'nav.dobleseis')}</a>
+        </li>
+        <li>
           <a
             href={locale === 'en' ? '/en/cafe' : '/cafe'}
             class={currentPath === '/cafe' || currentPath === '/en/cafe' ? 'active' : ''}
