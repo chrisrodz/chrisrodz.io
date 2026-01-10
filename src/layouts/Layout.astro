@@ -129,6 +129,11 @@ const cookieExpires = dayjs().add(1, 'year').toDate().toUTCString();
           >
         </li>
         <li>
+          <a href="https://parranda.app" target="_blank" rel="noopener noreferrer"
+            >{t(locale, 'nav.parranda')}</a
+          >
+        </li>
+        <li>
           <a
             href={locale === 'en' ? '/en/cafe' : '/cafe'}
             class={currentPath === '/cafe' || currentPath === '/en/cafe' ? 'active' : ''}
@@ -141,38 +146,6 @@ const cookieExpires = dayjs().add(1, 'year').toDate().toUTCString();
             class={currentPath === '/stats' || currentPath === '/en/stats' ? 'active' : ''}
             >{t(locale, 'nav.stats')}</a
           >
-        </li>
-      </ul>
-      <ul class="nav-links">
-        <li class="nav-actions">
-          <button
-            id="theme-toggle"
-            aria-label={t(locale, 'accessibility.toggleTheme')}
-            class="contrast icon-button"
-            title={t(locale, 'accessibility.toggleThemeTitle')}
-          >
-            <span id="theme-icon" aria-hidden="true">🌕</span>
-          </button>
-        </li>
-        <li class="nav-actions">
-          <a
-            id="lang-toggle"
-            href={alternateUrl}
-            class="lang-toggle"
-            data-target-lang={locale === 'es' ? 'en' : 'es'}
-            data-tooltip={t(
-              locale,
-              locale === 'es' ? 'languageSwitch.tooltipEn' : 'languageSwitch.tooltipEs'
-            )}
-            data-placement="bottom"
-            aria-label={t(
-              locale,
-              locale === 'es' ? 'accessibility.switchToEnglish' : 'accessibility.switchToSpanish'
-            )}
-          >
-            <span class="lang-icon" aria-hidden="true">{locale === 'es' ? '🇺🇸' : '🇵🇷'}</span>
-            <span class="lang-text">{locale === 'es' ? 'EN' : 'ES'}</span>
-          </a>
         </li>
       </ul>
     </nav>
@@ -214,6 +187,34 @@ const cookieExpires = dayjs().add(1, 'year').toDate().toUTCString();
             style="color: var(--pico-muted-color); text-decoration: none;"
           >
             {t(locale, 'footer.x')}
+          </a>
+          <button
+            id="theme-toggle"
+            aria-label={t(locale, 'accessibility.toggleTheme')}
+            title={t(locale, 'accessibility.toggleThemeTitle')}
+            style="background: none; border: none; cursor: pointer; padding: 0; line-height: 1;"
+          >
+            <span id="theme-icon" style="vertical-align: -0.15em;" aria-hidden="true">🌕</span>
+          </button>
+          <a
+            id="lang-toggle"
+            href={alternateUrl}
+            data-target-lang={locale === 'es' ? 'en' : 'es'}
+            data-tooltip={t(
+              locale,
+              locale === 'es' ? 'languageSwitch.tooltipEn' : 'languageSwitch.tooltipEs'
+            )}
+            data-placement="top"
+            aria-label={t(
+              locale,
+              locale === 'es' ? 'accessibility.switchToEnglish' : 'accessibility.switchToSpanish'
+            )}
+            style="color: var(--pico-muted-color); text-decoration: none;"
+          >
+            <span style="vertical-align: -0.15em;" aria-hidden="true"
+              >{locale === 'es' ? '🇺🇸' : '🇵🇷'}</span
+            >
+            {locale === 'es' ? 'EN' : 'ES'}
           </a>
           {
             isAdmin && (

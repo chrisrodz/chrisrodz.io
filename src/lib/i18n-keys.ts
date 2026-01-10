@@ -10,6 +10,7 @@ export type TranslationKey =
   | 'nav.cafe'
   | 'nav.training'
   | 'nav.stats'
+  | 'nav.parranda'
   | 'footer.copyright'
   | 'footer.rss'
   | 'footer.email'
