@@ -211,4 +211,5 @@ export type TranslationKey =
   | 'subscribe.button'
   | 'subscribe.loading'
   | 'subscribe.success'
-  | 'subscribe.error';
+  | 'subscribe.error'
+  | 'subscribe.alreadySubscribed';

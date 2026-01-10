@@ -8,6 +8,7 @@ interface Props {
 const { variant = 'full' } = Astro.props;
 const locale = getLocaleFromUrl(Astro.url);
 const formId = `subscribe-form-${Math.random().toString(36).slice(2, 9)}`;
+const alreadySubscribedText = t(locale, 'subscribe.alreadySubscribed');
 ---
 
 <div class={`subscribe-form subscribe-form--${variant}`} data-form-id={formId}>
@@ -104,7 +105,7 @@ const formId = `subscribe-form-${Math.random().toString(36).slice(2, 9)}`;
   }
 </style>
 
-<script is:inline>
+<script is:inline define:vars={{ alreadySubscribedText }}>
   document.addEventListener('DOMContentLoaded', () => {
     const forms = document.querySelectorAll('.subscribe-form');
 
@@ -122,7 +123,7 @@ const formId = `subscribe-form-${Math.random().toString(36).slice(2, 9)}`;
       if (localStorage.getItem('subscribed') === 'true') {
         form.style.display = 'none';
         successEl.style.display = 'block';
-        successEl.querySelector('p').textContent = '✓';
+        successEl.querySelector('p').textContent = alreadySubscribedText;
         return;
       }
 

@@ -287,6 +287,7 @@
     "button": "Suscribirse",
     "loading": "Suscribiendo...",
     "success": "¡Listo! Revisa tu email para confirmar",
-    "error": "Algo salió mal, intenta de nuevo"
+    "error": "Algo salió mal, intenta de nuevo",
+    "alreadySubscribed": "Ya suscrito ✓"
   }
 }
