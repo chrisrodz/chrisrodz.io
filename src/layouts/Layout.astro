@@ -129,6 +129,11 @@ const cookieExpires = dayjs().add(1, 'year').toDate().toUTCString();
           >
         </li>
         <li>
+          <a href="https://parranda.app" target="_blank" rel="noopener noreferrer"
+            >{t(locale, 'nav.parranda')}</a
+          >
+        </li>
+        <li>
           <a
             href={locale === 'en' ? '/en/cafe' : '/cafe'}
             class={currentPath === '/cafe' || currentPath === '/en/cafe' ? 'active' : ''}
@@ -140,11 +145,6 @@ const cookieExpires = dayjs().add(1, 'year').toDate().toUTCString();
             href={locale === 'en' ? '/en/stats' : '/stats'}
             class={currentPath === '/stats' || currentPath === '/en/stats' ? 'active' : ''}
             >{t(locale, 'nav.stats')}</a
-          >
-        </li>
-        <li>
-          <a href="https://parranda.app" target="_blank" rel="noopener noreferrer"
-            >{t(locale, 'nav.parranda')}</a
           >
         </li>
       </ul>
