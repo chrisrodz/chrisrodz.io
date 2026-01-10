@@ -205,4 +205,10 @@ export type TranslationKey =
   | 'accessibility.switchToSpanish'
   | 'accessibility.switchToEnglish'
   | 'languageSwitch.tooltipEs'
-  | 'languageSwitch.tooltipEn';
+  | 'languageSwitch.tooltipEn'
+  | 'subscribe.cta'
+  | 'subscribe.placeholder'
+  | 'subscribe.button'
+  | 'subscribe.loading'
+  | 'subscribe.success'
+  | 'subscribe.error';

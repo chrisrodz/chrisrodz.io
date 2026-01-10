@@ -280,5 +280,13 @@
   "languageSwitch": {
     "tooltipEs": "Haz click para cambiar a Español",
     "tooltipEn": "Click for English"
+  },
+  "subscribe": {
+    "cta": "Suscríbete si quieres recibir mis próximos blog posts",
+    "placeholder": "tu@email.com",
+    "button": "Suscribirse",
+    "loading": "Suscribiendo...",
+    "success": "¡Listo! Revisa tu email para confirmar",
+    "error": "Algo salió mal, intenta de nuevo"
   }
 }
