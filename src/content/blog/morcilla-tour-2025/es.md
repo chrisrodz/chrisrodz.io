@@ -62,15 +62,15 @@ Como pueden ver en el timeline, pasé mucho tiempo chillando goma (sin lograr mu
 
 Quedando varios días para la primera parranda, y una vez le hice un demo a mi hermana del app, decidí hacer el pivot a web. Literalmente tomó 1 prompt y un ratito testing para lanzar en react-native-web. Para el nombre del website consideramos morcillatour.com, o algún domain así, pero se nos ocurrió [parranda.app](https://parranda.app) como un nombre catchy, que puede servir a cualquier grupo de parranda. Vercel fue clave para lanzar el app en web de forma rápida y sencilla.
 
-![Parranda App - Pantalla principal](/blog/morcilla-tour-2025/parranda-app-home.jpg)
+<img src="/blog/morcilla-tour-2025/parranda-app-home.jpg" alt="Parranda App - Pantalla principal" class="phone-screenshot" />
 
 ## El Cancionero: El Feature Estrella
 
 El feature estrella del app este season definitivamente fue el cancionero. Tenemos un cancionero en PDF que siempre usamos, pero el UX de abrir un PDF en el celular y navegar por el es bien porquería. La gente muchas veces estaban tratando de descifrar lo que dice la canción entre medio de los panderos, el cencerro, el güiro y el resto de la música. Con el cancionero digital nuestro coro de 100 personas se escuchaba en unísono mucho más que antes. Cuando todo el Corillo Morcillero tiene las canciones, pueden enfocarse más en cantar, bailar y pasarla bien.
 
-![Lista del Cancionero](/blog/morcilla-tour-2025/parranda-app-cancionero-list.jpg)
+<img src="/blog/morcilla-tour-2025/parranda-app-cancionero-list.jpg" alt="Lista del Cancionero" class="phone-screenshot" />
 
-![Detalle de Canción](/blog/morcilla-tour-2025/parranda-app-cancion-detail.jpg)
+<img src="/blog/morcilla-tour-2025/parranda-app-cancion-detail.jpg" alt="Detalle de Canción" class="phone-screenshot" />
 
 Ya en las parrandas pude aprender el verdadero poder de herramientas como Claude Code Web, que me ayudaron a atender bugs y feedback en vivo sin mucho afán y sobre todo sin perderme la parranda. Desde problemas con el login, issues de UI/UX y hasta añadir canciones nuevas al cancionero. Todo eso lo pude hacer desde mi teléfono a GitHub y de GitHub a producción. El plan original era que las personas se registraran, pero ya al final moví el cancionero para que se pueda acceder desde la pantalla inicial.
 
@@ -98,7 +98,7 @@ Al final de esta sesión, la pantalla principal quedo mucho más limpia con toda
 
 ### Iterando en Vivo Durante las Parrandas
 
-![Claude Code Mobile Sessions](/blog/morcilla-tour-2025/claude-code-mobile-sessions.jpg)
+<img src="/blog/morcilla-tour-2025/claude-code-mobile-sessions.jpg" alt="Claude Code Mobile Sessions" class="phone-screenshot" />
 
 Con el release de Claude Code Web la cosa se pone buena. Podía hacer cambios al parranda app desde mi teléfono durante las parrandas. Me propuse atender el feedback de la gente lo más rápido posible, y si podía hacerlo durante la parranda mejor. Claude Code Web fue un palo para esto. Durante el ensayo de las parrandas, mientras el corillo cantaba, yo estaba en una esquina haciendo deploys.
 

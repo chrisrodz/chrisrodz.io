@@ -566,6 +566,20 @@ section a {
   margin: 2rem 0;
 }
 
+/* Phone screenshot images - limit width for vertical/portrait images */
+.prose img.phone-screenshot {
+  max-width: 350px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 576px) {
+  .prose img.phone-screenshot {
+    max-width: 280px;
+  }
+}
+
 .prose ul,
 .prose ol {
   margin: 1.5rem 0;
