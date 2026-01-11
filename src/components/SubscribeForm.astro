@@ -7,7 +7,8 @@ interface Props {
 
 const { variant = 'full' } = Astro.props;
 const locale = getLocaleFromUrl(Astro.url);
-const actionUrl = 'https://follow.it/christian-rodriguez-blog-espa-ol';
+// Official follow.it subscription form endpoint
+const actionUrl = 'https://api.follow.it/subscription-form/bkFIU3hVQWlyZ1Y0TWlVcW5OODQzM282SEtjdWxkbkVUd2NRSG04SExVY1ZnTzAwQTZHMEhtZkRaMFUyTm1qdlhzMUlkNEtWcW11M0tHQVd0cHRhYWpWelloenZrbHgzVGFQTmFSUVkzVWVJRDduMFBRNUNRd3ZDMXBMYUs4aEZ8czVobHh2T2ZubDhzUkQ1YkgwbXNsTWJIMk90djFKSkhrZ1YrYmw0dERFUT0=/8';
 ---
 
 <div class={`subscribe-form subscribe-form--${variant}`}>
@@ -23,7 +24,7 @@ const actionUrl = 'https://follow.it/christian-rodriguez-blog-espa-ol';
         aria-label={t(locale, 'subscribe.placeholder')}
       />
       <button type="submit" class="subscribe-form__button">
-        {t(locale, 'subscribe.button')}
+        {t(locale, 'subscribe.button')} <span aria-hidden="true">↗</span>
       </button>
     </div>
     <p class="subscribe-form__hint">{t(locale, 'subscribe.hint')}</p>
