@@ -74,7 +74,7 @@ function buildContentSecurityPolicy(options: SecurityHeaderOptions): string {
     'manifest-src': new Set(["'self'"]),
     'frame-ancestors': new Set(["'self'"]),
     'base-uri': new Set(["'self'"]),
-    'form-action': new Set(["'self'"]),
+    'form-action': new Set(["'self'", 'https://api.follow.it']),
     'object-src': new Set(['none']),
     'worker-src': new Set(["'self'"]),
   };

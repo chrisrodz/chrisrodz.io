@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
+import SubscribeForm from '@/components/SubscribeForm.astro';
 import { getLocaleFromUrl, useTranslations } from '@/lib/i18n';
 import { getTranslatedPost, getBlogPostUrl } from '@/lib/i18n-server';
 import { getReadingTime } from '@/lib/reading-time';
@@ -133,7 +134,8 @@ const structuredData = {
 
   <div style="max-width: 70ch; margin: 3rem auto 0;">
     <hr style="margin: 3rem 0;" />
-    <nav>
+    <SubscribeForm variant="full" />
+    <nav style="margin-top: 2rem;">
       <a href={locale === 'en' ? '/en' : '/'} role="button" class="secondary">
         ← {t('blog.backToHome')}
       </a>

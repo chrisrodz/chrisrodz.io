@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import Greeting from '@/components/home/Greeting.astro';
 import IntroParagraphs from '@/components/home/IntroParagraphs.astro';
 import BlogPostsList from '@/components/home/BlogPostsList.astro';
+import SubscribeForm from '@/components/SubscribeForm.astro';
 import { getCollection, type CollectionEntry } from 'astro:content';
 import { getLocaleFromUrl, useTranslations } from '@/lib/i18n';
 
@@ -41,4 +42,6 @@ const personSchema = {
   </section>
 
   <BlogPostsList posts={allPosts} locale={locale} />
+
+  <SubscribeForm variant="full" />
 </Layout>
