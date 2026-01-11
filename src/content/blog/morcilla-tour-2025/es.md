@@ -4,7 +4,6 @@ description: 'Cómo construí parranda.app para mi grupo de parranda usando AI c
 slug: 'morcilla-tour-2025'
 pubDate: 2026-01-09
 locale: es
-category: engineering
 ---
 
 > "Me hace feliz todo lo que pueda hacer para que permanezca nuestra tradición y motivar a los jóvenes para que también mantengan ese legado que vino de nuestros ancestros. Eso es responsabilidad de todos porque el pueblo que pierde su tradición desaparece, pero hay personas dispuestas a mantenerla"
@@ -51,7 +50,7 @@ El 10 de noviembre me llegó el mensaje con la idea para el app y el día despu�
 > - Sing along
 > - AR Experiences
 
-Aquí un pequeño timeline del proyecto hasta hoy:
+No construí todo lo que teníamos en la idea original. Aquí un pequeño timeline del proyecto hasta hoy:
 
 - **Nov 11-17**: Diseño y implementación inicial en React Native
 - **Nov 18-24**: Chillando goma para lanzar en iOS y Android
@@ -59,45 +58,49 @@ Aquí un pequeño timeline del proyecto hasta hoy:
 - **Dic 2-9**: Chillando goma con el feature de galería que no se usó
 - **Todo Dic**: Añadiendo canciones y mejorando la experiencia de usuario
 
-Como pueden ver en el timeline, pasé mucho tiempo chillando goma. No es malo, ya que eso es parte del proceso de aprendizaje. Empecé el proyecto pensando que sería un app que la gente pueda bajar del app store directamente. Desafortunadamente, ese approach no funciona si quieres lanzar bien rápido, menos si estás trabajando con poco tiempo libre. Tampoco funciona si quieres que las personas se registren en el app para hacer login. Por último, aproveché esta oportunidad para adentrarme más en Supabase porque lo he visto en las redes y quería probarlo en un proyecto. En fin, estuve mucho tiempo enfocado en tareas que no eran valiosas para el proyecto.
+Como pueden ver en el timeline, pasé mucho tiempo chillando goma (sin lograr mucho progreso). No es malo, ya que eso es parte del proceso de aprendizaje. Empecé el proyecto pensando que sería un app que la gente pueda bajar del app store directamente. Desafortunadamente, ese approach no funciona si quieres lanzar bien rápido, menos si estás trabajando con poco tiempo libre. Tampoco funciona si quieres que las personas se registren en el app para hacer login. Por último, aproveché esta oportunidad para adentrarme más en Supabase porque lo he visto en las redes y quería probarlo en un proyecto. En fin, estuve mucho tiempo enfocado en tareas que no eran valiosas para el proyecto.
 
-Quedando varios días para la primera parranda, y una vez le di un demo a mi hermana, hicimos el pivot a web. Literalmente tomó 1 prompt y un ratito testing para lanzar en react-native-web. Hablamos sobre morcillatour.com, o algún domain así, pero se nos ocurrió parranda.app como un nombre catchy, que puede servir a cualquier grupo de parranda.
+Quedando varios días para la primera parranda, y una vez le hice un demo a mi hermana del app, decidí hacer el pivot a web. Literalmente tomó 1 prompt y un ratito testing para lanzar en react-native-web. Para el nombre del website consideramos morcillatour.com, o algún domain así, pero se nos ocurrió [parranda.app](https://parranda.app) como un nombre catchy, que puede servir a cualquier grupo de parranda. Vercel fue clave para lanzar el app en web de forma rápida y sencilla.
 
 ![Parranda App - Pantalla principal](/blog/morcilla-tour-2025/parranda-app-home.jpg)
 
-## Tech Stack
+## El Cancionero: El Feature Estrella
 
-**React Native**: Ya tenía experiencia con esta tecnología y pensé que podría shipear una versión al App Store rápidamente. Aunque al final no fue el caso (el pivot a web fue la decisión correcta), React Native me permitió reusar el código para la versión web con react-native-web.
+El feature estrella del app este season definitivamente fue el cancionero. Tenemos un cancionero en PDF que siempre usamos, pero el UX de abrir un PDF en el celular y navegar por el es bien porquería. La gente muchas veces estaban tratando de descifrar lo que dice la canción entre medio de los panderos, el cencerro, el güiro y el resto de la música. Con el cancionero digital nuestro coro de 100 personas se escuchaba en unísono mucho más que antes. Cuando todo el Corillo Morcillero tiene las canciones, pueden enfocarse más en cantar, bailar y pasarla bien.
 
-**Supabase**: Quería aprender esta herramienta que había visto mucho en las redes. Finalmente solo le saqué provecho al auth con magic link.
+![Lista del Cancionero](/blog/morcilla-tour-2025/parranda-app-cancionero-list.jpg)
 
-**Vercel**: Una vez decidí hacer el pivot a web, Vercel fue clave. Preview deployments automáticos en cada PR me permitieron testear cambios antes de ir a producción. El workflow de PR → preview → merge → deploy fue lo que me permitió iterar tan rápido durante las parrandas.
+![Detalle de Canción](/blog/morcilla-tour-2025/parranda-app-cancion-detail.jpg)
+
+Ya en las parrandas pude aprender el verdadero poder de herramientas como Claude Code Web, que me ayudaron a atender bugs y feedback en vivo sin mucho afán y sobre todo sin perderme la parranda. Desde problemas con el login, issues de UI/UX y hasta añadir canciones nuevas al cancionero. Todo eso lo pude hacer desde mi teléfono a GitHub y de GitHub a producción. El plan original era que las personas se registraran, pero ya al final moví el cancionero para que se pueda acceder desde la pantalla inicial.
 
 ### El Workflow: Prompt → PR → Preview → Deploy
 
-Usé principalmente **Claude Code**, **Cursor** y **ChatGPT** para escribir el 100% del código. El workflow que me funcionó mejor fue:
+Usé **Claude Code** y **Codex** para escribir el 100% del código. El workflow era el siguiente:
 
 1. Escribir un prompt descriptivo con contexto
-2. Claude genera el código y crea un PR
+2. El AI tool genera el código y crea un PR
 3. Vercel automáticamente genera un preview URL
-4. Testeo en el preview, doy feedback
+4. Testeo en el preview, y regreso al paso 1 hasta que quede satisfecho
 5. Merge → Deploy automático
+
+Miremos un ejemplo específico para ver el workflow de cerca.
 
 ### Ejemplo: Rediseñando la Navegación
 
-Cuando hice el pivot a web, la navegación con tabs no funcionaba bien en móvil. Este fue el prompt que usé:
+Cuando hice el pivot a web, tuve que repensar el tab navigation ya que no funciona bien cuando es un mobile web app. Este fue el prompt que usé:
 
 > "Use the frontend design skill to rethink the navigation. Remove the tabs and put all of the options in the Home Screen: songbook, parranda events, profile, gallery. Use chrome devtool mcp, run the web version of the app in demo mode so you can see the screen and come up with a solid UI"
 
-Lo interesante aquí es el uso de **MCP (Model Context Protocol)** — Claude Code puede conectarse a Chrome DevTools para ver la app en vivo mientras hace cambios. Esto me permitió iterar sobre el diseño sin tener que describir cada detalle. Claude podía ver lo que yo veía.
+El [frontend design skill](https://claude.com/blog/improving-frontend-design-through-skills) de Anthropic ayuda a que el modelo piense mucho mejor los temas de UI. Combinandolo con el uso de **MCP (Model Context Protocol)** — Claude Code puede conectarse a Chrome DevTools para ver la app en vivo mientras hace cambios y piensa sobre el diseño. Esto me permitió iterar sobre el diseño sin tener que describir cada detalle. Claude podía ver lo que yo veía.
 
-El resultado: una pantalla principal limpia con todas las opciones accesibles, optimizada para el uso en las parrandas donde la gente está de pie, con el teléfono en una mano y un güiro en la otra.
+Al final de esta sesión, la pantalla principal quedo mucho más limpia con todas las opciones accesibles, optimizada para el uso en las parrandas donde la gente está de pie, con el teléfono en una mano y un güiro en la otra. Así mismo fue el proceso de crear todos los features del app. Pase tiempo pensando sobre la arquitectura, los features y otros detalles importantes de software engineering pero el hands-on coding work fue mayormente hecho por Claude Code.
 
 ### Iterando en Vivo Durante las Parrandas
 
 ![Claude Code Mobile Sessions](/blog/morcilla-tour-2025/claude-code-mobile-sessions.jpg)
 
-Otra meta que me propuse fue atender el feedback al app lo más rápido posible, y si podía hacerlo durante la parranda mejor. Aquí es donde la cosa se pone buena. Claude Code Web fue un palo para esto. Durante el ensayo de las parrandas, mientras el corillo cantaba, yo estaba en una esquina haciendo deploys.
+Con el release de Claude Code Web la cosa se pone buena. Podía hacer cambios al parranda app desde mi teléfono durante las parrandas. Me propuse atender el feedback de la gente lo más rápido posible, y si podía hacerlo durante la parranda mejor. Claude Code Web fue un palo para esto. Durante el ensayo de las parrandas, mientras el corillo cantaba, yo estaba en una esquina haciendo deploys.
 
 Mira el screenshot de arriba con una lista de sesiones en Claude Code desde el celular. Cada una representa un cambio que hice en vivo:
 
@@ -105,21 +108,9 @@ Mira el screenshot de arriba con una lista de sesiones en Claude Code desde el c
 - **"Add next and previous song navigation"** — En la primera parranda me di cuenta que faltaba este UX para pasar de canción en canción. Otro PR en menos de 15 minutos.
 - **"Update house rules title and dancer emoji"** — Detallitos de UX que notas cuando 100 personas usan tu app al mismo tiempo. Como mencioné arriba, es súper importante que las personas que se unan sigan las reglas del Morcilla Tour.
 
-El flow era: alguien me dice algo → abro Claude Code en el iPhone → describo el cambio → Claude hace el PR → Vercel genera preview → verifico que funciona → merge → deploy. Todo en menos de 10 minutos, sin laptop, sin perderme la parranda.
+El flow era: alguien me dice algo → abro Claude Code en el iPhone → describo el cambio → Claude hace el PR → Vercel genera preview → verifico que funciona → merge → deploy. Todo en menos de 10 minutos, sin laptop, sin perderme la parranda. Web es mucho más rápido para deploy que un mobile app, y mucho más fácil iterar y hacer cambios. Esto era cierto antes de los LLMs y lo sigue siendo hoy.
 
 Esto es lo que los LLMs habilitan hoy: la capacidad de iterar a la velocidad del feedback. Ya no tienes que esperar a llegar a casa, abrir la laptop, recordar cuál era el bug. Lo resuelves en el momento, con el contexto fresco.
-
-## El Cancionero: El Feature Estrella
-
-Especialmente con el feature del cancionero, que nos ayudó a que nuestro coro de 100 personas se escuche en unísono. Siento que los otros features que implementamos no nos dieron nada de valor agregado en comparación con el cancionero.
-
-![Lista del Cancionero](/blog/morcilla-tour-2025/parranda-app-cancionero-list.jpg)
-
-![Detalle de Canción](/blog/morcilla-tour-2025/parranda-app-cancion-detail.jpg)
-
-Web es mucho más rápido para deploy que un mobile app, y mucho más fácil iterar y hacer cambios. Esto era cierto antes de los LLMs y lo sigue siendo hoy.
-
-Ya en las parrandas pude aprender el verdadero poder de herramientas como Claude Code Web, que me ayudaron a atender bugs y feedback en vivo sin mucho afán y sobre todo sin perderme la parranda. Desde problemas con el login, issues de UI/UX y hasta añadir canciones nuevas al cancionero. Todo eso lo pude hacer desde mi teléfono a GitHub y de GitHub a Vercel donde está deployed la página automáticamente. El plan original era que las personas se registraran, pero ya al final moví el cancionero para que se pueda acceder desde la pantalla inicial. Más importante que el registro es que todo El Corillo Morcillero tenga las canciones y puedan acompañarnos cantando y bailando, no tratando de descifrar lo que dice la canción entre medio de los panderos.
 
 ## Próximos Pasos
 
